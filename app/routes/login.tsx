@@ -1,20 +1,38 @@
 import {
   Button,
   Card,
+  Center,
   Container,
   FormControl,
+  FormErrorMessage,
   FormLabel,
   Input,
   Stack,
 } from "@chakra-ui/react";
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
-import { Form } from "@remix-run/react";
+import { json } from "@remix-run/node";
+import { Form, useLoaderData } from "@remix-run/react";
 import { authenticator } from "~/auth.server";
+import { Link } from "~/components/link";
+import { authSessionStorage } from "~/session.server";
 
 export async function loader({ request }: LoaderArgs) {
-  return await authenticator.isAuthenticated(request, {
+  await authenticator.isAuthenticated(request, {
     successRedirect: "/dashboard",
   });
+
+  const session = await authSessionStorage.getSession(
+    request.headers.get("cookie")
+  );
+  const error = session.get(authenticator.sessionErrorKey);
+  return json(
+    { error },
+    {
+      headers: {
+        "Set-Cookie": await authSessionStorage.commitSession(session),
+      },
+    }
+  );
 }
 
 export async function action({ request }: ActionArgs) {
@@ -25,16 +43,20 @@ export async function action({ request }: ActionArgs) {
 }
 
 export default function Login() {
+  const { error } = useLoaderData<typeof loader>();
   return (
     <Container maxW="30rem" py={5}>
       <Card p={4}>
         <Form method="post">
-          <Stack>
-            <FormControl>
+          <Stack spacing={5}>
+            <FormControl isInvalid={!!error}>
               <FormLabel>E-postadress</FormLabel>
               <Input type="email" name="email" required />
+              <FormErrorMessage>
+                Vänligen kontrollera e-postadressen.
+              </FormErrorMessage>
             </FormControl>
-            <FormControl>
+            <FormControl isInvalid={!!error}>
               <FormLabel>Lösenord</FormLabel>
               <Input
                 type="password"
@@ -42,8 +64,16 @@ export default function Login() {
                 autoComplete="current-password"
                 required
               />
+              <FormErrorMessage>
+                Vänligen kontrollera lösenordet.
+              </FormErrorMessage>
             </FormControl>
-            <Button type="submit">Logga in</Button>
+            <Button type="submit" colorScheme="blue" bg="blue.700">
+              Logga in
+            </Button>
+            <Center>
+              <Link to="/register">Skapa konto</Link>
+            </Center>
           </Stack>
         </Form>
       </Card>
