@@ -1,28 +1,50 @@
+import type { User as PrismaUser } from "@prisma/client";
+import { compare, hash } from "bcrypt";
 import { Authenticator } from "remix-auth";
 import { FormStrategy } from "remix-auth-form";
-import { authSessionStorage } from "./session.server";
+import { z } from "zod";
+import { db } from "./db.server";
+import { session } from "./session.server";
 
 // Create an instance of the authenticator, pass a generic with what
 // strategies will return and will store in the session
-export const authenticator = new Authenticator<User>(authSessionStorage, {
+export const authenticator = new Authenticator<User>(session, {
   sessionKey: "user",
+  sessionErrorKey: "auth-error",
 });
 
 // Tell the Authenticator to use the form strategy
 authenticator.use(
   new FormStrategy(async ({ form }) => {
-    let email = form.get("email");
-    let password = form.get("password");
-    let user = await login(email as any, password as any);
+    const { email, password } = z
+      .object({ email: z.string().min(1), password: z.string().min(1) })
+      .parse(Object.fromEntries(form.entries()));
+    const user = await db.user.findUnique({ where: { email } });
+    if (!user) {
+      throw new Error("Login failed");
+    }
+    const correctPassword =
+      !!user.password && (await compare(password, user.password));
+    if (!correctPassword) {
+      throw new Error("Login failed");
+    }
     return user;
   }),
   "user-pass"
 );
 
-async function login(email: string, password: string): User {
-  throw new Error("Invalid user");
+export async function signUp({
+  email,
+  password,
+}: {
+  email: string;
+  password: string;
+}) {
+  const user = await db.user.create({
+    data: { email: email, password: await hash(password, 10) },
+  });
+
+  return user;
 }
 
-export type User = {
-  id: string;
-};
+export type User = PrismaUser;

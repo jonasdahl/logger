@@ -1,4 +1,4 @@
-import { ChakraProvider, extendTheme } from "@chakra-ui/react";
+import { ChakraProvider, ColorModeScript, extendTheme } from "@chakra-ui/react";
 import type { MetaFunction } from "@remix-run/node";
 import {
   Links,
@@ -25,6 +25,7 @@ export default function App() {
       <body>
         <ChakraProvider theme={theme}>
           <Outlet />
+          <ColorModeScript />
         </ChakraProvider>
         <ScrollRestoration />
         <Scripts />

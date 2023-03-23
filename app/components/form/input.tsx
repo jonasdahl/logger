@@ -12,8 +12,10 @@ export function Input({
   label,
   type,
   autoComplete,
+  defaultValue,
 }: {
   name: string;
+  defaultValue?: string;
   label: string;
   type?: InputProps["type"];
   autoComplete?: string;
@@ -26,6 +28,7 @@ export function Input({
         type={type}
         {...getInputProps({ id: name } as any)}
         autoComplete={autoComplete}
+        defaultValue={defaultValue}
       />
       {error && (
         <FormErrorMessage className="my-error-class">{error}</FormErrorMessage>

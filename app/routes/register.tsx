@@ -4,10 +4,10 @@ import { json, redirect } from "@remix-run/node";
 import { withZod } from "@remix-validated-form/with-zod";
 import { ValidatedForm, validationError } from "remix-validated-form";
 import { z } from "zod";
-import { authenticator } from "~/auth.server";
+import { authenticator, signUp } from "~/auth.server";
 import { Input } from "~/components/form/input";
 import { SubmitButton } from "~/components/form/submit-button";
-import { authSessionStorage } from "~/session.server";
+import { commitSession, getSessionFromRequest } from "~/session.server";
 
 const validator = withZod(
   z
@@ -26,34 +26,25 @@ const validator = withZod(
 
 export async function loader({ request }: LoaderArgs) {
   await authenticator.isAuthenticated(request, {
-    successRedirect: "/dashboard",
+    successRedirect: "/",
   });
 
-  const session = await authSessionStorage.getSession(
-    request.headers.get("cookie")
-  );
-  const error = session.get(authenticator.sessionErrorKey);
+  const session = await getSessionFromRequest(request);
+  const error = session.get(authenticator.sessionErrorKey as "user");
   return json(
     { error },
-    {
-      headers: {
-        "Set-Cookie": await authSessionStorage.commitSession(session),
-      },
-    }
+    { headers: { "Set-Cookie": await commitSession(session) } }
   );
 }
 
 export async function action({ request }: ActionArgs) {
   const data = await validator.validate(await request.formData());
   if (data.error) return validationError(data.error);
-  const session = await authSessionStorage.getSession(
-    request.headers.get("cookie")
-  );
-  session.set(authenticator.sessionKey as "user", { id: "" });
-  return redirect("/dashboard", {
-    headers: {
-      "Set-Cookie": await authSessionStorage.commitSession(session),
-    },
+  const session = await getSessionFromRequest(request);
+  const user = await signUp(data.data);
+  session.set(authenticator.sessionKey as "user", user);
+  return redirect("/", {
+    headers: { "Set-Cookie": await commitSession(session) },
   });
 }
 
