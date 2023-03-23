@@ -39,11 +39,14 @@ export async function action({ request }: ActionArgs) {
     })),
   });
 
-  const deleteRes = await db.game.deleteMany({
+  const deleteRes = await db.game.updateMany({
     where: {
       provider: "fogisImport",
       userId: user.id,
       id: { in: toDeleteIds },
+    },
+    data: {
+      deletedAt: new Date(),
     },
   });
 

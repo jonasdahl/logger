@@ -48,6 +48,7 @@ export async function loader({ request }: LoaderArgs) {
         gte: DateTime.now().minus({ weeks: 2 }).toJSDate(),
         lte: DateTime.now().plus({ weeks: 2 }).toJSDate(),
       },
+      deletedAt: null,
     },
   });
 
@@ -58,6 +59,7 @@ export async function loader({ request }: LoaderArgs) {
         gte: DateTime.now().minus({ weeks: 2 }).toJSDate(),
         lte: DateTime.now().plus({ weeks: 2 }).toJSDate(),
       },
+      deletedAt: null,
     },
   });
 
@@ -163,9 +165,19 @@ function Day({ day, activities }: { day: Interval; activities: Activity[] }) {
                   <HStack key={activity.key}>
                     <Box>{activity.type}</Box>
                     <Spacer />
-                    <Button size="sm" colorScheme="red">
-                      Radera
-                    </Button>
+                    {"activity" in activity ? (
+                      <Form action="/api/delete-activity" method="post">
+                        <Button
+                          size="sm"
+                          colorScheme="red"
+                          type="submit"
+                          name="activityId"
+                          value={activity.activity.id}
+                        >
+                          Radera
+                        </Button>
+                      </Form>
+                    ) : null}
                   </HStack>
                 ))}
                 <HStack w="100%">

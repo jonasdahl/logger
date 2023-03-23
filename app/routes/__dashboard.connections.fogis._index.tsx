@@ -44,7 +44,7 @@ export async function loader({ request }: LoaderArgs) {
   });
 
   const user = await db.user.findUniqueOrThrow({
-    where: { id: userSession.id },
+    where: { id: userSession.id, deletedAt: null },
   });
 
   return json({
@@ -62,6 +62,7 @@ export async function action({ request }: ActionArgs) {
     where: {
       provider: "fogisImport",
       time: { gte: syncStart.toJSDate(), lte: syncEnd.toJSDate() },
+      deletedAt: null,
     },
   });
 

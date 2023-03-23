@@ -20,7 +20,7 @@ authenticator.use(
       .object({ email: z.string().min(1), password: z.string().min(1) })
       .parse(Object.fromEntries(form.entries()));
     const user = await db.user.findUnique({ where: { email } });
-    if (!user) {
+    if (!user || user.deletedAt) {
       throw new Error("Login failed");
     }
     const correctPassword =
