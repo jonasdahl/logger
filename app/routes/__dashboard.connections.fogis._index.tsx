@@ -43,7 +43,7 @@ export async function loader({ request }: LoaderArgs) {
     failureRedirect: "/login",
   });
 
-  const user = await db.user.findUniqueOrThrow({
+  const user = await db.user.findFirstOrThrow({
     where: { id: userSession.id, deletedAt: null },
   });
 

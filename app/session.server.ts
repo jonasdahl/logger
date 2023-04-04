@@ -3,8 +3,6 @@ import type { User } from "./auth.server";
 import type { FogisClient } from "./fogis/client.server";
 
 type SessionData = {
-  polarAccessToken: string | undefined;
-  polarUserId: number | undefined;
   user?: User;
   fogisGames?: Awaited<ReturnType<FogisClient["getGames"]>>;
 };

@@ -4,12 +4,14 @@ import { json, redirect } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
 import { DateTime } from "luxon";
 import { z } from "zod";
-import { getSessionFromRequest } from "~/session.server";
+import { authenticator } from "~/auth.server";
 
 export async function loader({ request }: LoaderArgs) {
-  const session = await getSessionFromRequest(request);
-  const polarUserId = session.get("polarUserId");
-  const polarAccessToken = session.get("polarAccessToken");
+  const user = await authenticator.isAuthenticated(request, {
+    failureRedirect: "/login",
+  });
+  const polarUserId = user.polarUserId; // TODO
+  const polarAccessToken = user.polarAccessToken; // TODO
 
   if (!polarUserId || !polarAccessToken) {
     throw redirect("/");
