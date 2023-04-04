@@ -1,8 +1,8 @@
+import type { User as PrismaUser } from "@prisma/client";
 import { compare, hash } from "bcrypt";
 import { Authenticator } from "remix-auth";
 import { FormStrategy } from "remix-auth-form";
 import { z } from "zod";
-import type { User as PrismaUser } from "../prisma/dist";
 import { db } from "./db.server";
 import { session } from "./session.server";
 

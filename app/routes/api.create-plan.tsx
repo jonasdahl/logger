@@ -1,10 +1,10 @@
+import { ActivityState, ActivityType } from "@prisma/client";
 import type { ActionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { DateTime } from "luxon";
 import { z } from "zod";
 import { authenticator } from "~/auth.server";
 import { db } from "~/db.server";
-import { ActivityState, ActivityType } from "../../prisma/dist";
 
 export async function action({ request }: ActionArgs) {
   const user = await authenticator.isAuthenticated(request, {

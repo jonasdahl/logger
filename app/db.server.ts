@@ -1,4 +1,4 @@
-import { PrismaClient } from "../prisma/dist";
+import { PrismaClient } from "@prisma/client";
 
 let db: PrismaClient;
 
