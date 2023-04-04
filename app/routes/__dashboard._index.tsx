@@ -23,7 +23,6 @@ import {
   Spacer,
   Stack,
 } from "@chakra-ui/react";
-import { ActivityType } from "@prisma/client";
 import type { LoaderArgs, SerializeFrom } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Form, useLoaderData, useNavigation } from "@remix-run/react";
@@ -33,6 +32,7 @@ import { forwardRef } from "react";
 import { authenticator } from "~/auth.server";
 import { db } from "~/db.server";
 import { useToggle } from "~/hooks/use-toggle";
+import { ActivityType } from "~/prisma";
 import { getSessionFromRequest } from "~/session.server";
 
 export async function loader({ request }: LoaderArgs) {
