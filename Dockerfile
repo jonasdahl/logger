@@ -19,7 +19,7 @@ WORKDIR /app
 
 COPY --from=deps /app/node_modules /app/node_modules
 ADD package.json pnpm-lock.yaml ./
-RUN pnpm prune --production
+RUN pnpm prune --prod
 
 # Build the app
 FROM base as build
@@ -41,8 +41,7 @@ RUN mkdir /app
 WORKDIR /app
 
 COPY --from=production-deps /app/node_modules /app/node_modules
-#My build goes to /app/server/build and i'm running /server/index.js express
-COPY --from=build /app/server /app/server
+COPY --from=build /build /build
 COPY --from=build /app/public /app/public
 ADD . .
 
