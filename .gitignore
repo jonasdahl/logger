@@ -1,6 +1,7 @@
 node_modules
 
 /app/prisma
+/prisma/dist
 /postgres-data
 /.cache
 /build

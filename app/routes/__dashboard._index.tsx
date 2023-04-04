@@ -32,8 +32,8 @@ import { forwardRef } from "react";
 import { authenticator } from "~/auth.server";
 import { db } from "~/db.server";
 import { useToggle } from "~/hooks/use-toggle";
-import { ActivityType } from "~/prisma";
 import { getSessionFromRequest } from "~/session.server";
+import { ActivityType } from "../../prisma/dist";
 
 export async function loader({ request }: LoaderArgs) {
   const user = await authenticator.isAuthenticated(request, {
