@@ -53,6 +53,7 @@ jobs:
           tags: |
             type=ref,event=branch
             type=ref,event=pr
+            type=sha
 
       - name: 🐳 Docker build
         uses: docker/build-push-action@v2
