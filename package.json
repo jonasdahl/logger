@@ -2,7 +2,7 @@
   "private": true,
   "sideEffects": false,
   "scripts": {
-    "build": "yarn run prisma generate && yarn run remix build",
+    "build": "pnpm run prisma generate && pnpm run remix build",
     "dev": "remix dev",
     "start": "remix-serve build",
     "typecheck": "tsc",
