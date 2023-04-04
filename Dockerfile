@@ -9,7 +9,7 @@ FROM base as deps
 RUN mkdir /app
 WORKDIR /app
 
-ADD package.json package-lock.yaml ./
+ADD package.json pnpm-lock.yaml ./
 RUN pnpm install --production=false
 
 # Setup production node_modules
@@ -19,7 +19,7 @@ RUN mkdir /app
 WORKDIR /app
 
 COPY --from=deps /app/node_modules /app/node_modules
-ADD package.json package-lock.yaml ./
+ADD package.json pnpm-lock.yaml ./
 RUN pnpm prune --production
 
 # Build the app
