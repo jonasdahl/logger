@@ -1,6 +1,6 @@
 node_modules
 
-/postgres-data
+
 /.cache
 /build
 /public/build
