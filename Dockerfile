@@ -10,7 +10,7 @@ RUN mkdir /app
 WORKDIR /app
 
 ADD package.json pnpm-lock.yaml ./
-RUN pnpm install --production=false
+RUN pnpm install
 
 # Setup production node_modules
 FROM base as production-deps
