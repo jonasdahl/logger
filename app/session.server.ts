@@ -1,6 +1,7 @@
 import { createCookieSessionStorage } from "@remix-run/node";
 import type { User } from "./auth.server";
 import type { FogisClient } from "./fogis/client.server";
+import { appSecret } from "./secrets.server";
 
 type SessionData = {
   user?: User;
@@ -30,7 +31,7 @@ export const session = createCookieSessionStorage<
     // maxAge: 60,
     path: "/", // remember to add this so the cookie will work in all routes
     sameSite: "lax",
-    secrets: ["b0676b85-7308-4e6e-86b2-a313c418cb61"],
+    secrets: [appSecret],
     secure: process.env.NODE_ENV === "production", // enable this in prod only
   },
 });
