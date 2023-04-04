@@ -1,7 +1,6 @@
 # base node image
 FROM node:gallium-bullseye-slim@sha256:0b889cbf70af3740c8caaee425be6a26f2e7f3ceffdb94a83b6d236eea1b421e as base
-# install pnpm
-RUN curl -fsSL https://get.pnpm.io/install.sh | SHELL=`which bash` bash -
+RUN npm i -g pnpm
 
 # Install all node_modules, including dev dependencies
 FROM base as deps
