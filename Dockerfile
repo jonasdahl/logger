@@ -31,6 +31,7 @@ COPY --from=deps /app/node_modules /app/node_modules
 
 ADD . .
 RUN pnpm run build
+RUN pnpm run prisma generate
 
 # Finally, build the production image with minimal footprint
 FROM base
