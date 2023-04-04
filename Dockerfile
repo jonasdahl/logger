@@ -41,7 +41,7 @@ RUN mkdir /app
 WORKDIR /app
 
 COPY --from=production-deps /app/node_modules /app/node_modules
-COPY --from=build /build /build
+COPY --from=build /app/build /app/build
 COPY --from=build /app/public /app/public
 ADD . .
 
