@@ -31,6 +31,7 @@ import { groupBy } from "lodash";
 import { DateTime, Interval } from "luxon";
 import { forwardRef } from "react";
 import { authenticator } from "~/auth.server";
+import { ButtonLink } from "~/components/button-link";
 import { db } from "~/db.server";
 import { useToggle } from "~/hooks/use-toggle";
 import { getSessionFromRequest } from "~/session.server";
@@ -102,8 +103,6 @@ export async function loader({ request }: LoaderArgs) {
   const activitiesByDay = groupBy(activities, (a) => a.day.toISO());
 
   return json({
-    polarAccessToken: data.get("polarAccessToken"),
-    polarUserId: data.get("polarUserId"),
     games,
     activities,
     activitiesByDay,
@@ -181,6 +180,13 @@ function Day({ day, activities }: { day: Interval; activities: Activity[] }) {
                   </HStack>
                 ))}
                 <HStack w="100%">
+                  <ButtonLink
+                    to={`/days/${day.start.toFormat("yyyy-MM-dd")}`}
+                    size="sm"
+                    flex={1}
+                  >
+                    Visa dag
+                  </ButtonLink>
                   {isPast || isToday ? (
                     <Button colorScheme="green" size="sm" flex={1}>
                       Registrera
@@ -250,21 +256,27 @@ const DayPreview = forwardRef<
     activities: Activity[];
   }
 >(({ day, activities, ...props }, ref) => {
+  const generalProps = {
+    borderWidth: day.contains(DateTime.now()) ? "thick" : undefined,
+    opacity: day.end.diffNow().toMillis() > 0 ? 0.7 : undefined,
+    ...props,
+  };
+
   if (activities.some((a) => a.type === "game")) {
-    return <GameDayPreview ref={ref} {...props} />;
+    return <GameDayPreview ref={ref} {...generalProps} />;
   }
   if (activities.some((a) => a.type === "rest")) {
-    return <RestDayPreview ref={ref} {...props} />;
+    return <RestDayPreview ref={ref} {...generalProps} />;
   }
   if (activities.some((a) => a.type === "exercise")) {
-    return <ExerciseDayPreview ref={ref} {...props} />;
+    return <ExerciseDayPreview ref={ref} {...generalProps} />;
   }
   return (
     <BasePreview
       bg="gray.500"
       _hover={{ bg: "gray.600" }}
       ref={ref}
-      {...props}
+      {...generalProps}
     />
   );
 });

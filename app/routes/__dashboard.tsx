@@ -14,6 +14,9 @@ export default function Dashboard() {
             Anslutningar
           </Link>
           <Spacer />
+          <Link to="/debug" color="white">
+            Debug
+          </Link>
           <Form method="post" action="/logout">
             <Button type="submit" color="white" variant="link">
               Logga ut

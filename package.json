@@ -11,9 +11,9 @@
     "prisma": "prisma"
   },
   "dependencies": {
-    "@chakra-ui/react": "^2.5.2",
-    "@emotion/react": "^11.10.6",
-    "@emotion/styled": "^11.10.6",
+    "@chakra-ui/react": "^2.6.1",
+    "@emotion/react": "^11.11.0",
+    "@emotion/styled": "^11.11.0",
     "@prisma/client": "^4.11.0",
     "@remix-run/node": "^1.16.0",
     "@remix-run/react": "^1.16.0",
@@ -46,7 +46,7 @@
     "@types/react-dom": "^18.0.8",
     "eslint": "^8.27.0",
     "react-refresh": "^0.14.0",
-    "typescript": "^4.8.4",
+    "typescript": "^5.0.4",
     "prisma": "^4.11.0"
   },
   "engines": {

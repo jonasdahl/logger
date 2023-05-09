@@ -11,12 +11,17 @@ import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { pick } from "lodash";
+import type { ReactNode } from "react";
 import { authenticator } from "~/auth.server";
 import { ButtonLink } from "~/components/button-link";
+import { db } from "~/db.server";
 
 export async function loader({ request }: LoaderArgs) {
-  const user = await authenticator.isAuthenticated(request, {
+  const sessionUser = await authenticator.isAuthenticated(request, {
     failureRedirect: "/login",
+  });
+  const user = await db.user.findFirstOrThrow({
+    where: { id: sessionUser.id },
   });
   return json({ user: pick(user, "polarUserId") });
 }
@@ -40,7 +45,23 @@ export default function Connections() {
         <Heading size="md">Permanenta</Heading>
         <Stack>
           {user.polarUserId ? (
-            <WorkingConnection name="Polar" statusText="Tillagd" />
+            <WorkingConnection name="Polar">
+              <Badge colorScheme="green">Tillagd</Badge>
+              <ButtonLink
+                to="/connections/polar/sync"
+                size="sm"
+                colorScheme="green"
+              >
+                Synka
+              </ButtonLink>
+              <ButtonLink
+                to="/connections/polar/remove"
+                size="sm"
+                colorScheme="red"
+              >
+                Ta bort
+              </ButtonLink>
+            </WorkingConnection>
           ) : (
             <AvailableConnection
               name="Polar"
@@ -82,16 +103,16 @@ function AvailableConnection({
 
 function WorkingConnection({
   name,
-  statusText,
+  children,
 }: {
   name: string;
-  statusText: string;
+  children: ReactNode;
 }) {
   return (
     <HStack p={3} bg="blue.200" borderRadius="md">
       <Box fontWeight="bold">{name}</Box>
       <Spacer />
-      <Badge colorScheme="green">{statusText}</Badge>
+      {children}
     </HStack>
   );
 }

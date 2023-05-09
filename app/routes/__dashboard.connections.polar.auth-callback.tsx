@@ -3,7 +3,11 @@ import { redirect } from "@remix-run/node";
 import { z } from "zod";
 import { authenticator } from "~/auth.server";
 import { db } from "~/db.server";
-import { polarClientId, polarClientSecret } from "~/secrets.server";
+import {
+  polarClientId,
+  polarClientSecret,
+  polarRedirectUrl,
+} from "~/secrets.server";
 import { commitSession, getSessionFromRequest } from "~/session.server";
 
 export async function loader({ request }: LoaderArgs) {
@@ -17,19 +21,22 @@ export async function loader({ request }: LoaderArgs) {
     throw new Error("No code in response");
   }
 
+  console.log("Getting token for code", authorizationCode);
+
   const res = await fetch("https://polarremote.com/v2/oauth2/token", {
     method: "POST",
     body: new URLSearchParams({
       code: authorizationCode,
       grant_type: "authorization_code",
-    }),
+      redirect_uri: polarRedirectUrl,
+    }).toString(),
     headers: {
       Authorization: `Basic ${Buffer.from(
         `${polarClientId}:${polarClientSecret}`,
         "utf-8"
       ).toString("base64")}`,
       "Content-Type": "application/x-www-form-urlencoded",
-      Accept: "application/json",
+      Accept: "application/json;charset=UTF-8",
     },
   });
 
@@ -43,9 +50,15 @@ export async function loader({ request }: LoaderArgs) {
     throw redirect("/dashboard/connections?error=invalid_response");
   }
 
+  const json = await res.json();
+  console.log("token data", json);
   const value = z
-    .object({ access_token: z.string(), x_user_id: z.number() })
-    .safeParse(await res.json());
+    .object({
+      access_token: z.string(),
+      x_user_id: z.number(),
+      expires_in: z.number(),
+    })
+    .safeParse(json);
 
   if (!value.success) {
     console.error("Invalid JSON from Polar Token Endpoint", value.error);

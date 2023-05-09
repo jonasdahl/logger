@@ -10,4 +10,8 @@ const env = z
 
 export const polarClientId = env.POLAR_CLIENT_ID;
 export const polarClientSecret = env.POLAR_CLIENT_SECRET;
+export const polarRedirectUrl =
+  process.env.NODE_ENV === "development"
+    ? "http://localhost:3000/connections/polar/auth-callback"
+    : "https://logger.addem.se/auth/polar/callback";
 export const appSecret = env.APP_SECRET;
