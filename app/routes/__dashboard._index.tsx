@@ -29,6 +29,7 @@ import { json } from "@remix-run/node";
 import { Form, useLoaderData, useNavigation } from "@remix-run/react";
 import { groupBy } from "lodash";
 import { DateTime, Interval } from "luxon";
+import type { ReactNode } from "react";
 import { forwardRef } from "react";
 import { authenticator } from "~/auth.server";
 import { ButtonLink } from "~/components/button-link";
@@ -317,7 +318,10 @@ const RestDayPreview = forwardRef<HTMLButtonElement, {}>((props, ref) => (
   </BasePreview>
 ));
 
-const ExerciseDayPreview = forwardRef<HTMLButtonElement, {}>((props, ref) => (
+const ExerciseDayPreview = forwardRef<
+  HTMLButtonElement,
+  { children: ReactNode }
+>((props, ref) => (
   <BasePreview bg="blue.700" _hover={{ bg: "blue.800" }} {...props} ref={ref}>
     {props.children ?? "Träning"}
   </BasePreview>
