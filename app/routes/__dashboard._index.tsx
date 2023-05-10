@@ -256,7 +256,11 @@ function PlanButton({ day, ...props }: ButtonProps & { day: Interval }) {
                 <ModalCloseButton />
               </ModalHeader>
               <ModalBody>
-                <input type="hidden" name="day" value={day.start.toISO()} />
+                <input
+                  type="hidden"
+                  name="day"
+                  value={day.start.toFormat("yyyy-MM-dd")}
+                />
                 <Select name="type">
                   <option value="rest">Vila</option>
                   <option value="exercise">Träning</option>

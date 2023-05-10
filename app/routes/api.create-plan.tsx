@@ -5,16 +5,20 @@ import { DateTime } from "luxon";
 import { z } from "zod";
 import { authenticator } from "~/auth.server";
 import { db } from "~/db.server";
+import { getTimeZoneFromRequest } from "~/time";
 
 export async function action({ request }: ActionArgs) {
   const user = await authenticator.isAuthenticated(request, {
     failureRedirect: "/login",
   });
+  const timeZone = getTimeZoneFromRequest(request);
 
   const formData = await request.formData();
   const day = z
     .string()
-    .transform((s) => DateTime.fromISO(s).startOf("day"))
+    .transform((s) =>
+      DateTime.fromFormat(s, "yyyy-MM-dd", { zone: timeZone }).startOf("day")
+    )
     .parse(formData.get("day"));
   const rawType = formData.get("type");
   const type =

@@ -1,4 +1,4 @@
-import { Container } from "@chakra-ui/react";
+import { Container, Stack } from "@chakra-ui/react";
 import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { assertIsAdmin, authenticator } from "~/auth.server";
@@ -15,10 +15,10 @@ export async function loader({ request }: LoaderArgs) {
 export default function SettingsIndex() {
   return (
     <Container maxW="container.lg" py={5}>
-      <Link to="/settings/purposes">Träningssyften</Link>
-      <Link to="/debug" color="white">
-        Debug
-      </Link>
+      <Stack>
+        <Link to="/settings/purposes">Träningssyften</Link>
+        <Link to="/debug">Debug</Link>
+      </Stack>
     </Container>
   );
 }

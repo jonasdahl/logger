@@ -5,7 +5,7 @@
     "build": "pnpm run prisma:build && pnpm run remix:build",
     "prisma:build": "pnpm run prisma generate",
     "remix:build": "remix build",
-    "dev": "remix dev",
+    "dev": "TZ=America/Montreal remix dev",
     "start": "remix-serve build",
     "typecheck": "tsc",
     "prisma": "prisma"
