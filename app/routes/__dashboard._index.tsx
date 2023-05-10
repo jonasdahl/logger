@@ -232,41 +232,40 @@ function PlanButton({ day, ...props }: ButtonProps & { day: Interval }) {
   return (
     <>
       <Button {...props} onClick={toggle} />
-      <Modal isOpen={modalOpen} onClose={close}>
-        <ModalOverlay />
+      {modalOpen ? (
+        <Modal isOpen onClose={close}>
+          <ModalOverlay />
 
-        <ModalContent>
-          <Form action="/api/create-plan" method="post">
-            <ModalHeader>
-              Planera
-              <ModalCloseButton />
-            </ModalHeader>
-            <ModalBody>
-              <input type="hidden" name="day" value={day.start.toISO()} />
-              <Select name="type">
-                <option value="rest">Vila</option>
-                <option value="exercise">Träning</option>
-                <option value="game">Match</option>
-              </Select>
-            </ModalBody>
-            <ModalFooter>
-              <Button type="submit" isLoading={state === "submitting"}>
-                Skapa
-              </Button>
-            </ModalFooter>
-          </Form>
-        </ModalContent>
-      </Modal>
+          <ModalContent>
+            <Form action="/api/create-plan" method="post">
+              <ModalHeader>
+                Planera
+                <ModalCloseButton />
+              </ModalHeader>
+              <ModalBody>
+                <input type="hidden" name="day" value={day.start.toISO()} />
+                <Select name="type">
+                  <option value="rest">Vila</option>
+                  <option value="exercise">Träning</option>
+                  <option value="game">Match</option>
+                </Select>
+              </ModalBody>
+              <ModalFooter>
+                <Button type="submit" isLoading={state === "submitting"}>
+                  Skapa
+                </Button>
+              </ModalFooter>
+            </Form>
+          </ModalContent>
+        </Modal>
+      ) : null}
     </>
   );
 }
 
 const DayPreview = forwardRef<
   HTMLButtonElement,
-  {
-    day: Interval;
-    activities: Activity[];
-  }
+  { day: Interval; activities: Activity[] }
 >(({ day, activities, ...props }, ref) => {
   const generalProps = {
     borderWidth: day.contains(DateTime.now()) ? "thick" : undefined,
