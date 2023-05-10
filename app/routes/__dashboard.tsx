@@ -14,6 +14,9 @@ export default function Dashboard() {
             Anslutningar
           </Link>
           <Spacer />
+          <Link to="/settings" color="white">
+            Inställningar
+          </Link>
           <Link to="/debug" color="white">
             Debug
           </Link>

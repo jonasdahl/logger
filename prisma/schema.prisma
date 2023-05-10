@@ -22,7 +22,7 @@ model User {
   polarAccessToken String?
   games            Game[]
   activities       Activity[]
-  PolarExercise    PolarExercise[]
+  polarExercises   PolarExercise[]
 }
 
 model Game {
@@ -52,10 +52,17 @@ enum ActivityState {
 }
 
 model Activity {
-  id    String        @id @default(uuid())
-  time  DateTime
-  type  ActivityType
-  state ActivityState
+  id          String        @id @default(uuid())
+  time        DateTime
+  type        ActivityType
+  state       ActivityState
+  comment     String?
+  description String?
+
+  primaryPurpose     ActivityPurpose? @relation(name: "primaryPurpose", fields: [primaryPurposeId], references: [id])
+  primaryPurposeId   String?
+  secondaryPurpose   ActivityPurpose? @relation(name: "secondaryPurpose", fields: [secondaryPurposeId], references: [id])
+  secondaryPurposeId String?
 
   userId String
   user   User   @relation(fields: [userId], references: [id])
@@ -68,10 +75,18 @@ model Activity {
 model PolarExercise {
   id String @id @default(uuid())
 
-  polarId    BigInt   @unique
+  polarId    Int      @unique
   raw        String
   uploadTime DateTime
   userId     String
   user       User     @relation(fields: [userId], references: [id])
   startTime  DateTime
+}
+
+model ActivityPurpose {
+  id String @id @default(uuid())
+
+  label             String
+  primaryPurposes   Activity[] @relation(name: "primaryPurpose")
+  secondaryPurposes Activity[] @relation(name: "secondaryPurpose")
 }

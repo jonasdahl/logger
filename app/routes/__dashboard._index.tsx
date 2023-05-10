@@ -34,13 +34,11 @@ import { authenticator } from "~/auth.server";
 import { ButtonLink } from "~/components/button-link";
 import { db } from "~/db.server";
 import { useToggle } from "~/hooks/use-toggle";
-import { getSessionFromRequest } from "~/session.server";
 
 export async function loader({ request }: LoaderArgs) {
   const user = await authenticator.isAuthenticated(request, {
     failureRedirect: "/login",
   });
-  const data = await getSessionFromRequest(request);
 
   const games = await db.game.findMany({
     where: {
@@ -61,6 +59,10 @@ export async function loader({ request }: LoaderArgs) {
         lte: DateTime.now().plus({ weeks: 2 }).toJSDate(),
       },
       deletedAt: null,
+    },
+    include: {
+      primaryPurpose: true,
+      secondaryPurpose: true,
     },
   });
 
@@ -100,7 +102,9 @@ export async function loader({ request }: LoaderArgs) {
     }),
   ];
 
-  const activitiesByDay = groupBy(activities, (a) => a.day.toISO());
+  const activitiesByDay = groupBy(activities, (a) =>
+    a.day.startOf("day").toISO()
+  );
 
   return json({
     games,
@@ -188,9 +192,16 @@ function Day({ day, activities }: { day: Interval; activities: Activity[] }) {
                     Visa dag
                   </ButtonLink>
                   {isPast || isToday ? (
-                    <Button colorScheme="green" size="sm" flex={1}>
+                    <ButtonLink
+                      to={`/activities/create?date=${day.start.toFormat(
+                        "yyyy-MM-dd"
+                      )}`}
+                      colorScheme="green"
+                      size="sm"
+                      flex={1}
+                    >
                       Registrera
-                    </Button>
+                    </ButtonLink>
                   ) : null}
                   {isFuture || isToday ? (
                     <PlanButton
@@ -258,7 +269,7 @@ const DayPreview = forwardRef<
 >(({ day, activities, ...props }, ref) => {
   const generalProps = {
     borderWidth: day.contains(DateTime.now()) ? "thick" : undefined,
-    opacity: day.end.diffNow().toMillis() > 0 ? 0.7 : undefined,
+    opacity: day.start.diffNow().toMillis() > 0 ? 0.7 : undefined,
     ...props,
   };
 
@@ -269,7 +280,20 @@ const DayPreview = forwardRef<
     return <RestDayPreview ref={ref} {...generalProps} />;
   }
   if (activities.some((a) => a.type === "exercise")) {
-    return <ExerciseDayPreview ref={ref} {...generalProps} />;
+    const purposes = activities
+      .flatMap((a) =>
+        a.type === "exercise"
+          ? [a.activity.primaryPurpose, a.activity.secondaryPurpose]
+          : []
+      )
+      .filter(Boolean);
+    const label = purposes.map((p) => p?.label).join(" + ") || "Träning";
+
+    return (
+      <ExerciseDayPreview ref={ref} {...generalProps}>
+        {label}
+      </ExerciseDayPreview>
+    );
   }
   return (
     <BasePreview
@@ -295,7 +319,7 @@ const RestDayPreview = forwardRef<HTMLButtonElement, {}>((props, ref) => (
 
 const ExerciseDayPreview = forwardRef<HTMLButtonElement, {}>((props, ref) => (
   <BasePreview bg="blue.700" _hover={{ bg: "blue.800" }} {...props} ref={ref}>
-    Träning
+    {props.children ?? "Träning"}
   </BasePreview>
 ));
 
@@ -306,6 +330,7 @@ const BasePreview = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => (
     flexGrow={1}
     borderColor="blue.900"
     color="white"
+    whiteSpace="normal"
     {...props}
   />
 ));
