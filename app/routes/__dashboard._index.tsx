@@ -30,7 +30,7 @@ import { Form, useLoaderData, useNavigation } from "@remix-run/react";
 import { groupBy } from "lodash";
 import { DateTime, Interval } from "luxon";
 import type { ReactNode } from "react";
-import { forwardRef } from "react";
+import { forwardRef, useEffect, useRef } from "react";
 import { authenticator } from "~/auth.server";
 import { ButtonLink } from "~/components/button-link";
 import { db } from "~/db.server";
@@ -241,6 +241,14 @@ function Day({ day, activities }: { day: Interval; activities: Activity[] }) {
 function PlanButton({ day, ...props }: ButtonProps & { day: Interval }) {
   const [modalOpen, { toggle, close }] = useToggle();
   const { state } = useNavigation();
+  const lastState = useRef(state);
+
+  useEffect(() => {
+    if (lastState.current === "submitting" && state !== "submitting") {
+      close();
+    }
+    lastState.current = state;
+  }, [close, state]);
 
   return (
     <>
