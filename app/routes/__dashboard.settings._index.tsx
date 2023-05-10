@@ -16,6 +16,9 @@ export default function SettingsIndex() {
   return (
     <Container maxW="container.lg" py={5}>
       <Link to="/settings/purposes">Träningssyften</Link>
+      <Link to="/debug" color="white">
+        Debug
+      </Link>
     </Container>
   );
 }
