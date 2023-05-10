@@ -128,7 +128,7 @@ export default function DashboardIndex() {
 
   return (
     <Container maxW="container.lg" py={5}>
-      <SimpleGrid columns={[1, 3, 7]} rowGap={2} columnGap={1}>
+      <SimpleGrid columns={7} rowGap={2} columnGap={1}>
         {days.map((day) => (
           <Day
             key={day.start.toMillis()}
@@ -150,8 +150,21 @@ function Day({ day, activities }: { day: Interval; activities: Activity[] }) {
   return (
     <Box h="7rem">
       <Stack h="100%" spacing={0}>
-        <Box fontSize="xs" textAlign="center" fontWeight="bold">
+        <Box
+          fontSize="xs"
+          textAlign="center"
+          fontWeight="bold"
+          display={["none", "block"]}
+        >
           {day.start.toFormat("yyyy-MM-dd")}
+        </Box>
+        <Box
+          fontSize="xs"
+          textAlign="center"
+          fontWeight="bold"
+          display={["block", "none"]}
+        >
+          {day.start.toFormat("dd")}
         </Box>
         <Popover>
           <PopoverTrigger>
@@ -337,6 +350,7 @@ const BasePreview = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => (
     borderColor="blue.900"
     color="white"
     whiteSpace="normal"
+    fontSize={[0, "md"]}
     {...props}
   />
 ));
