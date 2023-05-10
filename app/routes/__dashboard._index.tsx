@@ -42,12 +42,15 @@ export async function loader({ request }: LoaderArgs) {
     failureRedirect: "/login",
   });
 
+  const timeZone = getTimeZoneFromRequest(request);
+  const now = DateTime.now().setZone(timeZone);
+
   const games = await db.game.findMany({
     where: {
       userId: user.id,
       time: {
-        gte: DateTime.now().minus({ weeks: 2 }).toJSDate(),
-        lte: DateTime.now().plus({ weeks: 2 }).toJSDate(),
+        gte: now.minus({ weeks: 2 }).toJSDate(),
+        lte: now.plus({ weeks: 2 }).toJSDate(),
       },
       deletedAt: null,
     },
@@ -57,8 +60,8 @@ export async function loader({ request }: LoaderArgs) {
     where: {
       userId: user.id,
       time: {
-        gte: DateTime.now().minus({ weeks: 2 }).toJSDate(),
-        lte: DateTime.now().plus({ weeks: 2 }).toJSDate(),
+        gte: now.minus({ weeks: 2 }).toJSDate(),
+        lte: now.plus({ weeks: 2 }).toJSDate(),
       },
       deletedAt: null,
     },
@@ -67,8 +70,6 @@ export async function loader({ request }: LoaderArgs) {
       secondaryPurpose: true,
     },
   });
-
-  const timeZone = getTimeZoneFromRequest(request);
 
   const activities = [
     ...games.map((game) => ({
