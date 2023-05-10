@@ -35,6 +35,7 @@ import { authenticator } from "~/auth.server";
 import { ButtonLink } from "~/components/button-link";
 import { db } from "~/db.server";
 import { useToggle } from "~/hooks/use-toggle";
+import { getTimeZoneFromRequest } from "~/time";
 
 export async function loader({ request }: LoaderArgs) {
   const user = await authenticator.isAuthenticated(request, {
@@ -67,12 +68,14 @@ export async function loader({ request }: LoaderArgs) {
     },
   });
 
+  const timeZone = getTimeZoneFromRequest(request);
+
   const activities = [
     ...games.map((game) => ({
       key: `game:${game.id}`,
       type: "game" as const,
       game,
-      day: DateTime.fromJSDate(game.time).startOf("day"),
+      day: DateTime.fromJSDate(game.time, { zone: timeZone }).startOf("day"),
     })),
     ...otherActivities.map((activity) => {
       switch (activity.type) {
@@ -80,21 +83,21 @@ export async function loader({ request }: LoaderArgs) {
           return {
             key: `exercise:${activity.id}`,
             type: "exercise" as const,
-            day: DateTime.fromJSDate(activity.time),
+            day: DateTime.fromJSDate(activity.time, { zone: timeZone }),
             activity,
           };
         case ActivityType.Game:
           return {
             key: `game:${activity.id}`,
             type: "game" as const,
-            day: DateTime.fromJSDate(activity.time),
+            day: DateTime.fromJSDate(activity.time, { zone: timeZone }),
             activity,
           };
         case ActivityType.Rest:
           return {
             key: `rest:${activity.id}`,
             type: "rest" as const,
-            day: DateTime.fromJSDate(activity.time),
+            day: DateTime.fromJSDate(activity.time, { zone: timeZone }),
             activity,
           };
         default:
@@ -107,18 +110,14 @@ export async function loader({ request }: LoaderArgs) {
     a.day.startOf("day").toISO()
   );
 
-  return json({
-    games,
-    activities,
-    activitiesByDay,
-  });
+  return json({ games, activities, activitiesByDay, timeZone });
 }
 
 type Activity = SerializeFrom<typeof loader>["activities"][number];
 
 export default function DashboardIndex() {
-  const { activitiesByDay } = useLoaderData<typeof loader>();
-  const now = DateTime.now();
+  const { activitiesByDay, timeZone } = useLoaderData<typeof loader>();
+  const now = DateTime.now().setZone(timeZone);
   const startOfWeek = now.startOf("week");
   const startOfPreviousWeek = startOfWeek.minus({ weeks: 2 });
   const endOfWeek = now.endOf("week");
@@ -144,7 +143,8 @@ export default function DashboardIndex() {
 function Day({ day, activities }: { day: Interval; activities: Activity[] }) {
   const isFuture = day.start.diffNow().toMillis() > 0;
   const isPast = day.start.diffNow().toMillis() < 0;
-  const isToday = day.contains(DateTime.now());
+  const { timeZone } = useLoaderData<typeof loader>();
+  const isToday = day.contains(DateTime.now().setZone(timeZone));
 
   return (
     <Box h="7rem">
@@ -226,7 +226,6 @@ function Day({ day, activities }: { day: Interval; activities: Activity[] }) {
 
 function PlanButton({ day, ...props }: ButtonProps & { day: Interval }) {
   const [modalOpen, { toggle, close }] = useToggle();
-
   const { state } = useNavigation();
 
   return (
@@ -267,8 +266,11 @@ const DayPreview = forwardRef<
   HTMLButtonElement,
   { day: Interval; activities: Activity[] }
 >(({ day, activities, ...props }, ref) => {
+  const { timeZone } = useLoaderData<typeof loader>();
   const generalProps = {
-    borderWidth: day.contains(DateTime.now()) ? "thick" : undefined,
+    borderWidth: day.contains(DateTime.now().setZone(timeZone))
+      ? "thick"
+      : undefined,
     opacity: day.start.diffNow().toMillis() > 0 ? 0.7 : undefined,
     ...props,
   };
