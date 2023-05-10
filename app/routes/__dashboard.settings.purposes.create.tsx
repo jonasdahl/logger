@@ -4,7 +4,7 @@ import { json, redirect } from "@remix-run/node";
 import { withZod } from "@remix-validated-form/with-zod";
 import { ValidatedForm } from "remix-validated-form";
 import { z } from "zod";
-import { authenticator } from "~/auth.server";
+import { assertIsAdmin, authenticator } from "~/auth.server";
 import { SubmitButton } from "~/components/form/submit-button";
 import { Textarea } from "~/components/form/textarea";
 import { validate } from "~/components/form/validate.server";
@@ -25,13 +25,7 @@ export async function action({ request }: LoaderArgs) {
   const sessionUser = await authenticator.isAuthenticated(request, {
     failureRedirect: "/login",
   });
-  const user = await db.user.findUniqueOrThrow({
-    where: { id: sessionUser.id },
-  });
-  if (user.email !== "jonas@jdahl.se") {
-    throw new Error("Invalid user");
-  }
-
+  await assertIsAdmin(sessionUser.id);
   const data = await validate({ request, validator });
 
   await db.activityPurpose.createMany({
@@ -45,13 +39,7 @@ export async function loader({ request }: LoaderArgs) {
   const sessionUser = await authenticator.isAuthenticated(request, {
     failureRedirect: "/login",
   });
-  const user = await db.user.findUniqueOrThrow({
-    where: { id: sessionUser.id },
-  });
-  if (user.email !== "jonas@jdahl.se") {
-    throw new Error("Invalid user");
-  }
-
+  await assertIsAdmin(sessionUser.id);
   return json({});
 }
 

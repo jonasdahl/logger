@@ -2,6 +2,7 @@ import type { User as PrismaUser } from "@prisma/client";
 import { compare, hash } from "bcrypt";
 import { Authenticator } from "remix-auth";
 import { FormStrategy } from "remix-auth-form";
+import { unauthorized } from "remix-utils";
 import { z } from "zod";
 import { db } from "./db.server";
 import { session } from "./session.server";
@@ -32,6 +33,21 @@ authenticator.use(
   }),
   "user-pass"
 );
+
+export async function isAdmin(userId: string) {
+  const user = await db.user.findUnique({ where: { id: userId } });
+  if (user?.email === "jonas@jdahl.se") {
+    return true;
+  }
+  return false;
+}
+
+export async function assertIsAdmin(userId: string) {
+  const user = await db.user.findUnique({ where: { id: userId } });
+  if (user?.email !== "jonas@jdahl.se") {
+    throw unauthorized({ user });
+  }
+}
 
 export async function signUp({
   email,
