@@ -35,7 +35,7 @@ export async function createExerciseTransaction<T>(
   });
   console.log("Executing transaction actions done");
 
-  if (process.env.NODE_ENV === "development") {
+  if (process.env.NODE_ENV === "development" || true) {
     console.log("Skipping committing transaction, development mode");
     return res;
   }
