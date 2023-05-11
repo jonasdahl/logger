@@ -7,7 +7,7 @@ import { Link } from "~/components/link";
 
 export async function loader({ request }: LoaderArgs) {
   const { id: userId } = await authenticator.isAuthenticated(request, {
-    failureRedirect: "/",
+    failureRedirect: "/login",
   });
   return json({ isAdmin: await isAdmin(userId) });
 }
