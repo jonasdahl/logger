@@ -5,6 +5,10 @@ module.exports = {
     v2_errorBoundary: true,
     v2_meta: true,
     v2_normalizeFormMethod: true,
+    unstable_dev: {
+      port: "", // let it choose a random port
+      appServerPort: process.env.APP_SERVER_PORT || process.env.PORT || 3000,
+    },
   },
   ignoredRouteFiles: ["**/.*"],
   // appDirectory: "app",
