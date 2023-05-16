@@ -47,9 +47,7 @@ export async function loader({ request }: LoaderArgs) {
     where: { id: userSession.id, deletedAt: null },
   });
 
-  return json({
-    fogisUsername: user.fogisUsername,
-  });
+  return json({ fogisUsername: user.fogisUsername });
 }
 
 export async function action({ request }: ActionArgs) {
@@ -196,22 +194,33 @@ export default function Fogis() {
   }
 
   return (
-    <Container py={5}>
-      <Card p={4}>
+    <Container py={6}>
+      <Stack spacing={5}>
+        <Heading>Importera från Fogis</Heading>
+        <Box>
+          Fyll i dina inloggningsuppgifter till Fogis nedan så importeras dina
+          matcher automatiskt.
+        </Box>
         <ValidatedForm validator={validator} method="post">
           <Stack spacing={5}>
             <Input
               name="username"
               label="Användarnamn i Fogis"
               defaultValue={fogisUsername ?? undefined}
+              autoFocus={!fogisUsername}
             />
-            <Input name="password" type="password" label="Lösenord i Fogis" />
+            <Input
+              name="password"
+              type="password"
+              label="Lösenord i Fogis"
+              autoFocus={!!fogisUsername}
+            />
             <SubmitButton colorScheme="blue" bg="blue.700">
               Hämta matcher
             </SubmitButton>
           </Stack>
         </ValidatedForm>
-      </Card>
+      </Stack>
     </Container>
   );
 }

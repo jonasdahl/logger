@@ -50,6 +50,11 @@ export async function action({ request }: ActionArgs) {
     },
   });
 
+  await db.user.update({
+    where: { id: user.id },
+    data: { lastFogisSync: new Date() },
+  });
+
   const session = await getSessionFromRequest(request);
   session.flash(
     "success",

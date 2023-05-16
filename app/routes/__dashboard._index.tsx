@@ -121,13 +121,16 @@ export async function loader({ request }: LoaderArgs) {
     activitiesByDay,
     timeZone,
     showOnboarding: !realUser.onboardedAt,
+    showFogisSync:
+      realUser.lastFogisSync &&
+      DateTime.fromJSDate(realUser.lastFogisSync).diffNow().as("weeks") < -1,
   });
 }
 
 type Activity = SerializeFrom<typeof loader>["activities"][number];
 
 export default function DashboardIndex() {
-  const { activitiesByDay, timeZone, showOnboarding } =
+  const { activitiesByDay, timeZone, showOnboarding, showFogisSync } =
     useLoaderData<typeof loader>();
   const now = DateTime.now().setZone(timeZone);
   const startOfWeek = now.startOf("week");
@@ -155,6 +158,27 @@ export default function DashboardIndex() {
             </HStack>
           </Alert>
         ) : null}
+
+        {showFogisSync ? (
+          <Alert>
+            <HStack w="100%">
+              <AlertTitle>
+                Det var mer än en vecka sedan du synkade mot Fogis.
+              </AlertTitle>
+              <Spacer />
+              <Box>
+                <ButtonLink
+                  size="sm"
+                  colorScheme="blue"
+                  to="/connections/fogis"
+                >
+                  Gör det nu
+                </ButtonLink>
+              </Box>
+            </HStack>
+          </Alert>
+        ) : null}
+
         <SimpleGrid columns={7} rowGap={2} columnGap={1}>
           {days.map((day) => (
             <Day
