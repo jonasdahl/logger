@@ -90,7 +90,7 @@ export default function PolarExercise() {
   }));
 
   return (
-    <Container py={5} maxW="container.lg">
+    <Container py={5} maxW="container.xl">
       <Stack>
         <Heading>Träning från Polar</Heading>
         <Heading size="md">Puls</Heading>
