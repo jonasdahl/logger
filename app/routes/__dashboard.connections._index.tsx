@@ -24,6 +24,12 @@ export async function loader({ request }: LoaderArgs) {
   const user = await db.user.findFirstOrThrow({
     where: { id: sessionUser.id },
   });
+  if (user.onboardedAt === null) {
+    await db.user.update({
+      where: { id: user.id },
+      data: { onboardedAt: new Date() },
+    });
+  }
   return json({ user: pick(user, "polarUserId") });
 }
 
@@ -68,12 +74,6 @@ export default function Connections() {
               action="/connections/polar"
             />
           )}
-
-          {/* <AvailableConnection
-            name="Google Calendar"
-            callToActionText="Lägg till"
-            action="/connections/fogis"
-          /> */}
         </Stack>
       </Stack>
     </Container>

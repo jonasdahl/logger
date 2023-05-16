@@ -1,5 +1,7 @@
 import type { ButtonProps } from "@chakra-ui/react";
 import {
+  Alert,
+  AlertTitle,
   Box,
   Button,
   Container,
@@ -111,13 +113,22 @@ export async function loader({ request }: LoaderArgs) {
     a.day.startOf("day").toISO()
   );
 
-  return json({ games, activities, activitiesByDay, timeZone });
+  const realUser = await db.user.findUniqueOrThrow({ where: { id: user.id } });
+
+  return json({
+    games,
+    activities,
+    activitiesByDay,
+    timeZone,
+    showOnboarding: !realUser.onboardedAt,
+  });
 }
 
 type Activity = SerializeFrom<typeof loader>["activities"][number];
 
 export default function DashboardIndex() {
-  const { activitiesByDay, timeZone } = useLoaderData<typeof loader>();
+  const { activitiesByDay, timeZone, showOnboarding } =
+    useLoaderData<typeof loader>();
   const now = DateTime.now().setZone(timeZone);
   const startOfWeek = now.startOf("week");
   const startOfPreviousWeek = startOfWeek.minus({ weeks: 2 });
@@ -128,15 +139,32 @@ export default function DashboardIndex() {
 
   return (
     <Container maxW="container.lg" py={5}>
-      <SimpleGrid columns={7} rowGap={2} columnGap={1}>
-        {days.map((day) => (
-          <Day
-            key={day.start.toMillis()}
-            day={day}
-            activities={activitiesByDay[day.start.toISO()] ?? []}
-          />
-        ))}
-      </SimpleGrid>
+      <Stack spacing={5}>
+        {showOnboarding ? (
+          <Alert>
+            <HStack w="100%">
+              <AlertTitle>
+                Börja med att sätta upp anslutningar till tredjepartsappar.
+              </AlertTitle>
+              <Spacer />
+              <Box>
+                <ButtonLink size="sm" colorScheme="blue" to="/connections">
+                  Kom igång
+                </ButtonLink>
+              </Box>
+            </HStack>
+          </Alert>
+        ) : null}
+        <SimpleGrid columns={7} rowGap={2} columnGap={1}>
+          {days.map((day) => (
+            <Day
+              key={day.start.toMillis()}
+              day={day}
+              activities={activitiesByDay[day.start.toISO()] ?? []}
+            />
+          ))}
+        </SimpleGrid>
+      </Stack>
     </Container>
   );
 }

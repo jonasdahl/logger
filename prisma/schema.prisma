@@ -20,6 +20,8 @@ model User {
   deletedAt        DateTime?
   polarUserId      Int?
   polarAccessToken String?
+  onboardedAt      DateTime?
+  lastFogisSync    DateTime?
   games            Game[]
   activities       Activity[]
   polarExercises   PolarExercise[]

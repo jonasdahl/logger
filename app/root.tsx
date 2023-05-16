@@ -17,12 +17,12 @@ export const meta: V2_MetaFunction = () => [
 
 export default function App() {
   return (
-    <html lang="en">
+    <html lang="en" style={{ height: "100%", minHeight: "100%" }}>
       <head>
         <Meta />
         <Links />
       </head>
-      <body>
+      <body style={{ height: "100%", minHeight: "100%" }}>
         <ChakraProvider theme={theme}>
           <Outlet />
           <ColorModeScript />
@@ -40,6 +40,15 @@ const theme = extendTheme({
   //   heading: `'StagSans', sans-serif`,
   //   body: `'StagSans', sans-serif`,
   // },
+
+  components: {
+    Alert: {
+      baseStyle: {
+        container: { borderRadius: "md" },
+      },
+    },
+  },
+
   colors: {
     blue: {
       "50": "#E6F4FF",
