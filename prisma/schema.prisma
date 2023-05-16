@@ -90,3 +90,10 @@ model ActivityPurpose {
   primaryPurposes   Activity[] @relation(name: "primaryPurpose")
   secondaryPurposes Activity[] @relation(name: "secondaryPurpose")
 }
+
+model PolarWebhook {
+  id String @id @default(uuid())
+
+  polarWebhookId                 String
+  polarWebhookSignatureSecretKey String
+}
