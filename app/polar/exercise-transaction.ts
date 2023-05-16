@@ -35,11 +35,6 @@ export async function createExerciseTransaction<T>(
   });
   console.log("Executing transaction actions done");
 
-  if (process.env.NODE_ENV === "development" || 1 + 1 === 2) {
-    console.log("Skipping committing transaction, development mode");
-    return res;
-  }
-
   console.log("Committing transaction");
   const commitRes = await fetch(
     `https://www.polaraccesslink.com/v3/users/${meta.userId}/exercise-transactions/${transaction["transaction-id"]}`,
