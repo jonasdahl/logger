@@ -1,5 +1,7 @@
 import { DateTime } from "luxon";
 
+export type FogisGameType = ReturnType<typeof parseGamesFromTableRows>[number];
+
 export function parseGamesFromTableRows(rows: NodeListOf<Element>) {
   if (!rows) {
     throw new Error("No table rows found.");

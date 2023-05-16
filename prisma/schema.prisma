@@ -22,20 +22,31 @@ model User {
   polarAccessToken String?
   onboardedAt      DateTime?
   lastFogisSync    DateTime?
-  games            Game[]
+  fogisGames       FogisGame[]
   activities       Activity[]
   polarExercises   PolarExercise[]
 }
 
-model Game {
-  id   String   @id @default(uuid())
-  time DateTime
+enum RefereeRole {
+  Center
+  Assistant
+  Fourth
+}
+
+model FogisGame {
+  id String @id @default(uuid())
+
+  time              DateTime
+  homeTeam          String
+  awayTeam          String
+  facility          String
+  positionLongitude Float?
+  positionLatitude  Float?
+  role              RefereeRole
+  gameId            String
 
   userId String
   user   User   @relation(fields: [userId], references: [id])
-
-  provider   String?
-  providerId String?
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt

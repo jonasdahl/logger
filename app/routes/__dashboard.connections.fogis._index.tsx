@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  Card,
   Checkbox,
   Container,
   Heading,
@@ -56,9 +55,8 @@ export async function action({ request }: ActionArgs) {
   const syncStart = DateTime.now().minus({ days: 30 });
   const syncEnd = DateTime.now().plus({ years: 1 });
   const syncInterval = Interval.fromDateTimes(syncStart, syncEnd);
-  const usersGames = await db.game.findMany({
+  const usersGames = await db.fogisGame.findMany({
     where: {
-      provider: "fogisImport",
       time: { gte: syncStart.toJSDate(), lte: syncEnd.toJSDate() },
       deletedAt: null,
     },
@@ -83,12 +81,12 @@ export async function action({ request }: ActionArgs) {
 
   const toDelete = usersGames.filter((previouslySyncedGame) => {
     return !foundGames.some(
-      (fogisGame) => fogisGame.id === previouslySyncedGame.providerId
+      (fogisGame) => fogisGame.id === previouslySyncedGame.gameId
     );
   });
   const toAdd = foundGames.filter((foundGame) => {
     return !usersGames.some(
-      (previouslySyncedGame) => previouslySyncedGame.providerId === foundGame.id
+      (previouslySyncedGame) => previouslySyncedGame.gameId === foundGame.id
     );
   });
 
@@ -107,77 +105,77 @@ export default function Fogis() {
     return (
       <Container py={5} maxW="container.lg">
         <Form method="post" action="/connections/fogis/save">
-          <Card p={4}>
-            <Stack spacing={5}>
-              <Heading>Granska import</Heading>
-              <Stack>
-                <Heading size="md">Matcher som kommer läggas till</Heading>
-                {actionData.toAdd.length === 0 ? (
-                  <Box>Inga nya matcher.</Box>
-                ) : (
-                  <TableContainer>
-                    <Table size="sm">
-                      <Tbody>
-                        {actionData.toAdd.map((game) => (
-                          <Tr key={game.id}>
-                            <Td w={1} pr={0}>
-                              <Checkbox
-                                name="add"
-                                value={game.id}
-                                defaultChecked
-                              />
-                            </Td>
-                            <Td>
-                              {DateTime.fromISO(game.time).toFormat(
-                                "yyyy-MM-dd HH:mm"
-                              )}
-                              <input
-                                type="hidden"
-                                name={`toAdd[${game.id}]`}
-                                value={JSON.stringify(game)}
-                              />
-                            </Td>
-                            <Td>
-                              {game.homeTeam.name}-{game.awayTeam.name}
-                            </Td>
-                          </Tr>
-                        ))}
-                      </Tbody>
-                    </Table>
-                  </TableContainer>
-                )}
-              </Stack>
+          <Stack spacing={6}>
+            <Heading>Granska import</Heading>
+            <Stack>
+              <Heading size="md">Matcher som kommer läggas till</Heading>
+              {actionData.toAdd.length === 0 ? (
+                <Box>Inga nya matcher.</Box>
+              ) : (
+                <TableContainer>
+                  <Table size="sm">
+                    <Tbody>
+                      {actionData.toAdd.map((game) => (
+                        <Tr key={game.id}>
+                          <Td w={1} pr={0}>
+                            <Checkbox
+                              name="add"
+                              value={game.id}
+                              defaultChecked
+                            />
+                          </Td>
+                          <Td>
+                            {DateTime.fromISO(game.time).toFormat(
+                              "yyyy-MM-dd HH:mm"
+                            )}
+                            <input
+                              type="hidden"
+                              name={`toAdd[${game.id}]`}
+                              value={JSON.stringify(game)}
+                            />
+                          </Td>
+                          <Td>
+                            {game.homeTeam.name}-{game.awayTeam.name}
+                          </Td>
+                        </Tr>
+                      ))}
+                    </Tbody>
+                  </Table>
+                </TableContainer>
+              )}
+            </Stack>
 
-              <Stack>
-                <Heading size="md">Matcher som kommer tas bort</Heading>
-                {actionData.toDelete.length === 0 ? (
-                  <Box>Inga matcher tas bort.</Box>
-                ) : (
-                  <TableContainer>
-                    <Table size="sm">
-                      <Tbody>
-                        {actionData.toDelete.map((game) => (
-                          <Tr key={game.id}>
-                            <Td w={1} pr={0}>
-                              <Checkbox
-                                name="delete"
-                                value={game.id}
-                                defaultChecked
-                              />
-                            </Td>
-                            <Td>
-                              {DateTime.fromISO(game.time).toFormat(
-                                "yyyy-MM-dd HH:mm"
-                              )}
-                            </Td>
-                          </Tr>
-                        ))}
-                      </Tbody>
-                    </Table>
-                  </TableContainer>
-                )}
-              </Stack>
+            <Stack>
+              <Heading size="md">Matcher som kommer tas bort</Heading>
+              {actionData.toDelete.length === 0 ? (
+                <Box>Inga matcher tas bort.</Box>
+              ) : (
+                <TableContainer>
+                  <Table size="sm">
+                    <Tbody>
+                      {actionData.toDelete.map((game) => (
+                        <Tr key={game.id}>
+                          <Td w={1} pr={0}>
+                            <Checkbox
+                              name="delete"
+                              value={game.id}
+                              defaultChecked
+                            />
+                          </Td>
+                          <Td>
+                            {DateTime.fromISO(game.time).toFormat(
+                              "yyyy-MM-dd HH:mm"
+                            )}
+                          </Td>
+                        </Tr>
+                      ))}
+                    </Tbody>
+                  </Table>
+                </TableContainer>
+              )}
+            </Stack>
 
+            <Box>
               <Button
                 type="submit"
                 colorScheme="green"
@@ -186,8 +184,8 @@ export default function Fogis() {
               >
                 Genomför ändringar
               </Button>
-            </Stack>
-          </Card>
+            </Box>
+          </Stack>
         </Form>
       </Container>
     );
@@ -215,9 +213,11 @@ export default function Fogis() {
               label="Lösenord i Fogis"
               autoFocus={!!fogisUsername}
             />
-            <SubmitButton colorScheme="blue" bg="blue.700">
-              Hämta matcher
-            </SubmitButton>
+            <Box>
+              <SubmitButton colorScheme="blue" bg="blue.700">
+                Hämta matcher
+              </SubmitButton>
+            </Box>
           </Stack>
         </ValidatedForm>
       </Stack>

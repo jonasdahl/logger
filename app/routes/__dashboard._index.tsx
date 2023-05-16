@@ -47,7 +47,7 @@ export async function loader({ request }: LoaderArgs) {
   const timeZone = getTimeZoneFromRequest(request);
   const now = DateTime.now().setZone(timeZone);
 
-  const games = await db.game.findMany({
+  const games = await db.fogisGame.findMany({
     where: {
       userId: user.id,
       time: {
@@ -218,7 +218,7 @@ function Day({ day, activities }: { day: Interval; activities: Activity[] }) {
         >
           {day.start.toFormat("dd")}
         </Box>
-        <Popover>
+        <Popover closeOnBlur>
           <PopoverTrigger>
             <DayPreview day={day} activities={activities} />
           </PopoverTrigger>
@@ -233,7 +233,13 @@ function Day({ day, activities }: { day: Interval; activities: Activity[] }) {
               <Stack>
                 {activities.map((activity) => (
                   <HStack key={activity.key}>
-                    <Box>{activity.type}</Box>
+                    <Box>
+                      {activity.type === "game"
+                        ? `Match: ${activity.game.homeTeam} - ${activity.game.awayTeam}`
+                        : activity.type === "exercise"
+                        ? "Träning"
+                        : "Vila"}
+                    </Box>
                     <Spacer />
                     {"activity" in activity ? (
                       <Form action="/api/delete-activity" method="post">
