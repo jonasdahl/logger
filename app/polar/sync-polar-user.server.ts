@@ -1,6 +1,8 @@
 import { db } from "~/db.server";
 import { createExerciseTransaction } from "./exercise-transaction";
 import { getPolarExercise } from "./get-exercise";
+import { getPolarExerciseSampleTypes } from "./get-exercise-sample-types";
+import { getPolarExerciseSamples } from "./get-exercise-samples";
 import { getPolarExercises } from "./get-exercises";
 
 export async function syncPolarUser({
@@ -33,12 +35,32 @@ export async function syncPolarUser({
           transactionId,
         });
 
-        console.log(details);
+        const sampleTypes = await getPolarExerciseSampleTypes({
+          ...meta,
+          exerciseId,
+          transactionId,
+        });
+
+        const sampleRes = await Promise.all(
+          sampleTypes.types.map(async (sampleType) => {
+            const samples = await getPolarExerciseSamples({
+              ...meta,
+              exerciseId,
+              sampleType,
+              transactionId,
+            });
+
+            return { sampleType, samples };
+          })
+        );
+
+        console.log("got samples:", sampleRes);
 
         const base = {
           raw: JSON.stringify(details),
           startTime: details["start-time"].toJSDate(),
           uploadTime: details["upload-time"].toJSDate(),
+          samples: JSON.stringify(sampleRes),
           userId,
         };
 

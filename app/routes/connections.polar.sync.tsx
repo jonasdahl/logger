@@ -17,7 +17,7 @@ export async function action({ request }: ActionArgs) {
     throw new Error("Invalid polar user");
   }
 
-  await syncPolarUser({ polarAccessToken, polarUserId, userId: user.id });
+  await syncPolarUser({ polarAccessToken, polarUserId, userId: id });
 
-  return redirect("/connections");
+  return redirect("/connections?success");
 }

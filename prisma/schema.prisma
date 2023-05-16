@@ -81,6 +81,7 @@ model PolarExercise {
   userId     String
   user       User     @relation(fields: [userId], references: [id])
   startTime  DateTime
+  samples    String?
 }
 
 model ActivityPurpose {
