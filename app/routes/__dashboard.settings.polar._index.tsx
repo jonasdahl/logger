@@ -49,6 +49,21 @@ export async function action({ request }: ActionArgs) {
     body: JSON.stringify({ events: ["EXERCISE"], url }),
   });
 
+  if (res.status === 409) {
+    console.log(res.status, res.statusText);
+    throw new Error("Webhook already existed");
+  }
+
+  if (res.status === 400) {
+    console.log(res.status, res.statusText);
+    throw new Error("Webhook request was bad");
+  }
+
+  if (res.status !== 201) {
+    console.log(res.status, res.statusText);
+    throw new Error("Webhook request failed");
+  }
+
   const { data } = createdWebhook.parse(await res.json());
 
   // Delete all previous webhook references, we can only have one!
