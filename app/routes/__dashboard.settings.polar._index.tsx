@@ -90,11 +90,14 @@ export async function loader({ request }: LoaderArgs) {
 
   const webhooks = await db.polarWebhook.findMany();
 
-  return json({ webhook: data, webhooks });
+  const defaultUrl = new URL(request.url);
+  defaultUrl.pathname = "/connections/polar/webhook";
+
+  return json({ webhook: data, webhooks, defaultUrl: defaultUrl.toString() });
 }
 
 export default function SettingsIndex() {
-  const { webhook, webhooks } = useLoaderData<typeof loader>();
+  const { webhook, webhooks, defaultUrl } = useLoaderData<typeof loader>();
 
   return (
     <Container maxW="container.lg" py={5}>
@@ -103,11 +106,7 @@ export default function SettingsIndex() {
 
         <ValidatedForm validator={validator} method="post">
           <Stack>
-            <Input
-              name="url"
-              label="URL"
-              defaultValue="http://localhost:3000/connections/polar/webhook"
-            />
+            <Input name="url" label="URL" defaultValue={defaultUrl} />
             <Box>
               <SubmitButton colorScheme="green">Create webhook</SubmitButton>
             </Box>
