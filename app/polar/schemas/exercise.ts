@@ -15,11 +15,10 @@ export const exercise = z.object({
   distance: z.number().optional(),
   "heart-rate": z
     .object({
-      average: z.number(),
-      maximum: z.number(),
+      average: z.number().optional(),
+      maximum: z.number().optional(),
     })
-    .optional()
-    .nullable(),
+    .optional(),
   "training-load": z.number().optional(),
   sport: z.string().optional(),
   "has-route": z.boolean().optional(),

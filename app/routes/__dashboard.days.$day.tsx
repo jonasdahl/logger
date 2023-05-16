@@ -17,6 +17,7 @@ import { DateTime } from "luxon";
 import { z } from "zod";
 import { authenticator } from "~/auth.server";
 import { ButtonLink } from "~/components/button-link";
+import { Link } from "~/components/link";
 import { db } from "~/db.server";
 
 const dayType = z
@@ -114,9 +115,13 @@ export default function DashboardIndex() {
         ))}
 
         <Heading size="sm">Data från Polar</Heading>
-        <UnorderedList>
+        <UnorderedList pl={4}>
           {polarEntries.map((e) => (
-            <ListItem key={e.id}>{e.startTime}</ListItem>
+            <ListItem key={e.id}>
+              <Link to={`/connections/polar/exercise/${e.id}`}>
+                {e.startTime}
+              </Link>
+            </ListItem>
           ))}
         </UnorderedList>
       </Stack>

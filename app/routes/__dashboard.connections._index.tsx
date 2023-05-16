@@ -1,6 +1,7 @@
 import {
   Badge,
   Box,
+  Button,
   Container,
   Heading,
   HStack,
@@ -9,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { Form, useLoaderData } from "@remix-run/react";
 import { pick } from "lodash";
 import type { ReactNode } from "react";
 import { authenticator } from "~/auth.server";
@@ -47,13 +48,11 @@ export default function Connections() {
           {user.polarUserId ? (
             <WorkingConnection name="Polar">
               <Badge colorScheme="green">Tillagd</Badge>
-              <ButtonLink
-                to="/connections/polar/sync"
-                size="sm"
-                colorScheme="green"
-              >
-                Synka
-              </ButtonLink>
+              <Form action="/connections/polar/sync" method="post">
+                <Button type="submit" size="sm" colorScheme="green">
+                  Synka
+                </Button>
+              </Form>
               <ButtonLink
                 to="/connections/polar/remove"
                 size="sm"

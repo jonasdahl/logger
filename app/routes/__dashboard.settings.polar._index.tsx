@@ -51,6 +51,9 @@ export async function action({ request }: ActionArgs) {
 
   const { data } = createdWebhook.parse(await res.json());
 
+  // Delete all previous webhook references, we can only have one!
+  await db.polarWebhook.deleteMany();
+
   await db.polarWebhook.create({
     data: {
       polarWebhookId: data.id,
