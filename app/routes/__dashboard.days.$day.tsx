@@ -41,6 +41,7 @@ export async function loader({ request, params }: LoaderArgs) {
             lte: day.endOf("day").toJSDate(),
           },
         },
+        orderBy: { startTime: "asc" },
       },
       activities: {
         where: {
