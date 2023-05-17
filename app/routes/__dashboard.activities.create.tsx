@@ -57,7 +57,7 @@ export async function action({ request }: ActionArgs) {
       secondaryPurposeId: data.secondaryPurposeId,
       description: data.description,
       comment: data.comment,
-      fromPlannedActivityId: plannedActivity.id ?? null,
+      fromPlannedActivityId: plannedActivity?.id ?? null,
     },
   });
   return redirect(`/days/${DateTime.now().toFormat("yyyy-MM-dd")}`);
