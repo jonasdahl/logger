@@ -47,11 +47,7 @@ export async function loader({ request, params }: LoaderArgs) {
         orderBy: { time: "asc" },
       },
       plannedActivities: {
-        where: {
-          time: timeFilter,
-          deletedAt: null,
-          generatedActivities: { none: {} },
-        },
+        where: { time: timeFilter, deletedAt: null },
         include: { primaryPurpose: {}, secondaryPurpose: {} },
         orderBy: { time: "asc" },
       },

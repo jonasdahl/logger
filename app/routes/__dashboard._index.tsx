@@ -380,7 +380,7 @@ const DayPreview = forwardRef<
     );
   }
   if (
-    day.start.diffNow().toMillis() < 0 &&
+    day.end.diffNow().toMillis() > 0 &&
     activities.some((a) => a.type === "plannedActivity")
   ) {
     const purposes = activities
