@@ -218,7 +218,7 @@ function Day({ day, activities }: { day: Interval; activities: Activity[] }) {
         >
           {day.start.toFormat("dd")}
         </Box>
-        <Popover closeOnBlur>
+        <Popover>
           <PopoverTrigger>
             <DayPreview day={day} activities={activities} />
           </PopoverTrigger>
@@ -232,29 +232,13 @@ function Day({ day, activities }: { day: Interval; activities: Activity[] }) {
             <PopoverBody>
               <Stack>
                 {activities.map((activity) => (
-                  <HStack key={activity.key}>
-                    <Box>
-                      {activity.type === "game"
-                        ? `Match: ${activity.game.homeTeam} - ${activity.game.awayTeam}`
-                        : activity.type === "exercise"
-                        ? "Träning"
-                        : "Vila"}
-                    </Box>
-                    <Spacer />
-                    {"activity" in activity ? (
-                      <Form action="/api/delete-activity" method="post">
-                        <Button
-                          size="sm"
-                          colorScheme="red"
-                          type="submit"
-                          name="activityId"
-                          value={activity.activity.id}
-                        >
-                          Radera
-                        </Button>
-                      </Form>
-                    ) : null}
-                  </HStack>
+                  <Box key={activity.key}>
+                    {activity.type === "game"
+                      ? `Match: ${activity.game.homeTeam} - ${activity.game.awayTeam}`
+                      : activity.type === "exercise"
+                      ? "Träning"
+                      : "Vila"}
+                  </Box>
                 ))}
                 <HStack w="100%">
                   <ButtonLink
