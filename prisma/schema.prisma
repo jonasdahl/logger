@@ -11,20 +11,21 @@ datasource db {
 }
 
 model User {
-  id               String          @id @default(uuid())
-  email            String          @unique
-  fogisUsername    String?
-  password         String?
-  createdAt        DateTime        @default(now())
-  updatedAt        DateTime        @default(now()) @updatedAt
-  deletedAt        DateTime?
-  polarUserId      Int?
-  polarAccessToken String?
-  onboardedAt      DateTime?
-  lastFogisSync    DateTime?
-  fogisGames       FogisGame[]
-  activities       Activity[]
-  polarExercises   PolarExercise[]
+  id                String            @id @default(uuid())
+  email             String            @unique
+  fogisUsername     String?
+  password          String?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @default(now()) @updatedAt
+  deletedAt         DateTime?
+  polarUserId       Int?
+  polarAccessToken  String?
+  onboardedAt       DateTime?
+  lastFogisSync     DateTime?
+  fogisGames        FogisGame[]
+  activities        Activity[]
+  polarExercises    PolarExercise[]
+  plannedActivities PlannedActivity[]
 }
 
 enum RefereeRole {
@@ -53,28 +54,34 @@ model FogisGame {
   deletedAt DateTime?
 }
 
-enum ActivityType {
-  Rest
-  Exercise
-  Game
-}
-
-enum ActivityState {
-  Planned
-  Registered
-}
-
 model Activity {
-  id          String        @id @default(uuid())
+  id          String   @id @default(uuid())
   time        DateTime
-  type        ActivityType
-  state       ActivityState
   comment     String?
   description String?
 
   primaryPurpose     ActivityPurpose? @relation(name: "primaryPurpose", fields: [primaryPurposeId], references: [id])
   primaryPurposeId   String?
   secondaryPurpose   ActivityPurpose? @relation(name: "secondaryPurpose", fields: [secondaryPurposeId], references: [id])
+  secondaryPurposeId String?
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+}
+
+model PlannedActivity {
+  id          String   @id @default(uuid())
+  time        DateTime
+  comment     String?
+  description String?
+
+  primaryPurpose     ActivityPurpose? @relation(name: "primaryPurposePlanned", fields: [primaryPurposeId], references: [id])
+  primaryPurposeId   String?
+  secondaryPurpose   ActivityPurpose? @relation(name: "secondaryPurposePlanned", fields: [secondaryPurposeId], references: [id])
   secondaryPurposeId String?
 
   userId String
@@ -100,9 +107,11 @@ model PolarExercise {
 model ActivityPurpose {
   id String @id @default(uuid())
 
-  label             String
-  primaryPurposes   Activity[] @relation(name: "primaryPurpose")
-  secondaryPurposes Activity[] @relation(name: "secondaryPurpose")
+  label                    String
+  primaryPurposes          Activity[]        @relation(name: "primaryPurpose")
+  secondaryPurposes        Activity[]        @relation(name: "secondaryPurpose")
+  primaryPurposesPlanned   PlannedActivity[] @relation(name: "primaryPurposePlanned")
+  secondaryPurposesPlanned PlannedActivity[] @relation(name: "secondaryPurposePlanned")
 }
 
 model PolarWebhook {

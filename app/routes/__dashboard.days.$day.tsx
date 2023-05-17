@@ -14,43 +14,40 @@ import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { DateTime } from "luxon";
-import { z } from "zod";
 import { authenticator } from "~/auth.server";
 import { ButtonLink } from "~/components/button-link";
 import { Link } from "~/components/link";
 import { db } from "~/db.server";
-
-const dayType = z
-  .string()
-  .transform((s) => DateTime.fromFormat(s, "yyyy-MM-dd"));
-const paramsType = z.object({ day: dayType });
+import { getTimeZoneFromRequest } from "~/time";
 
 export async function loader({ request, params }: LoaderArgs) {
-  const { day } = paramsType.parse(params);
   const { id } = await authenticator.isAuthenticated(request, {
     failureRedirect: "/login",
   });
+  const timeZone = getTimeZoneFromRequest(request);
+  if (!params.day) {
+    throw new Error("No day param");
+  }
+  const day = DateTime.fromFormat(params.day, "yyyy-MM-dd", { zone: timeZone });
+  const dayStart = day.startOf("day");
+  const dayEnd = day.endOf("day");
+
+  const timeFilter = { gte: dayStart.toJSDate(), lte: dayEnd.toJSDate() };
 
   const user = await db.user.findFirstOrThrow({
     where: { id },
     include: {
       polarExercises: {
-        where: {
-          startTime: {
-            gte: day.startOf("day").toJSDate(),
-            lte: day.endOf("day").toJSDate(),
-          },
-        },
+        where: { startTime: timeFilter },
         orderBy: { startTime: "asc" },
       },
       activities: {
-        where: {
-          time: {
-            gte: day.startOf("day").toJSDate(),
-            lte: day.endOf("day").toJSDate(),
-          },
-          deletedAt: null,
-        },
+        where: { time: timeFilter, deletedAt: null },
+        include: { primaryPurpose: {}, secondaryPurpose: {} },
+        orderBy: { time: "asc" },
+      },
+      plannedActivities: {
+        where: { time: timeFilter, deletedAt: null },
         include: { primaryPurpose: {}, secondaryPurpose: {} },
         orderBy: { time: "asc" },
       },
@@ -58,16 +55,20 @@ export async function loader({ request, params }: LoaderArgs) {
   });
 
   return json({
-    dayString: day.toFormat("yyyy-MM-dd"),
+    dayStart: dayStart.toISO(),
+    dayEnd: dayEnd.toISO(),
+    timeZone,
     polarEntries: user.polarExercises,
     activities: user.activities,
+    plannedActivities: user.plannedActivities,
   });
 }
 
 export default function DashboardIndex() {
-  const { dayString, polarEntries, activities } =
+  const { dayStart, timeZone, polarEntries, activities, plannedActivities } =
     useLoaderData<typeof loader>();
-  const day = dayType.parse(dayString);
+
+  const day = DateTime.fromISO(dayStart, { zone: timeZone });
   const dayBefore = day.minus({ days: 1 });
   const dayAfter = day.plus({ days: 1 });
 
@@ -98,33 +99,70 @@ export default function DashboardIndex() {
           </ButtonLink>
         </HStack>
 
-        <Heading size="sm">Aktiviteter</Heading>
-        {activities.map((e) => (
-          <Box key={e.id} bg="blue.50" borderRadius="md" padding={3}>
-            <Wrap spacing={3}>
-              <Box as="time">{DateTime.fromISO(e.time).toFormat("HH:mm")}</Box>
-              {e.primaryPurpose ? (
-                <Box>Primärt: {e.primaryPurpose.label}</Box>
-              ) : null}
-              {e.secondaryPurpose ? (
-                <Box>Sekundärt: {e.secondaryPurpose.label}</Box>
-              ) : null}
-              {e.description ? <Box>{e.description}</Box> : null}
-              {e.comment ? <Box>{e.comment}</Box> : null}
-            </Wrap>
-          </Box>
-        ))}
+        {activities.length ? (
+          <Stack>
+            <Heading size="sm">Aktiviteter</Heading>
+            {activities.map((e) => (
+              <Box key={e.id} bg="blue.50" borderRadius="md" padding={3}>
+                <Wrap spacing={3}>
+                  <Box as="time">
+                    {DateTime.fromISO(e.time, { zone: timeZone }).toFormat(
+                      "HH:mm"
+                    )}
+                  </Box>
+                  {e.primaryPurpose ? (
+                    <Box>Primärt: {e.primaryPurpose.label}</Box>
+                  ) : null}
+                  {e.secondaryPurpose ? (
+                    <Box>Sekundärt: {e.secondaryPurpose.label}</Box>
+                  ) : null}
+                  {e.description ? <Box>{e.description}</Box> : null}
+                  {e.comment ? <Box>{e.comment}</Box> : null}
+                </Wrap>
+              </Box>
+            ))}
+          </Stack>
+        ) : null}
 
-        <Heading size="sm">Data från Polar</Heading>
-        <UnorderedList pl={4}>
-          {polarEntries.map((e) => (
-            <ListItem key={e.id}>
-              <Link to={`/connections/polar/exercise/${e.id}`}>
-                {e.startTime}
-              </Link>
-            </ListItem>
-          ))}
-        </UnorderedList>
+        {polarEntries.length ? (
+          <Stack>
+            <Heading size="sm">Data från Polar</Heading>
+            <UnorderedList pl={4}>
+              {polarEntries.map((e) => (
+                <ListItem key={e.id}>
+                  <Link to={`/connections/polar/exercise/${e.id}`}>
+                    {e.startTime}
+                  </Link>
+                </ListItem>
+              ))}
+            </UnorderedList>
+          </Stack>
+        ) : null}
+
+        {plannedActivities.length ? (
+          <Stack>
+            <Heading size="sm">Planerade aktiviteter</Heading>
+            {plannedActivities.map((e) => (
+              <Box key={e.id} bg="blue.50" borderRadius="md" padding={3}>
+                <Wrap spacing={3}>
+                  <Box as="time">
+                    {DateTime.fromISO(e.time, { zone: timeZone }).toFormat(
+                      "HH:mm"
+                    )}
+                  </Box>
+                  {e.primaryPurpose ? (
+                    <Box>Primärt: {e.primaryPurpose.label}</Box>
+                  ) : null}
+                  {e.secondaryPurpose ? (
+                    <Box>Sekundärt: {e.secondaryPurpose.label}</Box>
+                  ) : null}
+                  {e.description ? <Box>{e.description}</Box> : null}
+                  {e.comment ? <Box>{e.comment}</Box> : null}
+                </Wrap>
+              </Box>
+            ))}
+          </Stack>
+        ) : null}
       </Stack>
     </Container>
   );

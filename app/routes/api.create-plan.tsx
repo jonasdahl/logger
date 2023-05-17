@@ -1,4 +1,3 @@
-import { ActivityState, ActivityType } from "@prisma/client";
 import type { ActionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { DateTime } from "luxon";
@@ -17,31 +16,25 @@ export async function action({ request }: ActionArgs) {
   const day = z
     .string()
     .transform((s) =>
-      DateTime.fromFormat(s, "yyyy-MM-dd", { zone: timeZone }).startOf("day")
+      DateTime.fromFormat(s, "yyyy-MM-dd", { zone: timeZone })
+        .startOf("day")
+        .set({ hour: 12 })
     )
     .parse(formData.get("day"));
   const rawType = formData.get("type");
-  const type =
-    rawType === "exercise"
-      ? ActivityType.Exercise
-      : rawType === "game"
-      ? ActivityType.Game
-      : rawType === "rest"
-      ? ActivityType.Rest
-      : null;
 
-  if (!type) {
-    throw new Error("Invalid type");
+  if (rawType === "exercise") {
+    await db.plannedActivity.create({
+      data: {
+        userId: user.id,
+        time: day.toJSDate(),
+      },
+    });
+  } else if (rawType === "game") {
+    // TODO
+  } else if (rawType === "rest") {
+    // TODO
   }
-
-  await db.activity.create({
-    data: {
-      state: ActivityState.Planned,
-      userId: user.id,
-      time: day.toJSDate(),
-      type,
-    },
-  });
 
   return redirect("/");
 }

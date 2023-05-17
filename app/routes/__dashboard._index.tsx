@@ -25,7 +25,6 @@ import {
   Spacer,
   Stack,
 } from "@chakra-ui/react";
-import { ActivityType } from "@prisma/client";
 import type { LoaderArgs, SerializeFrom } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Form, useLoaderData, useNavigation } from "@remix-run/react";
@@ -46,66 +45,56 @@ export async function loader({ request }: LoaderArgs) {
 
   const timeZone = getTimeZoneFromRequest(request);
   const now = DateTime.now().setZone(timeZone);
+  const timeFilter = {
+    gte: now.minus({ weeks: 2 }).toJSDate(),
+    lte: now.plus({ weeks: 2 }).toJSDate(),
+  };
 
-  const games = await db.fogisGame.findMany({
-    where: {
-      userId: user.id,
-      time: {
-        gte: now.minus({ weeks: 2 }).toJSDate(),
-        lte: now.plus({ weeks: 2 }).toJSDate(),
-      },
-      deletedAt: null,
-    },
-  });
-
-  const otherActivities = await db.activity.findMany({
-    where: {
-      userId: user.id,
-      time: {
-        gte: now.minus({ weeks: 2 }).toJSDate(),
-        lte: now.plus({ weeks: 2 }).toJSDate(),
-      },
-      deletedAt: null,
-    },
+  const fullUser = await db.user.findUniqueOrThrow({
+    where: { id: user.id },
     include: {
-      primaryPurpose: true,
-      secondaryPurpose: true,
+      fogisGames: {
+        where: { time: timeFilter, deletedAt: null },
+      },
+      activities: {
+        where: { time: timeFilter, deletedAt: null },
+        include: {
+          primaryPurpose: true,
+          secondaryPurpose: true,
+        },
+      },
+      plannedActivities: {
+        where: { time: timeFilter, deletedAt: null },
+        include: {
+          primaryPurpose: true,
+          secondaryPurpose: true,
+        },
+      },
     },
   });
 
   const activities = [
-    ...games.map((game) => ({
+    ...fullUser.fogisGames.map((game) => ({
       key: `game:${game.id}`,
       type: "game" as const,
       game,
       day: DateTime.fromJSDate(game.time, { zone: timeZone }).startOf("day"),
     })),
-    ...otherActivities.map((activity) => {
-      switch (activity.type) {
-        case ActivityType.Exercise:
-          return {
-            key: `exercise:${activity.id}`,
-            type: "exercise" as const,
-            day: DateTime.fromJSDate(activity.time, { zone: timeZone }),
-            activity,
-          };
-        case ActivityType.Game:
-          return {
-            key: `game:${activity.id}`,
-            type: "game" as const,
-            day: DateTime.fromJSDate(activity.time, { zone: timeZone }),
-            activity,
-          };
-        case ActivityType.Rest:
-          return {
-            key: `rest:${activity.id}`,
-            type: "rest" as const,
-            day: DateTime.fromJSDate(activity.time, { zone: timeZone }),
-            activity,
-          };
-        default:
-          throw new Error(`Unknown activity type: ${activity.type}`);
-      }
+    ...fullUser.activities.map((activity) => {
+      return {
+        key: `exercise:${activity.id}`,
+        type: "exercise" as const,
+        day: DateTime.fromJSDate(activity.time, { zone: timeZone }),
+        activity,
+      };
+    }),
+    ...fullUser.plannedActivities.map((activity) => {
+      return {
+        key: `exercise:${activity.id}`,
+        type: "exercise" as const,
+        day: DateTime.fromJSDate(activity.time, { zone: timeZone }),
+        activity,
+      };
     }),
   ];
 
@@ -116,7 +105,6 @@ export async function loader({ request }: LoaderArgs) {
   const realUser = await db.user.findUniqueOrThrow({ where: { id: user.id } });
 
   return json({
-    games,
     activities,
     activitiesByDay,
     timeZone,
@@ -404,7 +392,8 @@ const BasePreview = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => (
     borderColor="blue.900"
     color="white"
     whiteSpace="normal"
-    fontSize={[0, "md"]}
+    wordBreak="break-word"
+    fontSize={[0, "sm"]}
     {...props}
   />
 ));

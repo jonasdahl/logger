@@ -1,5 +1,4 @@
 import { Box, Container, Heading, Stack } from "@chakra-ui/react";
-import { ActivityState, ActivityType } from "@prisma/client";
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useLoaderData, useSearchParams } from "@remix-run/react";
@@ -41,8 +40,6 @@ export async function action({ request }: ActionArgs) {
   await db.activity.create({
     data: {
       userId,
-      type: ActivityType.Exercise,
-      state: ActivityState.Registered,
       time: data.date.toJSDate(),
       primaryPurposeId: data.primaryPurposeId,
       secondaryPurposeId: data.secondaryPurposeId,
