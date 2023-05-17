@@ -1,5 +1,4 @@
 import {
-  Badge,
   Box,
   Button,
   Container,
@@ -53,7 +52,6 @@ export default function Connections() {
         <Stack>
           {user.polarUserId ? (
             <WorkingConnection name="Polar">
-              <Badge colorScheme="green">Tillagd</Badge>
               <Form action="/connections/polar/sync" method="post">
                 <Button type="submit" size="sm" colorScheme="green">
                   Synka
