@@ -65,6 +65,9 @@ model Activity {
   secondaryPurpose   ActivityPurpose? @relation(name: "secondaryPurpose", fields: [secondaryPurposeId], references: [id])
   secondaryPurposeId String?
 
+  fromPlannedActivity   PlannedActivity? @relation(fields: [fromPlannedActivityId], references: [id])
+  fromPlannedActivityId String?
+
   userId String
   user   User   @relation(fields: [userId], references: [id])
 
@@ -87,9 +90,10 @@ model PlannedActivity {
   userId String
   user   User   @relation(fields: [userId], references: [id])
 
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deletedAt DateTime?
+  createdAt           DateTime   @default(now())
+  updatedAt           DateTime   @updatedAt
+  deletedAt           DateTime?
+  generatedActivities Activity[]
 }
 
 model PolarExercise {

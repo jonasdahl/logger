@@ -20,23 +20,27 @@ import {
   PopoverContent,
   PopoverHeader,
   PopoverTrigger,
-  Select,
   SimpleGrid,
   Spacer,
   Stack,
 } from "@chakra-ui/react";
 import type { LoaderArgs, SerializeFrom } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Form, useLoaderData, useNavigation } from "@remix-run/react";
+import { useLoaderData, useNavigation } from "@remix-run/react";
 import { groupBy } from "lodash";
 import { DateTime, Interval } from "luxon";
 import type { ReactNode } from "react";
 import { forwardRef, useEffect, useRef } from "react";
+import { ValidatedForm } from "remix-validated-form";
 import { authenticator } from "~/auth.server";
 import { ButtonLink } from "~/components/button-link";
+import { Select } from "~/components/form/select";
+import { SubmitButton } from "~/components/form/submit-button";
+import { Textarea } from "~/components/form/textarea";
 import { db } from "~/db.server";
 import { useToggle } from "~/hooks/use-toggle";
 import { getTimeZoneFromRequest } from "~/time";
+import { createPlannedActivityValidator } from "./__dashboard.planned-activities.create";
 
 export async function loader({ request }: LoaderArgs) {
   const user = await authenticator.isAuthenticated(request, {
@@ -82,18 +86,18 @@ export async function loader({ request }: LoaderArgs) {
     })),
     ...fullUser.activities.map((activity) => {
       return {
-        key: `exercise:${activity.id}`,
-        type: "exercise" as const,
+        key: `activity:${activity.id}`,
+        type: "activity" as const,
         day: DateTime.fromJSDate(activity.time, { zone: timeZone }),
         activity,
       };
     }),
-    ...fullUser.plannedActivities.map((activity) => {
+    ...fullUser.plannedActivities.map((plannedActivity) => {
       return {
-        key: `exercise:${activity.id}`,
-        type: "exercise" as const,
-        day: DateTime.fromJSDate(activity.time, { zone: timeZone }),
-        activity,
+        key: `plannedActivity:${plannedActivity.id}`,
+        type: "plannedActivity" as const,
+        day: DateTime.fromJSDate(plannedActivity.time, { zone: timeZone }),
+        plannedActivity,
       };
     }),
   ];
@@ -104,7 +108,10 @@ export async function loader({ request }: LoaderArgs) {
 
   const realUser = await db.user.findUniqueOrThrow({ where: { id: user.id } });
 
+  const purposes = await db.activityPurpose.findMany({});
+
   return json({
+    purposes,
     activities,
     activitiesByDay,
     timeZone,
@@ -223,8 +230,10 @@ function Day({ day, activities }: { day: Interval; activities: Activity[] }) {
                   <Box key={activity.key}>
                     {activity.type === "game"
                       ? `Match: ${activity.game.homeTeam} - ${activity.game.awayTeam}`
-                      : activity.type === "exercise"
+                      : activity.type === "activity"
                       ? "Träning"
+                      : activity.type === "plannedActivity"
+                      ? "Planerad träning"
                       : "Vila"}
                   </Box>
                 ))}
@@ -272,6 +281,7 @@ function PlanButton({ day, ...props }: ButtonProps & { day: Interval }) {
   const [modalOpen, { toggle, close }] = useToggle();
   const { state } = useNavigation();
   const lastState = useRef(state);
+  const { purposes } = useLoaderData<typeof loader>();
 
   useEffect(() => {
     if (lastState.current === "submitting" && state !== "submitting") {
@@ -288,7 +298,11 @@ function PlanButton({ day, ...props }: ButtonProps & { day: Interval }) {
           <ModalOverlay />
 
           <ModalContent>
-            <Form action="/api/create-plan" method="post">
+            <ValidatedForm
+              validator={createPlannedActivityValidator}
+              method="post"
+              action="/planned-activities/create"
+            >
               <ModalHeader>
                 Planera
                 <ModalCloseButton />
@@ -296,21 +310,36 @@ function PlanButton({ day, ...props }: ButtonProps & { day: Interval }) {
               <ModalBody>
                 <input
                   type="hidden"
-                  name="day"
-                  value={day.start.toFormat("yyyy-MM-dd")}
+                  name="date"
+                  value={day.start
+                    .set({ hour: 12 })
+                    .toFormat("yyyy-MM-dd'T'HH:mm")}
                 />
-                <Select name="type">
-                  <option value="rest">Vila</option>
-                  <option value="exercise">Träning</option>
-                  <option value="game">Match</option>
-                </Select>
+                <Stack>
+                  <Select label="Primärt syfte" name="primaryPurposeId">
+                    <option value="null">Ej valt</option>
+                    {purposes.map((purpose) => (
+                      <option key={purpose.id} value={purpose.id}>
+                        {purpose.label}
+                      </option>
+                    ))}
+                  </Select>
+                  <Select label="Sekundärt syfte" name="secondaryPurposeId">
+                    <option value="null">Ej valt</option>
+                    {purposes.map((purpose) => (
+                      <option key={purpose.id} value={purpose.id}>
+                        {purpose.label}
+                      </option>
+                    ))}
+                  </Select>
+                  <Textarea label="Beskrivning/innehåll" name="description" />
+                  <Textarea label="Övriga kommentarer" name="comment" />
+                </Stack>
               </ModalBody>
               <ModalFooter>
-                <Button type="submit" isLoading={state === "submitting"}>
-                  Skapa
-                </Button>
+                <SubmitButton>Skapa</SubmitButton>
               </ModalFooter>
-            </Form>
+            </ValidatedForm>
           </ModalContent>
         </Modal>
       ) : null}
@@ -334,13 +363,10 @@ const DayPreview = forwardRef<
   if (activities.some((a) => a.type === "game")) {
     return <GameDayPreview ref={ref} {...generalProps} />;
   }
-  if (activities.some((a) => a.type === "rest")) {
-    return <RestDayPreview ref={ref} {...generalProps} />;
-  }
-  if (activities.some((a) => a.type === "exercise")) {
+  if (activities.some((a) => a.type === "activity")) {
     const purposes = activities
       .flatMap((a) =>
-        a.type === "exercise"
+        a.type === "activity"
           ? [a.activity.primaryPurpose, a.activity.secondaryPurpose]
           : []
       )
@@ -352,6 +378,31 @@ const DayPreview = forwardRef<
         {label}
       </ExerciseDayPreview>
     );
+  }
+  if (
+    day.start.diffNow().toMillis() < 0 &&
+    activities.some((a) => a.type === "plannedActivity")
+  ) {
+    const purposes = activities
+      .flatMap((a) =>
+        a.type === "plannedActivity"
+          ? [
+              a.plannedActivity.primaryPurpose,
+              a.plannedActivity.secondaryPurpose,
+            ]
+          : []
+      )
+      .filter(Boolean);
+    const label = purposes.map((p) => p?.label).join(" + ") || "Träning";
+
+    return (
+      <ExerciseDayPreview ref={ref} {...generalProps}>
+        {label}
+      </ExerciseDayPreview>
+    );
+  }
+  if (day.start.diffNow().toMillis() < 0) {
+    return <RestDayPreview ref={ref} {...generalProps} />;
   }
   return (
     <BasePreview

@@ -1,4 +1,4 @@
-import { Box, Container, Heading, Stack } from "@chakra-ui/react";
+import { Alert, Box, Container, Heading, Stack } from "@chakra-ui/react";
 import type { ActionArgs, LoaderArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useLoaderData, useSearchParams } from "@remix-run/react";
@@ -13,12 +13,12 @@ import { SubmitButton } from "~/components/form/submit-button";
 import { Textarea } from "~/components/form/textarea";
 import { validate } from "~/components/form/validate.server";
 import { db } from "~/db.server";
+import { getTimeZoneFromRequest } from "~/time";
 
 const validator = withZod(
   z.object({
-    date: z
-      .string()
-      .transform((s) => DateTime.fromFormat(s.trim(), "yyyy-MM-dd'T'HH:mm")),
+    fromPlannedActivityId: z.string().optional(),
+    date: z.string(),
     description: z.string(),
     comment: z.string(),
     primaryPurposeId: z
@@ -37,27 +37,53 @@ export async function action({ request }: ActionArgs) {
     failureRedirect: "/",
   });
   const data = await validate({ request, validator });
+
+  const plannedActivity = data.fromPlannedActivityId
+    ? await db.plannedActivity.findFirst({
+        where: { id: data.fromPlannedActivityId, userId },
+      })
+    : null;
+
+  const timeZone = await getTimeZoneFromRequest(request);
+  const time = DateTime.fromFormat(data.date.trim(), "yyyy-MM-dd'T'HH:mm", {
+    zone: timeZone,
+  });
+
   await db.activity.create({
     data: {
       userId,
-      time: data.date.toJSDate(),
+      time: time.toJSDate(),
       primaryPurposeId: data.primaryPurposeId,
       secondaryPurposeId: data.secondaryPurposeId,
       description: data.description,
       comment: data.comment,
+      fromPlannedActivityId: plannedActivity.id ?? null,
     },
   });
   return redirect(`/days/${DateTime.now().toFormat("yyyy-MM-dd")}`);
 }
 
 export async function loader({ request }: LoaderArgs) {
+  const userInfo = await authenticator.isAuthenticated(request, {
+    failureRedirect: "/",
+  });
   const purposes = await db.activityPurpose.findMany({});
 
-  return json({ purposes });
+  const url = new URL(request.url);
+  const plannedActivityId = url.searchParams.get("from");
+  const plannedActivity = plannedActivityId
+    ? await db.plannedActivity.findFirst({
+        where: { id: plannedActivityId, userId: userInfo.id },
+      })
+    : null;
+  const timeZone = await getTimeZoneFromRequest(request);
+
+  return json({ purposes, plannedActivity, timeZone });
 }
 
 export default function DashboardIndex() {
-  const { purposes } = useLoaderData<typeof loader>();
+  const { purposes, plannedActivity, timeZone } =
+    useLoaderData<typeof loader>();
   const [searchParams] = useSearchParams();
   const dateFromParams = searchParams.get("date");
 
@@ -66,15 +92,37 @@ export default function DashboardIndex() {
       <ValidatedForm validator={validator} method="post">
         <Stack spacing={5}>
           <Heading>Skapa aktivitet</Heading>
+          {plannedActivity ? (
+            <Box>
+              <input
+                type="hidden"
+                name="fromPlannedActivityId"
+                value={plannedActivity.id}
+              />
+              <Alert>
+                Denna aktivitet kommer att kopplas till en planerad aktivitet.
+              </Alert>
+            </Box>
+          ) : null}
           <Input
             label="Datum"
             name="date"
             type="datetime-local"
             defaultValue={
-              dateFromParams ? `${dateFromParams}T12:00` : undefined
+              plannedActivity?.time
+                ? DateTime.fromISO(plannedActivity.time)
+                    .setZone(timeZone)
+                    .toFormat("yyyy-MM-dd'T'HH:mm")
+                : dateFromParams
+                ? `${dateFromParams}T12:00`
+                : undefined
             }
           />
-          <Select label="Primärt syfte" name="primaryPurposeId">
+          <Select
+            label="Primärt syfte"
+            name="primaryPurposeId"
+            defaultValue={plannedActivity?.primaryPurposeId ?? undefined}
+          >
             <option value="null">Ej valt</option>
             {purposes.map((purpose) => (
               <option key={purpose.id} value={purpose.id}>
@@ -82,7 +130,11 @@ export default function DashboardIndex() {
               </option>
             ))}
           </Select>
-          <Select label="Sekundärt syfte" name="secondaryPurposeId">
+          <Select
+            label="Sekundärt syfte"
+            name="secondaryPurposeId"
+            defaultValue={plannedActivity?.secondaryPurposeId ?? undefined}
+          >
             <option value="null">Ej valt</option>
             {purposes.map((purpose) => (
               <option key={purpose.id} value={purpose.id}>
@@ -90,8 +142,16 @@ export default function DashboardIndex() {
               </option>
             ))}
           </Select>
-          <Textarea label="Beskrivning/innehåll" name="description" />
-          <Textarea label="Övriga kommentarer" name="comment" />
+          <Textarea
+            label="Beskrivning/innehåll"
+            name="description"
+            defaultValue={plannedActivity?.description ?? undefined}
+          />
+          <Textarea
+            label="Övriga kommentarer"
+            name="comment"
+            defaultValue={plannedActivity?.comment ?? undefined}
+          />
           <Box>
             <SubmitButton colorScheme="green">Skapa</SubmitButton>
           </Box>

@@ -47,7 +47,11 @@ export async function loader({ request, params }: LoaderArgs) {
         orderBy: { time: "asc" },
       },
       plannedActivities: {
-        where: { time: timeFilter, deletedAt: null },
+        where: {
+          time: timeFilter,
+          deletedAt: null,
+          generatedActivities: { none: {} },
+        },
         include: { primaryPurpose: {}, secondaryPurpose: {} },
         orderBy: { time: "asc" },
       },
@@ -68,8 +72,6 @@ export default function DashboardIndex() {
   const { dayStart, polarEntries, timeZone, activities, plannedActivities } =
     useLoaderData<typeof loader>();
 
-  console.log(polarEntries);
-
   const day = DateTime.fromISO(dayStart).setZone(timeZone);
   const dayBefore = day.minus({ days: 1 });
   const dayAfter = day.plus({ days: 1 });
@@ -78,13 +80,28 @@ export default function DashboardIndex() {
     <Container py={5} maxW="container.md">
       <Stack spacing={5}>
         <HStack>
-          <Spacer />
-          <ButtonLink
-            to={`/activities/create?date=${day.toFormat("yyyy-MM-dd")}`}
-            colorScheme="green"
-          >
-            Ny aktivitet
+          <ButtonLink to={`/days/${DateTime.now().toFormat("yyyy-MM-dd")}`}>
+            Idag
           </ButtonLink>
+          <Spacer />
+          {day.diffNow().toMillis() < 0 ? (
+            <ButtonLink
+              to={`/activities/create?date=${day.toFormat("yyyy-MM-dd")}`}
+              colorScheme="green"
+            >
+              Registrera
+            </ButtonLink>
+          ) : null}
+          {day.endOf("day").diffNow().toMillis() < 0 ? null : (
+            <ButtonLink
+              to={`/planned-activities/create?date=${day.toFormat(
+                "yyyy-MM-dd"
+              )}`}
+              colorScheme="green"
+            >
+              Planera
+            </ButtonLink>
+          )}
         </HStack>
 
         <HStack>
@@ -92,9 +109,11 @@ export default function DashboardIndex() {
             {dayBefore.toFormat("yyyy-MM-dd")}
           </ButtonLink>
           <Spacer />
-          <VStack textAlign="center">
-            <Heading>{day.toFormat("yyyy-MM-dd")}</Heading>
-            <Box>{day.toFormat("EEEE 'vecka' WW, kkkk", { locale: "sv" })}</Box>
+          <VStack textAlign="center" spacing={0}>
+            <Heading size="md">{day.toFormat("yyyy-MM-dd")}</Heading>
+            <Box fontSize="xs">
+              {day.toFormat("EEEE 'vecka' WW, kkkk", { locale: "sv" })}
+            </Box>
           </VStack>
           <Spacer />
           <ButtonLink to={`/days/${dayAfter.toFormat("yyyy-MM-dd")}`}>
@@ -139,23 +158,6 @@ export default function DashboardIndex() {
           </Stack>
         ) : null}
 
-        {polarEntries.length ? (
-          <Stack>
-            <Heading size="sm">Data från Polar</Heading>
-            <Stack>
-              {polarEntries.map((e) => (
-                <Box key={e.id} bg="blue.50" borderRadius="md" padding={3}>
-                  <Link to={`/connections/polar/exercise/${e.id}`}>
-                    {DateTime.fromISO(e.startTime)
-                      .setZone(timeZone)
-                      .toFormat("HH:mm")}
-                  </Link>
-                </Box>
-              ))}
-            </Stack>
-          </Stack>
-        ) : null}
-
         {plannedActivities.length ? (
           <Stack>
             <Heading size="sm">Planerade aktiviteter</Heading>
@@ -181,6 +183,15 @@ export default function DashboardIndex() {
                   <Box>
                     <ButtonLink
                       size="sm"
+                      colorScheme="green"
+                      to={`/activities/create?from=${e.id}`}
+                    >
+                      Registrera
+                    </ButtonLink>
+                  </Box>
+                  <Box>
+                    <ButtonLink
+                      size="sm"
                       colorScheme="red"
                       to={`/planned-activities/${e.id}/delete`}
                     >
@@ -190,6 +201,23 @@ export default function DashboardIndex() {
                 </HStack>
               </Box>
             ))}
+          </Stack>
+        ) : null}
+
+        {polarEntries.length ? (
+          <Stack>
+            <Heading size="sm">Data från Polar</Heading>
+            <Stack>
+              {polarEntries.map((e) => (
+                <Box key={e.id} bg="blue.50" borderRadius="md" padding={3}>
+                  <Link to={`/connections/polar/exercise/${e.id}`}>
+                    {DateTime.fromISO(e.startTime)
+                      .setZone(timeZone)
+                      .toFormat("HH:mm")}
+                  </Link>
+                </Box>
+              ))}
+            </Stack>
           </Stack>
         ) : null}
       </Stack>
