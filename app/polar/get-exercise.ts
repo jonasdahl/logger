@@ -31,5 +31,7 @@ export async function getPolarExercise({
     );
   }
 
-  return exercisesRes.json().then((json) => exercise.parse(json));
+  return exercisesRes
+    .json()
+    .then((json) => ({ raw: json, parsed: exercise.parse(json) }));
 }

@@ -3,10 +3,8 @@ import {
   Container,
   HStack,
   Heading,
-  ListItem,
   Spacer,
   Stack,
-  UnorderedList,
   VStack,
   Wrap,
 } from "@chakra-ui/react";
@@ -65,16 +63,18 @@ export async function loader({ request, params }: LoaderArgs) {
 }
 
 export default function DashboardIndex() {
-  const { dayStart, timeZone, polarEntries, activities, plannedActivities } =
+  const { dayStart, polarEntries, timeZone, activities, plannedActivities } =
     useLoaderData<typeof loader>();
 
-  const day = DateTime.fromISO(dayStart, { zone: timeZone });
+  console.log(polarEntries);
+
+  const day = DateTime.fromISO(dayStart);
   const dayBefore = day.minus({ days: 1 });
   const dayAfter = day.plus({ days: 1 });
 
   return (
     <Container py={5} maxW="container.md">
-      <Stack>
+      <Stack spacing={5}>
         <HStack>
           <Spacer />
           <ButtonLink
@@ -84,6 +84,7 @@ export default function DashboardIndex() {
             Ny aktivitet
           </ButtonLink>
         </HStack>
+
         <HStack>
           <ButtonLink to={`/days/${dayBefore.toFormat("yyyy-MM-dd")}`}>
             {dayBefore.toFormat("yyyy-MM-dd")}
@@ -104,21 +105,31 @@ export default function DashboardIndex() {
             <Heading size="sm">Aktiviteter</Heading>
             {activities.map((e) => (
               <Box key={e.id} bg="blue.50" borderRadius="md" padding={3}>
-                <Wrap spacing={3}>
-                  <Box as="time">
-                    {DateTime.fromISO(e.time, { zone: timeZone }).toFormat(
-                      "HH:mm"
-                    )}
+                <HStack>
+                  <Wrap spacing={3}>
+                    <Box as="time">
+                      {DateTime.fromISO(e.time).toFormat("HH:mm")}
+                    </Box>
+                    {e.primaryPurpose ? (
+                      <Box>Primärt: {e.primaryPurpose.label}</Box>
+                    ) : null}
+                    {e.secondaryPurpose ? (
+                      <Box>Sekundärt: {e.secondaryPurpose.label}</Box>
+                    ) : null}
+                    {e.description ? <Box>{e.description}</Box> : null}
+                    {e.comment ? <Box>{e.comment}</Box> : null}
+                  </Wrap>
+                  <Spacer />
+                  <Box>
+                    <ButtonLink
+                      size="sm"
+                      colorScheme="red"
+                      to={`/activities/${e.id}/delete`}
+                    >
+                      Radera
+                    </ButtonLink>
                   </Box>
-                  {e.primaryPurpose ? (
-                    <Box>Primärt: {e.primaryPurpose.label}</Box>
-                  ) : null}
-                  {e.secondaryPurpose ? (
-                    <Box>Sekundärt: {e.secondaryPurpose.label}</Box>
-                  ) : null}
-                  {e.description ? <Box>{e.description}</Box> : null}
-                  {e.comment ? <Box>{e.comment}</Box> : null}
-                </Wrap>
+                </HStack>
               </Box>
             ))}
           </Stack>
@@ -127,15 +138,17 @@ export default function DashboardIndex() {
         {polarEntries.length ? (
           <Stack>
             <Heading size="sm">Data från Polar</Heading>
-            <UnorderedList pl={4}>
+            <Stack>
               {polarEntries.map((e) => (
-                <ListItem key={e.id}>
+                <Box key={e.id} bg="blue.50" borderRadius="md" padding={3}>
                   <Link to={`/connections/polar/exercise/${e.id}`}>
-                    {e.startTime}
+                    {DateTime.fromISO(e.startTime)
+                      .setZone(timeZone)
+                      .toFormat("HH:mm ZZZZ")}
                   </Link>
-                </ListItem>
+                </Box>
               ))}
-            </UnorderedList>
+            </Stack>
           </Stack>
         ) : null}
 
@@ -144,21 +157,31 @@ export default function DashboardIndex() {
             <Heading size="sm">Planerade aktiviteter</Heading>
             {plannedActivities.map((e) => (
               <Box key={e.id} bg="blue.50" borderRadius="md" padding={3}>
-                <Wrap spacing={3}>
-                  <Box as="time">
-                    {DateTime.fromISO(e.time, { zone: timeZone }).toFormat(
-                      "HH:mm"
-                    )}
+                <HStack>
+                  <Wrap spacing={3}>
+                    <Box as="time">
+                      {DateTime.fromISO(e.time).toFormat("HH:mm")}
+                    </Box>
+                    {e.primaryPurpose ? (
+                      <Box>Primärt: {e.primaryPurpose.label}</Box>
+                    ) : null}
+                    {e.secondaryPurpose ? (
+                      <Box>Sekundärt: {e.secondaryPurpose.label}</Box>
+                    ) : null}
+                    {e.description ? <Box>{e.description}</Box> : null}
+                    {e.comment ? <Box>{e.comment}</Box> : null}
+                  </Wrap>
+                  <Spacer />
+                  <Box>
+                    <ButtonLink
+                      size="sm"
+                      colorScheme="red"
+                      to={`/planned-activities/${e.id}/delete`}
+                    >
+                      Radera
+                    </ButtonLink>
                   </Box>
-                  {e.primaryPurpose ? (
-                    <Box>Primärt: {e.primaryPurpose.label}</Box>
-                  ) : null}
-                  {e.secondaryPurpose ? (
-                    <Box>Sekundärt: {e.secondaryPurpose.label}</Box>
-                  ) : null}
-                  {e.description ? <Box>{e.description}</Box> : null}
-                  {e.comment ? <Box>{e.comment}</Box> : null}
-                </Wrap>
+                </HStack>
               </Box>
             ))}
           </Stack>

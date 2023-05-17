@@ -29,7 +29,7 @@ export async function syncPolarUser({
       for (const exercise of res?.exercises ?? []) {
         const exerciseId = Number(exercise.match(/\/exercises\/(\d+)$/)?.[1]);
 
-        const details = await getPolarExercise({
+        const { parsed: details, raw } = await getPolarExercise({
           ...meta,
           exerciseId: exerciseId,
           transactionId,
@@ -57,7 +57,7 @@ export async function syncPolarUser({
         console.log("got samples:", sampleRes);
 
         const base = {
-          raw: JSON.stringify(details),
+          raw: JSON.stringify(raw),
           startTime: details["start-time"].toJSDate(),
           uploadTime: details["upload-time"].toJSDate(),
           samples: JSON.stringify(sampleRes),
