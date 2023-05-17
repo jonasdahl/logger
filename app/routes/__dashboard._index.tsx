@@ -393,7 +393,7 @@ const BasePreview = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => (
     color="white"
     whiteSpace="normal"
     wordBreak="break-word"
-    fontSize={[0, "sm"]}
+    fontSize={[0, "xs"]}
     {...props}
   />
 ));

@@ -26,7 +26,9 @@ export async function loader({ request, params }: LoaderArgs) {
   if (!params.day) {
     throw new Error("No day param");
   }
-  const day = DateTime.fromFormat(params.day, "yyyy-MM-dd", { zone: timeZone });
+  const day = DateTime.fromFormat(params.day, "yyyy-MM-dd", {
+    zone: timeZone,
+  }).setZone(timeZone);
   const dayStart = day.startOf("day");
   const dayEnd = day.endOf("day");
 
@@ -68,7 +70,7 @@ export default function DashboardIndex() {
 
   console.log(polarEntries);
 
-  const day = DateTime.fromISO(dayStart);
+  const day = DateTime.fromISO(dayStart).setZone(timeZone);
   const dayBefore = day.minus({ days: 1 });
   const dayAfter = day.plus({ days: 1 });
 
@@ -108,7 +110,9 @@ export default function DashboardIndex() {
                 <HStack>
                   <Wrap spacing={3}>
                     <Box as="time">
-                      {DateTime.fromISO(e.time).toFormat("HH:mm")}
+                      {DateTime.fromISO(e.time)
+                        .setZone(timeZone)
+                        .toFormat("HH:mm")}
                     </Box>
                     {e.primaryPurpose ? (
                       <Box>Primärt: {e.primaryPurpose.label}</Box>
@@ -144,7 +148,7 @@ export default function DashboardIndex() {
                   <Link to={`/connections/polar/exercise/${e.id}`}>
                     {DateTime.fromISO(e.startTime)
                       .setZone(timeZone)
-                      .toFormat("HH:mm ZZZZ")}
+                      .toFormat("HH:mm")}
                   </Link>
                 </Box>
               ))}
@@ -160,7 +164,9 @@ export default function DashboardIndex() {
                 <HStack>
                   <Wrap spacing={3}>
                     <Box as="time">
-                      {DateTime.fromISO(e.time).toFormat("HH:mm")}
+                      {DateTime.fromISO(e.time)
+                        .setZone(timeZone)
+                        .toFormat("HH:mm")}
                     </Box>
                     {e.primaryPurpose ? (
                       <Box>Primärt: {e.primaryPurpose.label}</Box>
