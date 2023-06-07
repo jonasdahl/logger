@@ -302,7 +302,6 @@ function PlanButton({ day, ...props }: ButtonProps & { day: Interval }) {
               validator={createPlannedActivityValidator}
               method="post"
               action="/planned-activities/create?returnTo=/calendar"
-              
             >
               <ModalHeader>
                 Planera
@@ -445,7 +444,8 @@ const BasePreview = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => (
     color="white"
     whiteSpace="normal"
     wordBreak="break-word"
-    fontSize={[0, "xs"]}
+    fontSize={["2xs", "xs"]}
+    p={[0, 2, 3]}
     {...props}
   />
 ));
