@@ -22,6 +22,9 @@ export default function Dashboard() {
           <Link to="/" color="white">
             Start
           </Link>
+          <Link to="/calendar" color="white">
+            Kalender
+          </Link>
           <Link to="/connections" color="white">
             Anslutningar
           </Link>
