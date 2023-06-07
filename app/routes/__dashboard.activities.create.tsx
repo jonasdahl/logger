@@ -84,11 +84,33 @@ export async function loader({ request }: LoaderArgs) {
     : null;
   const timeZone = await getTimeZoneFromRequest(request);
 
-  return json({ purposes, plannedActivity, timeZone });
+  const dateFromParams = url.searchParams.get("date");
+  const dateStart = dateFromParams
+    ? DateTime.fromFormat(dateFromParams, "yyyy-MM-dd", {
+        zone: timeZone,
+      }).startOf("day")
+    : null;
+  const polarActivity = await db.polarExercise.findFirst({
+    where: {
+      userId: userInfo.id,
+      startTime: {
+        gte: dateStart?.toJSDate(),
+        lt: dateStart?.plus({ days: 1 }).toJSDate(),
+      },
+    },
+    orderBy: { startTime: "asc" },
+  });
+
+  return json({
+    purposes,
+    plannedActivity,
+    timeZone,
+    polarActivityStart: polarActivity?.startTime,
+  });
 }
 
 export default function DashboardIndex() {
-  const { purposes, plannedActivity, timeZone } =
+  const { purposes, plannedActivity, timeZone, polarActivityStart } =
     useLoaderData<typeof loader>();
   const [searchParams] = useSearchParams();
   const dateFromParams = searchParams.get("date");
@@ -117,6 +139,10 @@ export default function DashboardIndex() {
             defaultValue={
               plannedActivity?.time
                 ? DateTime.fromISO(plannedActivity.time)
+                    .setZone(timeZone)
+                    .toFormat("yyyy-MM-dd'T'HH:mm")
+                : polarActivityStart
+                ? DateTime.fromISO(polarActivityStart)
                     .setZone(timeZone)
                     .toFormat("yyyy-MM-dd'T'HH:mm")
                 : dateFromParams
