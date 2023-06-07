@@ -13,5 +13,5 @@ export const polarClientSecret = env.POLAR_CLIENT_SECRET;
 export const polarRedirectUrl =
   process.env.NODE_ENV === "development"
     ? "http://localhost:3000/connections/polar/auth-callback"
-    : "https://log.jdahl.se/auth/polar/callback";
+    : "https://log.jdahl.se/connections/polar/auth-callback";
 export const appSecret = env.APP_SECRET;
