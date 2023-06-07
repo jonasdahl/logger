@@ -26,6 +26,7 @@ export async function loader({ request }: LoaderArgs) {
   const { id: userId } = await authenticator.isAuthenticated(request, {
     failureRedirect: "/login",
   });
+
   return json({ isAdmin: await isAdmin(userId) });
 }
 

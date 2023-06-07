@@ -58,7 +58,7 @@ export async function syncPolarUser({
 
         const base = {
           raw: JSON.stringify(raw),
-          startTime: details["start-time"].toJSDate(),
+          startTime: details.start.toJSDate(),
           uploadTime: details["upload-time"].toJSDate(),
           samples: JSON.stringify(sampleRes),
           userId,
