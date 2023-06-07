@@ -66,7 +66,7 @@ export default function Dashboard() {
                   to="/settings"
                   icon={<FontAwesomeIcon icon={faUserLock} />}
                 >
-                  Inställningar
+                  Administration
                 </MenuItem>
               ) : null}
               <MenuItem

@@ -160,11 +160,11 @@ export default function PolarExercise() {
                             {zone.name}
                           </Td>
                           <Td w={1} whiteSpace="nowrap">
-                            {zone.minRelative.toFixed(0)}% &lt;{" "}
+                            {zone.minRelative.toFixed(0)}% -{" "}
                             {zone.maxRelative.toFixed(0)}%
                           </Td>
                           <Td w={1} whiteSpace="nowrap">
-                            {zone.minAbsolute?.toFixed(0)} &lt;{" "}
+                            {zone.minAbsolute?.toFixed(0)} -{" "}
                             {zone.maxAbsolute?.toFixed(0)}
                           </Td>
                           <Td>
