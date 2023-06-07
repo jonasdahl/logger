@@ -50,8 +50,8 @@ export async function loader({ request }: LoaderArgs) {
   const timeZone = getTimeZoneFromRequest(request);
   const now = DateTime.now().setZone(timeZone);
   const timeFilter = {
-    gte: now.minus({ weeks: 2 }).toJSDate(),
-    lte: now.plus({ weeks: 2 }).toJSDate(),
+    gte: now.minus({ weeks: 3 }).toJSDate(),
+    lte: now.plus({ weeks: 3 }).toJSDate(),
   };
 
   const fullUser = await db.user.findUniqueOrThrow({
