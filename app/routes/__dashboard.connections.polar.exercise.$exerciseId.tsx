@@ -1,11 +1,18 @@
 import {
+  Alert,
+  AlertDescription,
   Box,
   Code,
   Container,
   Heading,
   Stack,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
   Table,
   TableContainer,
+  Tabs,
   Tbody,
   Td,
   Th,
@@ -14,19 +21,20 @@ import {
 } from "@chakra-ui/react";
 import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { useLoaderData, useLocation } from "@remix-run/react";
 import { sum } from "lodash";
 import { Duration } from "luxon";
 import { ClientOnly } from "remix-utils";
 import { z } from "zod";
 import { authenticator } from "~/auth.server";
 import {
+  AnimatedAreaSeries,
   AnimatedAxis,
   AnimatedGrid,
   AnimatedLineSeries,
-  LineSeries,
   XYChart,
 } from "~/components/charts/xy-chart.client";
+import { Link } from "~/components/link";
 import { db } from "~/db.server";
 
 export async function loader({ request, params }: LoaderArgs) {
@@ -38,8 +46,13 @@ export async function loader({ request, params }: LoaderArgs) {
     where: { userId: user.id, id: params.exerciseId },
   });
 
+  const { maxPulse } = await db.user.findUniqueOrThrow({
+    where: { id: user.id },
+  });
+
   return json({
     exercise,
+    maxPulse,
     samples: z
       .array(
         z.object({
@@ -55,120 +68,177 @@ export async function loader({ request, params }: LoaderArgs) {
 }
 
 export default function PolarExercise() {
-  const { exercise, samples } = useLoaderData<typeof loader>();
-  const maxHeartRate = 197; // TODO
+  const {
+    exercise,
+    samples,
+    maxPulse: maxHeartRate,
+  } = useLoaderData<typeof loader>();
   const heartRateSamples = samples
     .filter((s) => s.sampleType === "0")
     .flatMap((s) =>
-      s.samples.data.map((x) => {
+      s.samples.data.map((x, i) => {
         const v = Number(x);
         if (!v || isNaN(v)) {
           return { value: null, duration: s.samples["recording-rate"] };
         }
-        return { value: v, duration: s.samples["recording-rate"] };
+        return {
+          value: v,
+          duration: s.samples["recording-rate"],
+          tStart: i * s.samples["recording-rate"],
+        };
       })
     );
   const zones = [
-    { name: "Zon 1", max: 59.999 },
-    { name: "Zon 2", max: 75.999 },
-    { name: "Zon 3", max: 85.999 },
-    { name: "Zon 4", max: 93.999 },
-    { name: "Zon 5", max: 100 },
-  ].map(({ name, max }) => ({
-    name,
-    maxRelative: max,
-    max: maxHeartRate * (max / 100),
-  }));
+    { name: "Zon 1", max: 59.999, color: "var(--chakra-colors-green-600)" },
+    { name: "Zon 2", max: 75.999, color: "var(--chakra-colors-green-400)" },
+    { name: "Zon 3", max: 85.999, color: "var(--chakra-colors-yellow-500)" },
+    { name: "Zon 4", max: 93.999, color: "var(--chakra-colors-red-400)" },
+    { name: "Zon 5", max: 100, color: "var(--chakra-colors-red-600)" },
+  ]
+    .map(({ name, max, color }) => ({
+      name,
+      color,
+      maxRelative: max,
+      maxAbsolute: maxHeartRate ? maxHeartRate * (max / 100) : null,
+    }))
+    .map((x, i, arr) => ({
+      ...x,
+      minAbsolute: arr[i - 1]?.maxAbsolute ?? 0,
+      minRelative: arr[i - 1]?.maxRelative ?? 0,
+    }));
   const heartRateZones = zones.map((zone, i, arr) => ({
     zone,
     samples: heartRateSamples.filter(
       (s) =>
         s.value !== null &&
-        s.value <= zone.max &&
-        !arr.filter((_, j) => j < i).some((z) => s.value! <= z.max)
+        zone.maxAbsolute !== null &&
+        s.value <= zone.maxAbsolute &&
+        !arr.filter((_, j) => j < i).some((z) => s.value! <= z.maxAbsolute!)
     ),
   }));
+  const location = useLocation();
+
+  const timestamps = heartRateSamples.map((s) => s.tStart ?? 0);
+  const tMax = Math.max(...timestamps);
+  const tMin = Math.min(...timestamps);
 
   return (
     <Container py={5} maxW="container.xl">
-      <Stack>
+      <Stack spacing={5}>
         <Heading>Träning från Polar</Heading>
         <Heading size="md">Puls</Heading>
-        <TableContainer>
-          <Table>
-            <Thead>
-              <Tr>
-                <Th>Zon</Th>
-                <Th>Puls (rel)</Th>
-                <Th>Puls (abs)</Th>
-                <Th>Tid i zon</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {heartRateZones.map(({ zone, samples }) => (
-                <Tr key={zone.name}>
-                  <Td w={1} whiteSpace="nowrap">
-                    {zone.name}
-                  </Td>
-                  <Td w={1} whiteSpace="nowrap">
-                    &lt;{zone.maxRelative.toFixed(0)}%
-                  </Td>
-                  <Td w={1} whiteSpace="nowrap">
-                    &lt;{zone.max.toFixed(0)}
-                  </Td>
-                  <Td>
-                    {Duration.fromMillis(
-                      sum(samples.map((s) => s.duration)) * 1000
-                    )
-                      .shiftTo("minutes", "seconds")
-                      .toFormat("m'min' ss's'")}
-                  </Td>
-                </Tr>
-              ))}
-            </Tbody>
-          </Table>
-        </TableContainer>
-        <Box>
-          <ClientOnly>
-            {() => (
-              <XYChart
-                height={300}
-                xScale={{ type: "linear" }}
-                yScale={{ type: "linear" }}
-              >
-                <AnimatedAxis orientation="bottom" />
-                <AnimatedAxis orientation="left" />
-                <AnimatedGrid />
-                {zones.map((z) => (
-                  <LineSeries
-                    dataKey={z.name}
-                    key={z.name}
-                    data={[
-                      { x: 0, y: z.max },
-                      { x: 60, y: z.max },
-                    ]}
-                    xAccessor={(p) => p.x / 60}
-                    yAccessor={(p) => p.y}
-                  />
-                ))}
-                {samples
-                  .filter((s) => s.sampleType === "0")
-                  .map((sample) => (
-                    <AnimatedLineSeries
-                      key={sample.sampleType}
-                      dataKey={sample.sampleType}
-                      data={sample.samples.data.map((y, xDelta) => ({
-                        y: isNaN(Number(y)) || !Number(y) ? null : Number(y),
-                        x: xDelta * sample.samples["recording-rate"],
-                      }))}
-                      xAccessor={(p) => p.x / 60}
-                      yAccessor={(p) => p.y}
-                    />
-                  ))}
-              </XYChart>
-            )}
-          </ClientOnly>
-        </Box>
+        {!maxHeartRate ? (
+          <Alert status="warning">
+            <AlertDescription>
+              <Link to={`/user?returnTo=${location.pathname}`}>
+                Lägg in din maxpuls
+              </Link>{" "}
+              för att visa pulszoner.
+            </AlertDescription>
+          </Alert>
+        ) : (
+          <Tabs>
+            <TabList>
+              <Tab>Tid i zon</Tab>
+              <Tab>Graf</Tab>
+            </TabList>
+            <TabPanels>
+              <TabPanel>
+                <TableContainer>
+                  <Table size="sm">
+                    <Thead>
+                      <Tr>
+                        <Th>Zon</Th>
+                        <Th>Relativ</Th>
+                        <Th>Absolut</Th>
+                        <Th>Tid i zon</Th>
+                      </Tr>
+                    </Thead>
+                    <Tbody>
+                      {heartRateZones.map(({ zone, samples }) => (
+                        <Tr key={zone.name}>
+                          <Td w={1} whiteSpace="nowrap">
+                            {zone.name}
+                          </Td>
+                          <Td w={1} whiteSpace="nowrap">
+                            {zone.minRelative.toFixed(0)}% &lt;{" "}
+                            {zone.maxRelative.toFixed(0)}%
+                          </Td>
+                          <Td w={1} whiteSpace="nowrap">
+                            {zone.minAbsolute?.toFixed(0)} &lt;{" "}
+                            {zone.maxAbsolute?.toFixed(0)}
+                          </Td>
+                          <Td>
+                            {Duration.fromMillis(
+                              sum(samples.map((s) => s.duration)) * 1000
+                            )
+                              .shiftTo("minutes", "seconds")
+                              .toFormat("m'min' ss's'")}
+                          </Td>
+                        </Tr>
+                      ))}
+                    </Tbody>
+                  </Table>
+                </TableContainer>
+              </TabPanel>
+              <TabPanel>
+                <Box>
+                  <ClientOnly>
+                    {() => (
+                      <XYChart
+                        height={400}
+                        xScale={{ type: "linear" }}
+                        yScale={{ type: "linear" }}
+                      >
+                        <AnimatedAxis orientation="bottom" />
+                        <AnimatedAxis orientation="left" />
+                        <AnimatedGrid />
+
+                        {zones.map((z, i, arr) => (
+                          <AnimatedAreaSeries
+                            dataKey={z.name}
+                            key={z.name}
+                            fill={z.color}
+                            strokeWidth={0}
+                            renderLine={false}
+                            data={[
+                              {
+                                x: tMin,
+                                y: z.maxAbsolute,
+                                y0: z.minAbsolute,
+                              },
+                              {
+                                x: tMax,
+                                y: z.maxAbsolute,
+                                y0: z.minAbsolute,
+                              },
+                            ]}
+                            xAccessor={(p) => p.x}
+                            yAccessor={(p) => p.y}
+                            y0Accessor={(p) => p.y0}
+                            opacity={0.5}
+                          />
+                        ))}
+
+                        <AnimatedLineSeries
+                          dataKey="Puls"
+                          data={heartRateSamples.map((s) => ({
+                            x: s.tStart ?? null,
+                            y: s.value ?? null,
+                          }))}
+                          xAccessor={(p) => p.x ?? 0}
+                          yAccessor={(p) => p.y}
+                          stroke="var(--chakra-colors-blue-800)"
+                          strokeWidth={1}
+                        />
+                      </XYChart>
+                    )}
+                  </ClientOnly>
+                </Box>
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
+        )}
 
         <Code as="pre" p={3} overflowX="auto">
           {JSON.stringify(exercise, null, 4)}

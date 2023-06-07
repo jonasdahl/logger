@@ -22,6 +22,7 @@ model User {
   polarAccessToken  String?
   onboardedAt       DateTime?
   lastFogisSync     DateTime?
+  maxPulse          Int?
   fogisGames        FogisGame[]
   activities        Activity[]
   polarExercises    PolarExercise[]

@@ -132,7 +132,10 @@ export default function DashboardIndex() {
               icon={<FontAwesomeIcon icon={faChevronLeft} />}
             />
           ) : (
-            <ButtonLink to={`/days/${dayBefore.toFormat("yyyy-MM-dd")}`}>
+            <ButtonLink
+              to={`/days/${dayBefore.toFormat("yyyy-MM-dd")}`}
+              leftIcon={<FontAwesomeIcon icon={faChevronLeft} />}
+            >
               {dayBefore.toFormat("yyyy-MM-dd")}
             </ButtonLink>
           )}
@@ -153,7 +156,10 @@ export default function DashboardIndex() {
               icon={<FontAwesomeIcon icon={faChevronRight} />}
             />
           ) : (
-            <ButtonLink to={`/days/${dayAfter.toFormat("yyyy-MM-dd")}`}>
+            <ButtonLink
+              to={`/days/${dayAfter.toFormat("yyyy-MM-dd")}`}
+              rightIcon={<FontAwesomeIcon icon={faChevronRight} />}
+            >
               {dayAfter.toFormat("yyyy-MM-dd")}
             </ButtonLink>
           )}
