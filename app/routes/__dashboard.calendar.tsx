@@ -301,7 +301,8 @@ function PlanButton({ day, ...props }: ButtonProps & { day: Interval }) {
             <ValidatedForm
               validator={createPlannedActivityValidator}
               method="post"
-              action="/planned-activities/create"
+              action="/planned-activities/create?returnTo=/calendar"
+              
             >
               <ModalHeader>
                 Planera

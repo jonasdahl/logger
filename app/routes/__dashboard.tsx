@@ -6,6 +6,7 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
+  Progress,
   Spacer,
 } from "@chakra-ui/react";
 import {
@@ -18,7 +19,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Form, Outlet, useLoaderData } from "@remix-run/react";
+import { Form, Outlet, useLoaderData, useNavigation } from "@remix-run/react";
 import { authenticator, isAdmin } from "~/auth.server";
 import { Link } from "~/components/link";
 
@@ -32,10 +33,10 @@ export async function loader({ request }: LoaderArgs) {
 
 export default function Dashboard() {
   const { isAdmin } = useLoaderData<typeof loader>();
-
+  const { state } = useNavigation();
   return (
     <Box>
-      <Box bg="blue.700" boxShadow="lg" fontWeight="bold" overflowX="auto">
+      <Box bg="blue.700" boxShadow="lg" fontWeight="bold">
         <HStack h="100%" py={3} pr={3} pl={5} spacing={5}>
           <Link to="/" color="white">
             Start
@@ -89,6 +90,20 @@ export default function Dashboard() {
             </MenuList>
           </Menu>
         </HStack>
+      </Box>
+      <Box position="relative">
+        {state !== "idle" ? (
+          <Progress
+            colorScheme="yellow"
+            bg="transparent"
+            isIndeterminate
+            position="absolute"
+            left={0}
+            right={0}
+            bottom={0}
+            size="xs"
+          />
+        ) : null}
       </Box>
       <Outlet />
     </Box>
