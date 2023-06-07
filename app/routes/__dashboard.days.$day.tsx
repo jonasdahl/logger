@@ -58,6 +58,10 @@ export async function loader({ request, params }: LoaderArgs) {
         include: { primaryPurpose: {}, secondaryPurpose: {} },
         orderBy: { time: "asc" },
       },
+      fogisGames: {
+        where: { time: timeFilter, deletedAt: null },
+        orderBy: { time: "asc" },
+      },
     },
   });
 
@@ -68,12 +72,19 @@ export async function loader({ request, params }: LoaderArgs) {
     polarEntries: user.polarExercises,
     activities: user.activities,
     plannedActivities: user.plannedActivities,
+    fogisGames: user.fogisGames,
   });
 }
 
 export default function DashboardIndex() {
-  const { dayStart, polarEntries, timeZone, activities, plannedActivities } =
-    useLoaderData<typeof loader>();
+  const {
+    dayStart,
+    polarEntries,
+    timeZone,
+    activities,
+    plannedActivities,
+    fogisGames,
+  } = useLoaderData<typeof loader>();
 
   const { pathname } = useLocation();
 
@@ -225,6 +236,27 @@ export default function DashboardIndex() {
                       Radera
                     </ButtonLink>
                   </Box>
+                </HStack>
+              </Box>
+            ))}
+          </Stack>
+        ) : null}
+
+        {fogisGames.length ? (
+          <Stack>
+            <Heading size="sm">Matcher från Fogis</Heading>
+            {fogisGames.map((e) => (
+              <Box key={e.id} bg="blue.50" borderRadius="md" padding={3}>
+                <HStack>
+                  <Wrap spacing={3}>
+                    <Box as="time">
+                      {DateTime.fromISO(e.time)
+                        .setZone(timeZone)
+                        .toFormat("HH:mm")}
+                      : {e.homeTeam} - {e.awayTeam}
+                    </Box>
+                  </Wrap>
+                  <Spacer />
                 </HStack>
               </Box>
             ))}
