@@ -7,13 +7,20 @@ import {
   Stack,
   VStack,
   Wrap,
+  useBreakpointValue,
 } from "@chakra-ui/react";
+import {
+  faChevronLeft,
+  faChevronRight,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { useLoaderData, useLocation } from "@remix-run/react";
 import { DateTime } from "luxon";
 import { authenticator } from "~/auth.server";
 import { ButtonLink } from "~/components/button-link";
+import { IconButtonLink } from "~/components/icon-button-link";
 import { Link } from "~/components/link";
 import { db } from "~/db.server";
 import { getTimeZoneFromRequest } from "~/time";
@@ -68,9 +75,13 @@ export default function DashboardIndex() {
   const { dayStart, polarEntries, timeZone, activities, plannedActivities } =
     useLoaderData<typeof loader>();
 
+  const { pathname } = useLocation();
+
   const day = DateTime.fromISO(dayStart).setZone(timeZone);
   const dayBefore = day.minus({ days: 1 });
   const dayAfter = day.plus({ days: 1 });
+
+  const isSmallScreen = useBreakpointValue([true, true, false]);
 
   return (
     <Container py={5} maxW="container.md">
@@ -82,7 +93,9 @@ export default function DashboardIndex() {
           <Spacer />
           {day.diffNow().toMillis() < 0 ? (
             <ButtonLink
-              to={`/activities/create?date=${day.toFormat("yyyy-MM-dd")}`}
+              to={`/activities/create?date=${day.toFormat(
+                "yyyy-MM-dd"
+              )}&returnTo=${pathname}`}
               colorScheme="green"
             >
               Registrera
@@ -92,7 +105,7 @@ export default function DashboardIndex() {
             <ButtonLink
               to={`/planned-activities/create?date=${day.toFormat(
                 "yyyy-MM-dd"
-              )}`}
+              )}&returnTo=${pathname}`}
               colorScheme="green"
             >
               Planera
@@ -101,20 +114,38 @@ export default function DashboardIndex() {
         </HStack>
 
         <HStack>
-          <ButtonLink to={`/days/${dayBefore.toFormat("yyyy-MM-dd")}`}>
-            {dayBefore.toFormat("yyyy-MM-dd")}
-          </ButtonLink>
+          {isSmallScreen ? (
+            <IconButtonLink
+              to={`/days/${dayBefore.toFormat("yyyy-MM-dd")}`}
+              aria-label="Föregående dag"
+              icon={<FontAwesomeIcon icon={faChevronLeft} />}
+            />
+          ) : (
+            <ButtonLink to={`/days/${dayBefore.toFormat("yyyy-MM-dd")}`}>
+              {dayBefore.toFormat("yyyy-MM-dd")}
+            </ButtonLink>
+          )}
+
           <Spacer />
           <VStack textAlign="center" spacing={0}>
-            <Heading size="md">{day.toFormat("yyyy-MM-dd")}</Heading>
-            <Box fontSize="xs">
+            <Heading>{day.toFormat("yyyy-MM-dd")}</Heading>
+            <Box fontSize="xs" display={{ base: "none", sm: "block" }}>
               {day.toFormat("EEEE 'vecka' WW, kkkk", { locale: "sv" })}
             </Box>
           </VStack>
           <Spacer />
-          <ButtonLink to={`/days/${dayAfter.toFormat("yyyy-MM-dd")}`}>
-            {dayAfter.toFormat("yyyy-MM-dd")}
-          </ButtonLink>
+
+          {isSmallScreen ? (
+            <IconButtonLink
+              to={`/days/${dayAfter.toFormat("yyyy-MM-dd")}`}
+              aria-label="Nästa dag"
+              icon={<FontAwesomeIcon icon={faChevronRight} />}
+            />
+          ) : (
+            <ButtonLink to={`/days/${dayAfter.toFormat("yyyy-MM-dd")}`}>
+              {dayAfter.toFormat("yyyy-MM-dd")}
+            </ButtonLink>
+          )}
         </HStack>
 
         {activities.length ? (

@@ -57,7 +57,12 @@ export async function action({ request }: ActionArgs) {
     },
   });
 
-  return redirect("/");
+  const url = new URL(request.url);
+  const redirectTo =
+    url.searchParams.get("returnTo") ??
+    `/days/${DateTime.now().toFormat("yyyy-MM-dd")}`;
+
+  return redirect(redirectTo);
 }
 
 export async function loader({ request }: LoaderArgs) {

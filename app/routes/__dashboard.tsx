@@ -17,7 +17,7 @@ export default function Dashboard() {
 
   return (
     <Box>
-      <Box bg="blue.700" boxShadow="lg">
+      <Box bg="blue.700" boxShadow="lg" fontWeight="bold">
         <HStack h="100%" p={5} spacing={5}>
           <Link to="/" color="white">
             Start

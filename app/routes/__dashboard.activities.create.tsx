@@ -33,6 +33,7 @@ const validator = withZod(
 );
 
 export async function action({ request }: ActionArgs) {
+  const url = new URL(request.url);
   const { id: userId } = await authenticator.isAuthenticated(request, {
     failureRedirect: "/",
   });
@@ -60,7 +61,12 @@ export async function action({ request }: ActionArgs) {
       fromPlannedActivityId: plannedActivity?.id ?? null,
     },
   });
-  return redirect(`/days/${DateTime.now().toFormat("yyyy-MM-dd")}`);
+
+  const redirectTo =
+    url.searchParams.get("returnTo") ??
+    `/days/${DateTime.now().toFormat("yyyy-MM-dd")}`;
+
+  return redirect(redirectTo);
 }
 
 export async function loader({ request }: LoaderArgs) {

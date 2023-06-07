@@ -1,5 +1,7 @@
 import { ChakraProvider, ColorModeScript, extendTheme } from "@chakra-ui/react";
-import type { V2_MetaFunction } from "@remix-run/node";
+import { config } from "@fortawesome/fontawesome-svg-core";
+import faStyles from "@fortawesome/fontawesome-svg-core/styles.css";
+import type { LinksFunction, V2_MetaFunction } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -9,11 +11,17 @@ import {
   ScrollRestoration,
 } from "@remix-run/react";
 
+config.autoAddCss = false;
+
 export const meta: V2_MetaFunction = () => [
   { charSet: "utf-8" },
   { title: "Träningsdagbok" },
   { name: "viewport", content: "width=device-width,initial-scale=1" },
 ];
+
+export const links: LinksFunction = () => {
+  return [{ rel: "stylesheet", href: faStyles, type: "text/css" }];
+};
 
 export default function App() {
   return (
