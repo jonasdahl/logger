@@ -445,7 +445,7 @@ const BasePreview = forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => (
     whiteSpace="normal"
     wordBreak="break-word"
     fontSize={["2xs", "xs"]}
-    p={[0, 2, 3]}
+    p={[0, 1]}
     {...props}
   />
 ));

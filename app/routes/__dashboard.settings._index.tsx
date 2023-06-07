@@ -7,7 +7,12 @@ import {
   SimpleGrid,
   VStack,
 } from "@chakra-ui/react";
-import { faCode, faLink, faRunning } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCode,
+  faLink,
+  faRunning,
+  faUsers,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
@@ -32,6 +37,9 @@ export default function SettingsIndex() {
           icon={<FontAwesomeIcon icon={faRunning} />}
         >
           Träningssyften
+        </Item>
+        <Item to="/settings/users" icon={<FontAwesomeIcon icon={faUsers} />}>
+          Användare
         </Item>
         <Item to="/settings/polar" icon={<FontAwesomeIcon icon={faLink} />}>
           Polar
