@@ -2,7 +2,6 @@ import {
   Alert,
   AlertDescription,
   Box,
-  Code,
   Container,
   Heading,
   Stack,
@@ -190,11 +189,18 @@ export default function PolarExercise() {
                         xScale={{ type: "linear" }}
                         yScale={{ type: "linear" }}
                       >
-                        <AnimatedAxis orientation="bottom" />
+                        <AnimatedAxis
+                          orientation="bottom"
+                          tickFormat={(v) =>
+                            (Number(v) / 60).toLocaleString("sv-SE", {
+                              maximumFractionDigits: 1,
+                            })
+                          }
+                        />
                         <AnimatedAxis orientation="left" />
                         <AnimatedGrid />
 
-                        {zones.map((z, i, arr) => (
+                        {zones.map((z) => (
                           <AnimatedAreaSeries
                             dataKey={z.name}
                             key={z.name}
@@ -239,7 +245,7 @@ export default function PolarExercise() {
             </TabPanels>
           </Tabs>
         )}
-
+        {/* 
         <Code as="pre" p={3} overflowX="auto">
           {JSON.stringify(exercise, null, 4)}
         </Code>
@@ -250,7 +256,7 @@ export default function PolarExercise() {
         <Heading>Samples</Heading>
         <Code as="pre" p={3} overflowX="auto">
           {JSON.stringify(samples, null, 4)}
-        </Code>
+        </Code> */}
       </Stack>
     </Container>
   );
