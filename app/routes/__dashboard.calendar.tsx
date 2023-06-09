@@ -30,7 +30,7 @@ import { useLoaderData, useNavigation } from "@remix-run/react";
 import { groupBy } from "lodash";
 import { DateTime, Interval } from "luxon";
 import type { ReactNode } from "react";
-import { forwardRef, useEffect, useRef } from "react";
+import { forwardRef, useEffect, useRef, useState } from "react";
 import { ValidatedForm } from "remix-validated-form";
 import { authenticator } from "~/auth.server";
 import { ButtonLink } from "~/components/button-link";
@@ -39,6 +39,7 @@ import { SubmitButton } from "~/components/form/submit-button";
 import { Textarea } from "~/components/form/textarea";
 import { db } from "~/db.server";
 import { useToggle } from "~/hooks/use-toggle";
+import { vapidKeys } from "~/secrets.server";
 import { getTimeZoneFromRequest } from "~/time";
 import { createPlannedActivityValidator } from "./__dashboard.planned-activities.create";
 
@@ -119,14 +120,20 @@ export async function loader({ request }: LoaderArgs) {
     showFogisSync:
       realUser.lastFogisSync &&
       DateTime.fromJSDate(realUser.lastFogisSync).diffNow().as("weeks") < -1,
+    publicKey: vapidKeys.publicKey,
   });
 }
 
 type Activity = SerializeFrom<typeof loader>["activities"][number];
 
 export default function DashboardIndex() {
-  const { activitiesByDay, timeZone, showOnboarding, showFogisSync } =
-    useLoaderData<typeof loader>();
+  const {
+    activitiesByDay,
+    timeZone,
+    showOnboarding,
+    showFogisSync,
+    publicKey,
+  } = useLoaderData<typeof loader>();
   const now = DateTime.now().setZone(timeZone);
   const startOfWeek = now.startOf("week");
   const startOfPreviousWeek = startOfWeek.minus({ weeks: 2 });
@@ -134,6 +141,30 @@ export default function DashboardIndex() {
   const endOfPeriod = endOfWeek.plus({ weeks: 2 });
   const interval = Interval.fromDateTimes(startOfPreviousWeek, endOfPeriod);
   const days = interval.splitBy({ days: 1 });
+
+  const [notificationEnabled, setNotificationsEnabled] = useState<
+    null | boolean
+  >(null);
+
+  useEffect(() => {
+    async function checkNotificationPermission() {
+      const registration = await navigator.serviceWorker.getRegistration(
+        "/sw.js"
+      );
+      if (!registration) {
+        setNotificationsEnabled(false);
+        return;
+      }
+      const state = await registration.pushManager.permissionState({
+        userVisibleOnly: true,
+        applicationServerKey: publicKey,
+      });
+
+      console.log(state);
+    }
+    checkNotificationPermission();
+    return () => {};
+  }, []);
 
   return (
     <Container maxW="container.lg" py={5}>
@@ -152,20 +183,31 @@ export default function DashboardIndex() {
                   );
                   if (result !== "granted") {
                     console.warn("Not granted");
+                    return;
                   }
-                  navigator.serviceWorker
-                    .register("/sw.js")
-                    .then((registration) => {
-                      registration.pushManager
-                        .subscribe({
-                          applicationServerKey:
-                            "BMIbbG0FbOHYZdm1UzxqVHeHIgCureDhaHfrt2w7fsXDDCN-ZpjAhvLmccBXX-ZgtSSysCSpSuXLO9_oOcrz8EI",
-                          userVisibleOnly: true,
-                        })
-                        .then((sub) => {
-                          console.log("subscribed:", sub);
-                        });
-                    });
+
+                  const registration =
+                    await navigator.serviceWorker.getRegistration("/sw.js");
+                  if (!registration) {
+                    throw new Error("No registration");
+                  }
+
+                  const sub = await registration.pushManager.subscribe({
+                    applicationServerKey: publicKey,
+                    userVisibleOnly: true,
+                  });
+                  const data = JSON.parse(JSON.stringify(sub)) as any;
+                  const res = await fetch("/api/push/subscribe", {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                      endpoint: sub.endpoint,
+                      keys: data.keys,
+                    }),
+                  });
+                  const response = await res.json();
                 }}
               >
                 Aktivera

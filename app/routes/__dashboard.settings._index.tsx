@@ -9,6 +9,7 @@ import {
 } from "@chakra-ui/react";
 import {
   faCode,
+  faExclamationTriangle,
   faLink,
   faRunning,
   faUsers,
@@ -46,6 +47,12 @@ export default function SettingsIndex() {
         </Item>
         <Item to="/debug" icon={<FontAwesomeIcon icon={faCode} />}>
           Debug
+        </Item>
+        <Item
+          to="/settings/notifications"
+          icon={<FontAwesomeIcon icon={faExclamationTriangle} />}
+        >
+          Aviseringar
         </Item>
       </SimpleGrid>
     </Container>

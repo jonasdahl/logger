@@ -5,6 +5,8 @@ const env = z
     POLAR_CLIENT_ID: z.string(),
     POLAR_CLIENT_SECRET: z.string(),
     APP_SECRET: z.string(),
+    VAPID_PUBLIC: z.string(),
+    VAPID_PRIVATE: z.string(),
   })
   .parse(process.env);
 
@@ -15,3 +17,7 @@ export const polarRedirectUrl =
     ? "http://localhost:3000/connections/polar/auth-callback"
     : "https://log.jdahl.se/connections/polar/auth-callback";
 export const appSecret = env.APP_SECRET;
+export const vapidKeys = {
+  publicKey: env.VAPID_PUBLIC,
+  privateKey: env.VAPID_PRIVATE,
+};

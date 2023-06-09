@@ -14,9 +14,9 @@ startTransition(() => {
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker
     .register("/sw.js")
-    .then((registration) => {
+    .then((registration) => registration.update())
+    .then(() => {
       console.log("Service worker successfully registered.");
-      return registration;
     })
     .catch((err) => {
       console.error("Unable to register service worker.", err);
