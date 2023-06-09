@@ -126,7 +126,9 @@ model PolarExercise {
 model ActivityPurpose {
   id String @id @default(uuid())
 
-  label                    String
+  label      String
+  shortLabel String?
+
   primaryPurposes          Activity[]        @relation(name: "primaryPurpose")
   secondaryPurposes        Activity[]        @relation(name: "secondaryPurpose")
   primaryPurposesPlanned   PlannedActivity[] @relation(name: "primaryPurposePlanned")
