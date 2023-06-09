@@ -141,8 +141,8 @@ export default function PolarExercise() {
               <Tab>Tid i zon</Tab>
               <Tab>Graf</Tab>
             </TabList>
-            <TabPanels>
-              <TabPanel>
+            <TabPanels px={0}>
+              <TabPanel px={0}>
                 <TableContainer>
                   <Table size="sm">
                     <Thead>
