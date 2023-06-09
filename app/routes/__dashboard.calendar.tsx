@@ -138,6 +138,42 @@ export default function DashboardIndex() {
   return (
     <Container maxW="container.lg" py={5}>
       <Stack spacing={5}>
+        <Alert status="info">
+          <HStack w="100%">
+            <AlertTitle>Aktivera aviseringar</AlertTitle>
+            <Spacer />
+            <Box>
+              <Button
+                size="sm"
+                colorScheme="blue"
+                onClick={async () => {
+                  const result = await Notification.requestPermission().catch(
+                    () => null
+                  );
+                  if (result !== "granted") {
+                    console.warn("Not granted");
+                  }
+                  navigator.serviceWorker
+                    .register("/sw.js")
+                    .then((registration) => {
+                      registration.pushManager
+                        .subscribe({
+                          applicationServerKey:
+                            "BMIbbG0FbOHYZdm1UzxqVHeHIgCureDhaHfrt2w7fsXDDCN-ZpjAhvLmccBXX-ZgtSSysCSpSuXLO9_oOcrz8EI",
+                          userVisibleOnly: true,
+                        })
+                        .then((sub) => {
+                          console.log("subscribed:", sub);
+                        });
+                    });
+                }}
+              >
+                Aktivera
+              </Button>
+            </Box>
+          </HStack>
+        </Alert>
+
         {showOnboarding ? (
           <Alert>
             <HStack w="100%">
