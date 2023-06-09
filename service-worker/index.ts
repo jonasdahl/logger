@@ -21,10 +21,6 @@ self.addEventListener("activate", (event) => {
   console.log("Activated SW");
 });
 
-self.addEventListener("online", () => {
-  console.log("online");
-});
-
 self.addEventListener("push", function (event) {
   if (event.data) {
     const promiseChain = self.registration.showNotification(event.data.text(), {
@@ -40,8 +36,6 @@ self.addEventListener("notificationclick", (event) => {
   const clickedNotification = event.notification;
   clickedNotification.close();
   event.waitUntil(
-    self.clients.openWindow(
-      `${clickedNotification.data.url}?notification_id=${clickedNotification.data.id}`
-    )
+    self.clients.openWindow(`https://log.jdahl.se/activities/create`)
   );
 });

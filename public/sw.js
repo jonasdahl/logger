@@ -7,19 +7,21 @@
   self.addEventListener("activate", (event) => {
     console.log("Activated SW");
   });
-  self.addEventListener("online", () => {
-    console.log("online");
-  });
   self.addEventListener("push", function(event) {
-    var _a, _b;
     if (event.data) {
-      console.log("This push event has a lot of data: ", event.data.text());
+      const promiseChain = self.registration.showNotification(event.data.text(), {
+        actions: [{ action: "register", title: "Registrera" }]
+      });
+      event.waitUntil(promiseChain);
     } else {
-      console.log("This push event has no data.");
+      console.log("Empty notification");
     }
-    const promiseChain = self.registration.showNotification(
-      (_b = (_a = event.data) == null ? void 0 : _a.text()) != null ? _b : "Check this out."
+  });
+  self.addEventListener("notificationclick", (event) => {
+    const clickedNotification = event.notification;
+    clickedNotification.close();
+    event.waitUntil(
+      self.clients.openWindow(`https://log.jdahl.se/activities/create`)
     );
-    event.waitUntil(promiseChain);
   });
 })();

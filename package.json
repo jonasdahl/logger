@@ -8,7 +8,7 @@
     "build:prisma": "prisma generate",
     "build:remix": "remix build",
     "build:server": "tsx ./build-server.ts",
-    "dev": "cross-env TZ=America/Montreal remix dev -c \"pnpm run dev:server\" --no-restart",
+    "dev": "cross-env TZ=America/Montreal remix dev -c \"pnpm run dev:all\" --no-restart",
     "dev:all": "run-p dev:server dev:sw",
     "dev:sw": "pnpm run build:sw --watch",
     "dev:server": "cross-env TZ=America/Montreal tsx watch --clear-screen=false --ignore \"app/**\" --ignore \"build/**\" --ignore \"node_modules/**\" ./index.js",
