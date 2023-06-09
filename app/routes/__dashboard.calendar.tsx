@@ -30,7 +30,7 @@ import { useLoaderData, useNavigation } from "@remix-run/react";
 import { groupBy } from "lodash";
 import { DateTime, Interval } from "luxon";
 import type { ReactNode } from "react";
-import { forwardRef, useEffect, useRef, useState } from "react";
+import { forwardRef, useEffect, useRef } from "react";
 import { ValidatedForm } from "remix-validated-form";
 import { authenticator } from "~/auth.server";
 import { ButtonLink } from "~/components/button-link";
@@ -39,7 +39,6 @@ import { SubmitButton } from "~/components/form/submit-button";
 import { Textarea } from "~/components/form/textarea";
 import { db } from "~/db.server";
 import { useToggle } from "~/hooks/use-toggle";
-import { vapidKeys } from "~/secrets.server";
 import { getTimeZoneFromRequest } from "~/time";
 import { createPlannedActivityValidator } from "./__dashboard.planned-activities.create";
 
@@ -120,20 +119,14 @@ export async function loader({ request }: LoaderArgs) {
     showFogisSync:
       realUser.lastFogisSync &&
       DateTime.fromJSDate(realUser.lastFogisSync).diffNow().as("weeks") < -1,
-    publicKey: vapidKeys.publicKey,
   });
 }
 
 type Activity = SerializeFrom<typeof loader>["activities"][number];
 
 export default function DashboardIndex() {
-  const {
-    activitiesByDay,
-    timeZone,
-    showOnboarding,
-    showFogisSync,
-    publicKey,
-  } = useLoaderData<typeof loader>();
+  const { activitiesByDay, timeZone, showOnboarding, showFogisSync } =
+    useLoaderData<typeof loader>();
   const now = DateTime.now().setZone(timeZone);
   const startOfWeek = now.startOf("week");
   const startOfPreviousWeek = startOfWeek.minus({ weeks: 2 });
@@ -142,79 +135,9 @@ export default function DashboardIndex() {
   const interval = Interval.fromDateTimes(startOfPreviousWeek, endOfPeriod);
   const days = interval.splitBy({ days: 1 });
 
-  const [subscription, setSubscription] = useState<
-    null | undefined | PushSubscription
-  >(undefined);
-
-  useEffect(() => {
-    async function checkNotificationPermission() {
-      const registration = await navigator.serviceWorker.getRegistration(
-        "/sw.js"
-      );
-      if (!registration) {
-        setSubscription(null);
-        return;
-      }
-
-      const subscription = await registration.pushManager.getSubscription();
-      setSubscription(subscription);
-    }
-    checkNotificationPermission();
-    return () => {};
-  }, [publicKey]);
-
   return (
     <Container maxW="container.lg" py={5}>
       <Stack spacing={5}>
-        {subscription === null ? (
-          <Alert status="info">
-            <HStack w="100%">
-              <AlertTitle>Aktivera aviseringar</AlertTitle>
-              <Spacer />
-              <Box>
-                <Button
-                  size="sm"
-                  colorScheme="blue"
-                  onClick={async () => {
-                    const result = await Notification.requestPermission().catch(
-                      () => null
-                    );
-                    if (result !== "granted") {
-                      console.warn("Not granted");
-                      return;
-                    }
-
-                    const registration =
-                      await navigator.serviceWorker.getRegistration("/sw.js");
-                    if (!registration) {
-                      throw new Error("No registration");
-                    }
-
-                    const sub = await registration.pushManager.subscribe({
-                      applicationServerKey: publicKey,
-                      userVisibleOnly: true,
-                    });
-                    setSubscription(sub);
-                    const data = JSON.parse(JSON.stringify(sub)) as any;
-                    await fetch("/api/push/subscribe", {
-                      method: "POST",
-                      headers: {
-                        "Content-Type": "application/json",
-                      },
-                      body: JSON.stringify({
-                        endpoint: sub.endpoint,
-                        keys: data.keys,
-                      }),
-                    });
-                  }}
-                >
-                  Aktivera
-                </Button>
-              </Box>
-            </HStack>
-          </Alert>
-        ) : null}
-
         {showOnboarding ? (
           <Alert>
             <HStack w="100%">
