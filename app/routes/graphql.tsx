@@ -9,7 +9,6 @@ export async function action({ request }: ActionArgs) {
     variables: params.variables ?? {},
     request,
   });
-  console.log(result);
   return new Response(JSON.stringify(result), {
     headers: { "Content-Type": "application/json" },
     status: 200,

@@ -12,7 +12,7 @@ export default function Playground() {
     <ClientOnly>
       {() => (
         <GraphiQL
-          fetcher={async (graphQLParams) => {
+          fetcher={async (graphQLParams): any => {
             const data = await fetch("/graphql", {
               method: "POST",
               headers: {
