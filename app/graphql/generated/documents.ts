@@ -13,11 +13,62 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
+  DateTime: { input: any; output: any; }
+};
+
+export type Activity = Exercise | FogisGame;
+
+export type ActivityBase = {
+  id: Scalars['ID']['output'];
+  start: Scalars['DateTime']['output'];
+};
+
+export type ActivityConnection = {
+  __typename?: 'ActivityConnection';
+  edges: Array<ActivityEdge>;
+  pageInfo: PageInfo;
+};
+
+export type ActivityEdge = {
+  __typename?: 'ActivityEdge';
+  cursor: Scalars['String']['output'];
+  node?: Maybe<Activity>;
+};
+
+export type Exercise = ActivityBase & {
+  __typename?: 'Exercise';
+  id: Scalars['ID']['output'];
+  start: Scalars['DateTime']['output'];
+};
+
+export type FogisGame = ActivityBase & {
+  __typename?: 'FogisGame';
+  awayTeam: Scalars['String']['output'];
+  homeTeam: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  start: Scalars['DateTime']['output'];
+};
+
+export type PageInfo = {
+  __typename?: 'PageInfo';
+  endCursor?: Maybe<Scalars['String']['output']>;
+  hasNextPage: Scalars['Boolean']['output'];
+  hasPreviousPage: Scalars['Boolean']['output'];
+  startCursor?: Maybe<Scalars['String']['output']>;
 };
 
 export type Query = {
   __typename?: 'Query';
+  activities: ActivityConnection;
   me?: Maybe<User>;
+};
+
+
+export type QueryActivitiesArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type User = {

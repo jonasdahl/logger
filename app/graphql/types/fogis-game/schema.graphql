@@ -1,0 +1,6 @@
+type FogisGame implements ActivityBase {
+  id: ID!
+  start: DateTime!
+  homeTeam: String!
+  awayTeam: String!
+}

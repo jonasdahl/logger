@@ -1,4 +1,43 @@
-export const typeDefinitions = `type Query {
+export const typeDefinitions = `union Activity = Exercise | FogisGame
+
+interface ActivityBase {
+  id: ID!
+  start: DateTime!
+}
+
+type ActivityConnection {
+  edges: [ActivityEdge!]!
+  pageInfo: PageInfo!
+}
+
+type ActivityEdge {
+  cursor: String!
+  node: Activity
+}
+
+scalar DateTime
+
+type Exercise implements ActivityBase {
+  id: ID!
+  start: DateTime!
+}
+
+type FogisGame implements ActivityBase {
+  awayTeam: String!
+  homeTeam: String!
+  id: ID!
+  start: DateTime!
+}
+
+type PageInfo {
+  endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+}
+
+type Query {
+  activities(after: String, before: String, first: Int, last: Int): ActivityConnection!
   me: User
 }
 

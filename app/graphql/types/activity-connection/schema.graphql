@@ -1,0 +1,4 @@
+type ActivityConnection {
+  pageInfo: PageInfo!
+  edges: [ActivityEdge!]!
+}

@@ -1,0 +1,4 @@
+type Exercise implements ActivityBase {
+  id: ID!
+  start: DateTime!
+}

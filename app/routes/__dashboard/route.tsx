@@ -4,6 +4,7 @@ import {
   IconButton,
   Menu,
   MenuButton,
+  MenuDivider,
   MenuItem,
   MenuList,
   Progress,
@@ -11,6 +12,7 @@ import {
   Tooltip,
 } from "@chakra-ui/react";
 import {
+  faCode,
   faLink,
   faRightFromBracket,
   faUser,
@@ -68,15 +70,6 @@ export default function Dashboard() {
               >
                 Personliga inställningar
               </MenuItem>
-              {isAdmin ? (
-                <MenuItem
-                  as={Link}
-                  to="/settings"
-                  icon={<FontAwesomeIcon icon={faUserLock} />}
-                >
-                  Administration
-                </MenuItem>
-              ) : null}
               <MenuItem
                 as={Link}
                 to="/connections"
@@ -84,7 +77,29 @@ export default function Dashboard() {
               >
                 Anslutningar
               </MenuItem>
+              {isAdmin ? (
+                <>
+                  <MenuDivider />
 
+                  <MenuItem
+                    as={Link}
+                    to="/settings"
+                    icon={<FontAwesomeIcon icon={faUserLock} />}
+                  >
+                    Administration
+                  </MenuItem>
+
+                  <MenuItem
+                    as={Link}
+                    target="_blank"
+                    to="/graphiql"
+                    icon={<FontAwesomeIcon icon={faCode} />}
+                  >
+                    GraphiQL
+                  </MenuItem>
+                </>
+              ) : null}
+              <MenuDivider />
               <Form method="post" action="/logout">
                 <MenuItem
                   type="submit"
