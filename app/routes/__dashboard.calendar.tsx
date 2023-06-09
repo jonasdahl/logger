@@ -142,9 +142,9 @@ export default function DashboardIndex() {
   const interval = Interval.fromDateTimes(startOfPreviousWeek, endOfPeriod);
   const days = interval.splitBy({ days: 1 });
 
-  const [notificationEnabled, setNotificationsEnabled] = useState<
-    null | boolean
-  >(null);
+  const [subscription, setSubscription] = useState<
+    null | undefined | PushSubscription
+  >(undefined);
 
   useEffect(() => {
     async function checkNotificationPermission() {
@@ -152,69 +152,68 @@ export default function DashboardIndex() {
         "/sw.js"
       );
       if (!registration) {
-        setNotificationsEnabled(false);
+        setSubscription(null);
         return;
       }
-      const state = await registration.pushManager.permissionState({
-        userVisibleOnly: true,
-        applicationServerKey: publicKey,
-      });
 
-      console.log(state);
+      const subscription = await registration.pushManager.getSubscription();
+      setSubscription(subscription);
     }
     checkNotificationPermission();
     return () => {};
-  }, []);
+  }, [publicKey]);
 
   return (
     <Container maxW="container.lg" py={5}>
       <Stack spacing={5}>
-        <Alert status="info">
-          <HStack w="100%">
-            <AlertTitle>Aktivera aviseringar</AlertTitle>
-            <Spacer />
-            <Box>
-              <Button
-                size="sm"
-                colorScheme="blue"
-                onClick={async () => {
-                  const result = await Notification.requestPermission().catch(
-                    () => null
-                  );
-                  if (result !== "granted") {
-                    console.warn("Not granted");
-                    return;
-                  }
+        {subscription === null ? (
+          <Alert status="info">
+            <HStack w="100%">
+              <AlertTitle>Aktivera aviseringar</AlertTitle>
+              <Spacer />
+              <Box>
+                <Button
+                  size="sm"
+                  colorScheme="blue"
+                  onClick={async () => {
+                    const result = await Notification.requestPermission().catch(
+                      () => null
+                    );
+                    if (result !== "granted") {
+                      console.warn("Not granted");
+                      return;
+                    }
 
-                  const registration =
-                    await navigator.serviceWorker.getRegistration("/sw.js");
-                  if (!registration) {
-                    throw new Error("No registration");
-                  }
+                    const registration =
+                      await navigator.serviceWorker.getRegistration("/sw.js");
+                    if (!registration) {
+                      throw new Error("No registration");
+                    }
 
-                  const sub = await registration.pushManager.subscribe({
-                    applicationServerKey: publicKey,
-                    userVisibleOnly: true,
-                  });
-                  const data = JSON.parse(JSON.stringify(sub)) as any;
-                  const res = await fetch("/api/push/subscribe", {
-                    method: "POST",
-                    headers: {
-                      "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                      endpoint: sub.endpoint,
-                      keys: data.keys,
-                    }),
-                  });
-                  const response = await res.json();
-                }}
-              >
-                Aktivera
-              </Button>
-            </Box>
-          </HStack>
-        </Alert>
+                    const sub = await registration.pushManager.subscribe({
+                      applicationServerKey: publicKey,
+                      userVisibleOnly: true,
+                    });
+                    setSubscription(sub);
+                    const data = JSON.parse(JSON.stringify(sub)) as any;
+                    await fetch("/api/push/subscribe", {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify({
+                        endpoint: sub.endpoint,
+                        keys: data.keys,
+                      }),
+                    });
+                  }}
+                >
+                  Aktivera
+                </Button>
+              </Box>
+            </HStack>
+          </Alert>
+        ) : null}
 
         {showOnboarding ? (
           <Alert>

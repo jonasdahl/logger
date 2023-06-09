@@ -1,4 +1,4 @@
-import { Box, Container, Heading, Stack } from "@chakra-ui/react";
+import { Box, Button, Container, Heading, Stack } from "@chakra-ui/react";
 import type { LoaderArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
@@ -55,20 +55,39 @@ export default function User() {
   const { user } = useLoaderData<typeof loader>();
   return (
     <Container py={5}>
-      <ValidatedForm validator={validator} method="post">
-        <Stack spacing={5}>
-          <Heading as="h1">Personliga inställningar</Heading>
-          <Input
-            label="Maxpuls"
-            name="maxPulse"
-            type="number"
-            defaultValue={user.maxPulse?.toFixed(0) ?? undefined}
-          />
-          <Box>
-            <SubmitButton colorScheme="green">Spara</SubmitButton>
-          </Box>
-        </Stack>
-      </ValidatedForm>
+      <Stack spacing={5}>
+        <ValidatedForm validator={validator} method="post">
+          <Stack spacing={5}>
+            <Heading as="h1">Personliga inställningar</Heading>
+            <Input
+              label="Maxpuls"
+              name="maxPulse"
+              type="number"
+              defaultValue={user.maxPulse?.toFixed(0) ?? undefined}
+            />
+            <Box>
+              <SubmitButton colorScheme="green">Spara</SubmitButton>
+            </Box>
+          </Stack>
+        </ValidatedForm>
+
+        <Heading as="h2">Rensa aviseringsinställningar</Heading>
+        <Button
+          onClick={async () => {
+            const registration = await navigator.serviceWorker.getRegistration(
+              "/sw.js"
+            );
+            if (!registration) {
+              throw new Error("No registration");
+            }
+            registration.pushManager
+              .getSubscription()
+              .then((sub) => sub?.unsubscribe());
+          }}
+        >
+          Rensa på denna enhet
+        </Button>
+      </Stack>
     </Container>
   );
 }
