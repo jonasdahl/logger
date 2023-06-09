@@ -180,7 +180,7 @@ export default function PolarExercise() {
                   </Table>
                 </TableContainer>
               </TabPanel>
-              <TabPanel>
+              <TabPanel px={0}>
                 <Box>
                   <ClientOnly>
                     {() => (
