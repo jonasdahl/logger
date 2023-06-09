@@ -32,10 +32,23 @@ self.addEventListener("push", function (event) {
   }
 });
 
-self.addEventListener("notificationclick", (event) => {
-  const clickedNotification = event.notification;
-  clickedNotification.close();
-  event.waitUntil(
-    self.clients.openWindow(`https://log.jdahl.se/activities/create`)
+self.addEventListener("notificationclick", (e) => {
+  // Close the notification popout
+  e.notification.close();
+  // Get all the Window clients
+  const url = `https://log.jdahl.se/activities/create`;
+
+  e.waitUntil(
+    self.clients.matchAll({ type: "window" }).then((clientsArr) => {
+      // If a Window tab matching the targeted URL already exists, focus that;
+      const hadWindowToFocus = clientsArr.some((windowClient) =>
+        windowClient.url === url ? (windowClient.focus(), true) : false
+      );
+      // Otherwise, open a new tab to the applicable URL and focus it.
+      if (!hadWindowToFocus)
+        self.clients
+          .openWindow(url)
+          .then((windowClient) => (windowClient ? windowClient.focus() : null));
+    })
   );
 });

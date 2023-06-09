@@ -17,11 +17,17 @@
       console.log("Empty notification");
     }
   });
-  self.addEventListener("notificationclick", (event) => {
-    const clickedNotification = event.notification;
-    clickedNotification.close();
-    event.waitUntil(
-      self.clients.openWindow(`https://log.jdahl.se/activities/create`)
+  self.addEventListener("notificationclick", (e) => {
+    e.notification.close();
+    const url = `https://log.jdahl.se/activities/create`;
+    e.waitUntil(
+      self.clients.matchAll({ type: "window" }).then((clientsArr) => {
+        const hadWindowToFocus = clientsArr.some(
+          (windowClient) => windowClient.url === url ? (windowClient.focus(), true) : false
+        );
+        if (!hadWindowToFocus)
+          self.clients.openWindow(url).then((windowClient) => windowClient ? windowClient.focus() : null);
+      })
     );
   });
 })();
