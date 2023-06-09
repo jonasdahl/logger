@@ -180,11 +180,12 @@ export default function PolarExercise() {
                   </Table>
                 </TableContainer>
               </TabPanel>
-              <TabPanel px={0} py={0}>
+              <TabPanel px={0}>
                 <Box>
                   <ClientOnly>
                     {() => (
                       <XYChart
+                        margin={{ top: 0, right: 0, bottom: 20, left: 30 }}
                         height={400}
                         xScale={{ type: "linear" }}
                         yScale={{ type: "linear" }}
