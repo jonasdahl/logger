@@ -8,6 +8,7 @@ import {
   MenuList,
   Progress,
   Spacer,
+  Tooltip,
 } from "@chakra-ui/react";
 import {
   faLink,
@@ -22,17 +23,24 @@ import { json } from "@remix-run/node";
 import { Form, Outlet, useLoaderData, useNavigation } from "@remix-run/react";
 import { authenticator, isAdmin } from "~/auth.server";
 import { Link } from "~/components/link";
+import { DashboardDocument } from "~/graphql/generated/documents";
+import { gql } from "~/graphql/graphql.server";
 
 export async function loader({ request }: LoaderArgs) {
   const { id: userId } = await authenticator.isAuthenticated(request, {
     failureRedirect: "/login",
   });
+  const { data } = await gql({
+    document: DashboardDocument,
+    request,
+    variables: {},
+  });
 
-  return json({ isAdmin: await isAdmin(userId) });
+  return json({ isAdmin: await isAdmin(userId), email: data?.me?.email });
 }
 
 export default function Dashboard() {
-  const { isAdmin } = useLoaderData<typeof loader>();
+  const { isAdmin, email } = useLoaderData<typeof loader>();
   const { state } = useNavigation();
   return (
     <Box>
@@ -43,13 +51,15 @@ export default function Dashboard() {
           </Link>
           <Spacer />
           <Menu>
-            <MenuButton
-              as={IconButton}
-              aria-label="Personlig meny"
-              colorScheme="blue"
-            >
-              <FontAwesomeIcon icon={faUser} />
-            </MenuButton>
+            <Tooltip label={email}>
+              <MenuButton
+                as={IconButton}
+                aria-label="Personlig meny"
+                colorScheme="blue"
+              >
+                <FontAwesomeIcon icon={faUser} />
+              </MenuButton>
+            </Tooltip>
             <MenuList>
               <MenuItem
                 as={Link}

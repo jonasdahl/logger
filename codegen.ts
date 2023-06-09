@@ -38,7 +38,7 @@ function kebabCaseToPascalCase(x: string) {
 const config: CodegenConfig = {
   overwrite: true,
   schema: ["app/graphql/**/*.graphql"],
-  documents: [],
+  documents: ["app/routes/**/*.graphql"],
   generates: {
     "app/graphql/generated/graphql.ts": {
       plugins: ["typescript", "typescript-resolvers"],
@@ -55,6 +55,9 @@ const config: CodegenConfig = {
     },
     "app/graphql/generated/graphql-schema.ts": {
       plugins: ["./schema-dump.js"],
+    },
+    "app/graphql/generated/documents.ts": {
+      plugins: ["typescript", "typescript-operations", "typed-document-node"],
     },
   },
 };
