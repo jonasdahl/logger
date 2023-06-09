@@ -9,6 +9,7 @@ export function SubmitButton(props: ButtonProps) {
       type="submit"
       disabled={isSubmitting}
       isLoading={isSubmitting}
+      colorScheme="green"
       {...props}
     />
   );

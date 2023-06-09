@@ -3,6 +3,7 @@ import {
   HStack,
   Heading,
   Spacer,
+  Stack,
   Table,
   TableContainer,
   Tbody,
@@ -14,6 +15,7 @@ import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { assertIsAdmin, authenticator } from "~/auth.server";
 import { ButtonLink } from "~/components/button-link";
+import { Link } from "~/components/link";
 import { db } from "~/db.server";
 
 export async function loader({ request }: LoaderArgs) {
@@ -34,22 +36,33 @@ export default function SettingsIndex() {
 
   return (
     <Container maxW="container.lg" py={5}>
-      <HStack>
-        <Heading>Träningssyften</Heading>
-        <Spacer />
-        <ButtonLink to="/settings/purposes/create">Skapa</ButtonLink>
-      </HStack>
-      <TableContainer>
-        <Table>
-          <Tbody>
-            {purposes.map((purpose) => (
-              <Tr key={purpose.id}>
-                <Td>{purpose.label}</Td>
-              </Tr>
-            ))}
-          </Tbody>
-        </Table>
-      </TableContainer>
+      <Stack spacing={5}>
+        <HStack>
+          <Heading>Träningssyften</Heading>
+          <Spacer />
+          <ButtonLink to="/settings/purposes/create">Skapa</ButtonLink>
+        </HStack>
+        <TableContainer>
+          <Table size="sm">
+            <Tbody>
+              {purposes.map((purpose) => (
+                <Tr key={purpose.id}>
+                  <Td>
+                    <Link to={`/settings/purposes/${purpose.id}`}>
+                      {purpose.label}
+                    </Link>
+                  </Td>
+                  <Td>
+                    <Link to={`/settings/purposes/${purpose.id}`}>
+                      {purpose.shortLabel}
+                    </Link>
+                  </Td>
+                </Tr>
+              ))}
+            </Tbody>
+          </Table>
+        </TableContainer>
+      </Stack>
     </Container>
   );
 }

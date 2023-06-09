@@ -371,7 +371,8 @@ const DayPreview = forwardRef<
           : []
       )
       .filter(Boolean);
-    const label = purposes.map((p) => p?.label).join(" + ") || "Träning";
+    const label =
+      purposes.map((p) => p?.shortLabel || p?.label).join(" + ") || "Träning";
 
     return (
       <ExerciseDayPreview ref={ref} {...generalProps}>
@@ -393,7 +394,8 @@ const DayPreview = forwardRef<
           : []
       )
       .filter(Boolean);
-    const label = purposes.map((p) => p?.label).join(" + ") || "Träning";
+    const label =
+      purposes.map((p) => p?.shortLabel || p?.label).join(" + ") || "Träning";
 
     return (
       <ExerciseDayPreview ref={ref} {...generalProps}>
