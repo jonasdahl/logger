@@ -27,13 +27,21 @@ self.addEventListener("online", () => {
 
 self.addEventListener("push", function (event) {
   if (event.data) {
-    console.log("This push event has a lot of data: ", event.data.text());
+    const promiseChain = self.registration.showNotification(event.data.text(), {
+      actions: [{ action: "register", title: "Registrera" }],
+    });
+    event.waitUntil(promiseChain);
   } else {
-    console.log("This push event has no data.");
+    console.log("Empty notification");
   }
+});
 
-  const promiseChain = self.registration.showNotification(
-    event.data?.text() ?? "Check this out."
+self.addEventListener("notificationclick", (event) => {
+  const clickedNotification = event.notification;
+  clickedNotification.close();
+  event.waitUntil(
+    self.clients.openWindow(
+      `${clickedNotification.data.url}?notification_id=${clickedNotification.data.id}`
+    )
   );
-  event.waitUntil(promiseChain);
 });
