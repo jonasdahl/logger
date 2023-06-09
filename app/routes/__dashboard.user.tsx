@@ -1,7 +1,7 @@
 import { Box, Button, Container, Heading, Stack } from "@chakra-ui/react";
 import type { LoaderArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { Form, useLoaderData } from "@remix-run/react";
 import { withZod } from "@remix-validated-form/with-zod";
 import { useEffect, useState } from "react";
 import { ValidatedForm } from "remix-validated-form";
@@ -11,29 +11,44 @@ import { Input } from "~/components/form/input";
 import { SubmitButton } from "~/components/form/submit-button";
 import { validate } from "~/components/form/validate.server";
 import { db } from "~/db.server";
+import { notify } from "~/push/notifications.server";
 import { vapidKeys } from "~/secrets.server";
 
 const validator = withZod(
-  z.object({
-    maxPulse: z.union([
-      z
-        .literal("")
-        .nullable()
-        .optional()
-        .transform(() => null),
-      z.coerce
-        .number()
-        .max(300, "Orimlig maxpuls.")
-        .min(40, "Orimlig maxpuls."),
-    ]),
-  })
+  z.union([
+    z.object({ _action: z.literal("testNotifications") }),
+    z.object({
+      _action: z.literal("saveSettings"),
+      maxPulse: z.union([
+        z
+          .literal("")
+          .nullable()
+          .optional()
+          .transform(() => null),
+        z.coerce
+          .number()
+          .max(300, "Orimlig maxpuls.")
+          .min(40, "Orimlig maxpuls."),
+      ]),
+    }),
+  ])
 );
 
 export async function action({ request }: LoaderArgs) {
   const sessionUser = await authenticator.isAuthenticated(request, {
     failureRedirect: "/",
   });
-  const { maxPulse } = await validate({ request, validator });
+  const form = await validate({ request, validator });
+  if (form._action === "testNotifications") {
+    const pushes = await db.pushSubscription.findMany({
+      where: { userId: sessionUser.id },
+    });
+    for (const push of pushes) {
+      await notify(push, "This is a test.").catch((e) => console.log(e));
+    }
+    return redirect("/user");
+  }
+  const { maxPulse } = form;
   await db.user.update({
     where: { id: sessionUser.id },
     data: { maxPulse },
@@ -81,6 +96,7 @@ export default function User() {
     <Container py={5}>
       <Stack spacing={5}>
         <ValidatedForm validator={validator} method="post">
+          <input type="hidden" name="_action" value="saveSettings" />
           <Stack spacing={5}>
             <Heading as="h1">Personliga inställningar</Heading>
             <Input
@@ -138,21 +154,36 @@ export default function User() {
               Aktivera aviseringar för denna enhet
             </Button>
           ) : (
-            <Button
-              onClick={async () => {
-                const registration =
-                  await navigator.serviceWorker.getRegistration("/sw.js");
-                if (!registration) {
-                  throw new Error("No registration");
-                }
-                registration.pushManager
-                  .getSubscription()
-                  .then((sub) => sub?.unsubscribe());
-                setSubscription(null);
-              }}
-            >
-              Stäng av aviseringar för denna enhet
-            </Button>
+            <Stack>
+              <Box>
+                <Form method="post">
+                  <input
+                    type="hidden"
+                    name="_action"
+                    value="testNotifications"
+                  />
+                  <Button type="submit">Testa aviseringar</Button>
+                </Form>
+              </Box>
+              <Box>
+                <Button
+                  colorScheme="red"
+                  onClick={async () => {
+                    const registration =
+                      await navigator.serviceWorker.getRegistration("/sw.js");
+                    if (!registration) {
+                      throw new Error("No registration");
+                    }
+                    registration.pushManager
+                      .getSubscription()
+                      .then((sub) => sub?.unsubscribe());
+                    setSubscription(null);
+                  }}
+                >
+                  Stäng av aviseringar för denna enhet
+                </Button>
+              </Box>
+            </Stack>
           )}
         </Box>
       </Stack>

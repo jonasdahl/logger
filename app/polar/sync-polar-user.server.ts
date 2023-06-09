@@ -1,4 +1,6 @@
+import { isAdmin } from "~/auth.server";
 import { db } from "~/db.server";
+import { notify } from "~/push/notifications.server";
 import { createExerciseTransaction } from "./exercise-transaction";
 import { getPolarExercise } from "./get-exercise";
 import { getPolarExerciseSampleTypes } from "./get-exercise-sample-types";
@@ -74,6 +76,16 @@ export async function syncPolarUser({
       return res;
     }
   );
+
+  if (data?.exercises.length || (await isAdmin(userId))) {
+    const pushes = await db.pushSubscription.findMany({ where: { userId } });
+    for (const push of pushes) {
+      await notify(
+        push,
+        "Ett nytt pass från Polar har importerats. Glöm inte att registrera det."
+      ).catch((e) => console.error(e));
+    }
+  }
 
   return data;
 }
