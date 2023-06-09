@@ -38,9 +38,6 @@ export default function Dashboard() {
     <Box>
       <Box bg="blue.700" boxShadow="lg" fontWeight="bold">
         <HStack h="100%" py={3} pr={3} pl={5} spacing={5}>
-          <Link to="/" color="white">
-            Start
-          </Link>
           <Link to="/calendar" color="white">
             Kalender
           </Link>
