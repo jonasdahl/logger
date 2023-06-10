@@ -58,6 +58,12 @@ const config: CodegenConfig = {
     },
     "app/graphql/generated/documents.ts": {
       plugins: ["typescript", "typescript-operations", "typed-document-node"],
+      config: {
+        avoidOptionals: true,
+        immutableTypes: true,
+        strictScalars: true,
+        scalars: { DateTime: "string" },
+      },
     },
   },
 };

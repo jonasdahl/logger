@@ -1,0 +1,4 @@
+type PlannedExercise implements ActivityBase {
+  id: ID!
+  start: DateTime!
+}

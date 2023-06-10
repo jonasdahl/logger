@@ -4,6 +4,7 @@ import type { DayResolvers } from "~/graphql/generated/graphql";
 
 export const dayResolvers: DayResolvers = {
   start: (parent) => parent.start,
+  date: (parent) => parent.start.toFormat("yyyy-MM-dd"),
   activities: async (parent, _, { userId }) => {
     const start = parent.start.startOf("day");
     const end = parent.start.endOf("day");
@@ -15,12 +16,21 @@ export const dayResolvers: DayResolvers = {
       where: {
         userId,
         time: { gte: start.toJSDate(), lte: end.toJSDate() },
+        deletedAt: null,
       },
     });
     const activities = await db.activity.findMany({
       where: {
         userId,
         time: { gte: start.toJSDate(), lte: end.toJSDate() },
+        deletedAt: null,
+      },
+    });
+    const plannedActivities = await db.plannedActivity.findMany({
+      where: {
+        userId,
+        time: { gte: start.toJSDate(), lte: end.toJSDate() },
+        deletedAt: null,
       },
     });
     return {
@@ -39,6 +49,10 @@ export const dayResolvers: DayResolvers = {
           ...activities.map((activity) => ({
             cursor: activity.id,
             node: { type: "Exercise" as const, value: activity },
+          })),
+          ...plannedActivities.map((activity) => ({
+            cursor: activity.id,
+            node: { type: "PlannedExercise" as const, value: activity },
           })),
         ],
         (x) => x.node.value.time,

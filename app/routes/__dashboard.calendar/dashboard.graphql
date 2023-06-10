@@ -1,0 +1,26 @@
+query Calendar($after: String!, $before: String!) {
+  days(after: $after, before: $before) {
+    edges {
+      cursor
+      node {
+        ...CalendarDay
+      }
+    }
+  }
+}
+
+fragment CalendarDay on Day {
+  start
+  date
+  activities {
+    edges {
+      cursor
+      node {
+        __typename
+        ... on ActivityBase {
+          start
+        }
+      }
+    }
+  }
+}

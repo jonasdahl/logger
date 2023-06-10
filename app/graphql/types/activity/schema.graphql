@@ -1,5 +1,1 @@
-union Activity = FogisGame | Exercise
-
-type FogisGame {
-  id: ID!
-}
+union Activity = FogisGame | Exercise | PlannedExercise

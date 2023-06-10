@@ -13,96 +13,104 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
-  DateTime: { input: any; output: any; }
+  DateTime: { input: string; output: string; }
 };
 
-export type Activity = Exercise | FogisGame;
+export type Activity = Exercise | FogisGame | PlannedExercise;
 
 export type ActivityBase = {
-  id: Scalars['ID']['output'];
-  start: Scalars['DateTime']['output'];
+  readonly id: Scalars['ID']['output'];
+  readonly start: Scalars['DateTime']['output'];
 };
 
 export type ActivityConnection = {
-  __typename?: 'ActivityConnection';
-  edges: Array<ActivityEdge>;
-  pageInfo: PageInfo;
+  readonly __typename?: 'ActivityConnection';
+  readonly edges: ReadonlyArray<ActivityEdge>;
+  readonly pageInfo: PageInfo;
 };
 
 export type ActivityEdge = {
-  __typename?: 'ActivityEdge';
-  cursor: Scalars['String']['output'];
-  node?: Maybe<Activity>;
+  readonly __typename?: 'ActivityEdge';
+  readonly cursor: Scalars['String']['output'];
+  readonly node: Maybe<Activity>;
 };
 
 export type ActivityFilter = {
-  startFrom?: InputMaybe<Scalars['DateTime']['input']>;
-  startTo?: InputMaybe<Scalars['DateTime']['input']>;
+  readonly startFrom: InputMaybe<Scalars['DateTime']['input']>;
+  readonly startTo: InputMaybe<Scalars['DateTime']['input']>;
 };
 
 export type Day = {
-  __typename?: 'Day';
-  activities: ActivityConnection;
-  start?: Maybe<Scalars['DateTime']['output']>;
+  readonly __typename?: 'Day';
+  readonly activities: ActivityConnection;
+  readonly date: Scalars['String']['output'];
+  readonly start: Scalars['DateTime']['output'];
 };
 
 
 export type DayActivitiesArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  before?: InputMaybe<Scalars['String']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
+  after: InputMaybe<Scalars['String']['input']>;
+  before: InputMaybe<Scalars['String']['input']>;
+  first: InputMaybe<Scalars['Int']['input']>;
+  last: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type DayConnection = {
-  __typename?: 'DayConnection';
-  edges: Array<DayEdge>;
-  pageInfo: PageInfo;
+  readonly __typename?: 'DayConnection';
+  readonly edges: ReadonlyArray<DayEdge>;
+  readonly pageInfo: PageInfo;
 };
 
 export type DayEdge = {
-  __typename?: 'DayEdge';
-  cursor: Scalars['String']['output'];
-  node?: Maybe<Day>;
+  readonly __typename?: 'DayEdge';
+  readonly cursor: Scalars['String']['output'];
+  readonly node: Maybe<Day>;
 };
 
 export type Exercise = ActivityBase & {
-  __typename?: 'Exercise';
-  id: Scalars['ID']['output'];
-  start: Scalars['DateTime']['output'];
+  readonly __typename?: 'Exercise';
+  readonly id: Scalars['ID']['output'];
+  readonly start: Scalars['DateTime']['output'];
 };
 
 export type FogisGame = ActivityBase & {
-  __typename?: 'FogisGame';
-  awayTeam: Scalars['String']['output'];
-  homeTeam: Scalars['String']['output'];
-  id: Scalars['ID']['output'];
-  start: Scalars['DateTime']['output'];
+  readonly __typename?: 'FogisGame';
+  readonly awayTeam: Scalars['String']['output'];
+  readonly homeTeam: Scalars['String']['output'];
+  readonly id: Scalars['ID']['output'];
+  readonly start: Scalars['DateTime']['output'];
 };
 
 export type PageInfo = {
-  __typename?: 'PageInfo';
-  endCursor?: Maybe<Scalars['String']['output']>;
-  hasNextPage: Scalars['Boolean']['output'];
-  hasPreviousPage: Scalars['Boolean']['output'];
-  startCursor?: Maybe<Scalars['String']['output']>;
+  readonly __typename?: 'PageInfo';
+  readonly endCursor: Maybe<Scalars['String']['output']>;
+  readonly hasNextPage: Scalars['Boolean']['output'];
+  readonly hasPreviousPage: Scalars['Boolean']['output'];
+  readonly startCursor: Maybe<Scalars['String']['output']>;
+};
+
+export type PlannedExercise = ActivityBase & {
+  readonly __typename?: 'PlannedExercise';
+  readonly id: Scalars['ID']['output'];
+  readonly start: Scalars['DateTime']['output'];
 };
 
 export type Query = {
-  __typename?: 'Query';
-  activities: ActivityConnection;
-  day?: Maybe<Day>;
-  days: DayConnection;
-  me?: Maybe<User>;
+  readonly __typename?: 'Query';
+  readonly activities: ActivityConnection;
+  readonly day: Maybe<Day>;
+  readonly days: DayConnection;
+  readonly me: Maybe<User>;
+  readonly today: Day;
 };
 
 
 export type QueryActivitiesArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  before?: InputMaybe<Scalars['String']['input']>;
-  filter?: InputMaybe<ActivityFilter>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
+  after: InputMaybe<Scalars['String']['input']>;
+  before: InputMaybe<Scalars['String']['input']>;
+  filter: InputMaybe<ActivityFilter>;
+  first: InputMaybe<Scalars['Int']['input']>;
+  last: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -112,22 +120,33 @@ export type QueryDayArgs = {
 
 
 export type QueryDaysArgs = {
-  after?: InputMaybe<Scalars['String']['input']>;
-  before?: InputMaybe<Scalars['String']['input']>;
-  first?: InputMaybe<Scalars['Int']['input']>;
-  last?: InputMaybe<Scalars['Int']['input']>;
+  after: InputMaybe<Scalars['String']['input']>;
+  before: InputMaybe<Scalars['String']['input']>;
+  first: InputMaybe<Scalars['Int']['input']>;
+  last: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type User = {
-  __typename?: 'User';
-  email: Scalars['String']['output'];
-  id: Scalars['ID']['output'];
+  readonly __typename?: 'User';
+  readonly email: Scalars['String']['output'];
+  readonly id: Scalars['ID']['output'];
 };
+
+export type CalendarQueryVariables = Exact<{
+  after: Scalars['String']['input'];
+  before: Scalars['String']['input'];
+}>;
+
+
+export type CalendarQuery = { readonly __typename?: 'Query', readonly days: { readonly __typename?: 'DayConnection', readonly edges: ReadonlyArray<{ readonly __typename?: 'DayEdge', readonly cursor: string, readonly node: { readonly __typename?: 'Day', readonly start: string, readonly date: string, readonly activities: { readonly __typename?: 'ActivityConnection', readonly edges: ReadonlyArray<{ readonly __typename?: 'ActivityEdge', readonly cursor: string, readonly node: { readonly __typename: 'Exercise', readonly start: string } | { readonly __typename: 'FogisGame', readonly start: string } | { readonly __typename: 'PlannedExercise', readonly start: string } | null }> } } | null }> } };
+
+export type CalendarDayFragment = { readonly __typename?: 'Day', readonly start: string, readonly date: string, readonly activities: { readonly __typename?: 'ActivityConnection', readonly edges: ReadonlyArray<{ readonly __typename?: 'ActivityEdge', readonly cursor: string, readonly node: { readonly __typename: 'Exercise', readonly start: string } | { readonly __typename: 'FogisGame', readonly start: string } | { readonly __typename: 'PlannedExercise', readonly start: string } | null }> } };
 
 export type DashboardQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type DashboardQuery = { __typename?: 'Query', me?: { __typename?: 'User', email: string } | null };
+export type DashboardQuery = { readonly __typename?: 'Query', readonly me: { readonly __typename?: 'User', readonly email: string } | null };
 
-
+export const CalendarDayFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CalendarDay"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Day"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"start"}},{"kind":"Field","name":{"kind":"Name","value":"date"}},{"kind":"Field","name":{"kind":"Name","value":"activities"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cursor"}},{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ActivityBase"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"start"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<CalendarDayFragment, unknown>;
+export const CalendarDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Calendar"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"after"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"before"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"days"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"after"},"value":{"kind":"Variable","name":{"kind":"Name","value":"after"}}},{"kind":"Argument","name":{"kind":"Name","value":"before"},"value":{"kind":"Variable","name":{"kind":"Name","value":"before"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cursor"}},{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CalendarDay"}}]}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CalendarDay"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Day"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"start"}},{"kind":"Field","name":{"kind":"Name","value":"date"}},{"kind":"Field","name":{"kind":"Name","value":"activities"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cursor"}},{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ActivityBase"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"start"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<CalendarQuery, CalendarQueryVariables>;
 export const DashboardDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Dashboard"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"me"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]}}]} as unknown as DocumentNode<DashboardQuery, DashboardQueryVariables>;

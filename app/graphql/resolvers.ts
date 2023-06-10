@@ -10,6 +10,7 @@ import { dayResolvers } from "./types/day/resolvers";
 import { exerciseResolvers } from "./types/exercise/resolvers";
 import { fogisGameResolvers } from "./types/fogis-game/resolvers";
 import { pageInfoResolvers } from "./types/page-info/resolvers";
+import { plannedExerciseResolvers } from "./types/planned-exercise/resolvers";
 import { queryResolvers } from "./types/query/resolvers";
 import { userResolvers } from "./types/user/resolvers";
 
@@ -27,4 +28,5 @@ export const resolvers: Resolvers = {
   Day: dayResolvers,
   DayConnection: dayConnectionResolvers,
   DayEdge: dayEdgeResolvers,
+  PlannedExercise: plannedExerciseResolvers,
 };

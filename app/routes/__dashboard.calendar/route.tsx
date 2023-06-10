@@ -1,7 +1,5 @@
 import type { ButtonProps } from "@chakra-ui/react";
 import {
-  Alert,
-  AlertTitle,
   Box,
   Button,
   Container,
@@ -21,13 +19,11 @@ import {
   PopoverHeader,
   PopoverTrigger,
   SimpleGrid,
-  Spacer,
   Stack,
 } from "@chakra-ui/react";
-import type { LoaderArgs, SerializeFrom } from "@remix-run/node";
+import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData, useNavigation } from "@remix-run/react";
-import { groupBy } from "lodash";
 import { DateTime, Interval } from "luxon";
 import type { ReactNode } from "react";
 import { forwardRef, useEffect, useRef } from "react";
@@ -38,82 +34,43 @@ import { Select } from "~/components/form/select";
 import { SubmitButton } from "~/components/form/submit-button";
 import { Textarea } from "~/components/form/textarea";
 import { db } from "~/db.server";
+import type { CalendarDayFragment } from "~/graphql/generated/documents";
+import { CalendarDocument } from "~/graphql/generated/documents";
+import { gql } from "~/graphql/graphql.server";
 import { useToggle } from "~/hooks/use-toggle";
 import { getTimeZoneFromRequest } from "~/time";
-import { createPlannedActivityValidator } from "./__dashboard.planned-activities.create";
+import { createPlannedActivityValidator } from "../__dashboard.planned-activities.create";
+import { FogisSyncAlert } from "./fogis-sync-alert";
+import { OnboardingAlert } from "./onboarding-alert";
 
 export async function loader({ request }: LoaderArgs) {
   const user = await authenticator.isAuthenticated(request, {
     failureRedirect: "/login",
   });
-
   const timeZone = getTimeZoneFromRequest(request);
   const now = DateTime.now().setZone(timeZone);
-  const timeFilter = {
-    gte: now.minus({ weeks: 3 }).toJSDate(),
-    lte: now.plus({ weeks: 3 }).toJSDate(),
-  };
 
-  const fullUser = await db.user.findUniqueOrThrow({
-    where: { id: user.id },
-    include: {
-      fogisGames: {
-        where: { time: timeFilter, deletedAt: null },
-      },
-      activities: {
-        where: { time: timeFilter, deletedAt: null },
-        include: {
-          primaryPurpose: true,
-          secondaryPurpose: true,
-        },
-      },
-      plannedActivities: {
-        where: { time: timeFilter, deletedAt: null },
-        include: {
-          primaryPurpose: true,
-          secondaryPurpose: true,
-        },
-      },
+  const { data } = await gql({
+    document: CalendarDocument,
+    variables: {
+      after: now
+        .startOf("week")
+        .minus({ weeks: 2, days: 1 })
+        .toFormat("yyyy-MM-dd"),
+      before: now
+        .endOf("week")
+        .plus({ weeks: 2, days: 1 })
+        .toFormat("yyyy-MM-dd"),
     },
+    request,
   });
 
-  const activities = [
-    ...fullUser.fogisGames.map((game) => ({
-      key: `game:${game.id}`,
-      type: "game" as const,
-      game,
-      day: DateTime.fromJSDate(game.time, { zone: timeZone }).startOf("day"),
-    })),
-    ...fullUser.activities.map((activity) => {
-      return {
-        key: `activity:${activity.id}`,
-        type: "activity" as const,
-        day: DateTime.fromJSDate(activity.time, { zone: timeZone }),
-        activity,
-      };
-    }),
-    ...fullUser.plannedActivities.map((plannedActivity) => {
-      return {
-        key: `plannedActivity:${plannedActivity.id}`,
-        type: "plannedActivity" as const,
-        day: DateTime.fromJSDate(plannedActivity.time, { zone: timeZone }),
-        plannedActivity,
-      };
-    }),
-  ];
-
-  const activitiesByDay = groupBy(activities, (a) =>
-    a.day.startOf("day").toISO()
-  );
-
   const realUser = await db.user.findUniqueOrThrow({ where: { id: user.id } });
-
   const purposes = await db.activityPurpose.findMany({});
 
   return json({
+    data,
     purposes,
-    activities,
-    activitiesByDay,
     timeZone,
     showOnboarding: !realUser.onboardedAt,
     showFogisSync:
@@ -122,77 +79,35 @@ export async function loader({ request }: LoaderArgs) {
   });
 }
 
-type Activity = SerializeFrom<typeof loader>["activities"][number];
-
 export default function DashboardIndex() {
-  const { activitiesByDay, timeZone, showOnboarding, showFogisSync } =
+  const { showOnboarding, showFogisSync, data } =
     useLoaderData<typeof loader>();
-  const now = DateTime.now().setZone(timeZone);
-  const startOfWeek = now.startOf("week");
-  const startOfPreviousWeek = startOfWeek.minus({ weeks: 2 });
-  const endOfWeek = now.endOf("week");
-  const endOfPeriod = endOfWeek.plus({ weeks: 2 });
-  const interval = Interval.fromDateTimes(startOfPreviousWeek, endOfPeriod);
-  const days = interval.splitBy({ days: 1 });
 
   return (
     <Container maxW="container.lg" py={5}>
       <Stack spacing={5}>
-        {showOnboarding ? (
-          <Alert>
-            <HStack w="100%">
-              <AlertTitle>
-                Börja med att sätta upp anslutningar till tredjepartsappar.
-              </AlertTitle>
-              <Spacer />
-              <Box>
-                <ButtonLink size="sm" colorScheme="blue" to="/connections">
-                  Kom igång
-                </ButtonLink>
-              </Box>
-            </HStack>
-          </Alert>
-        ) : null}
+        {showOnboarding ? <OnboardingAlert /> : null}
 
-        {showFogisSync ? (
-          <Alert>
-            <HStack w="100%">
-              <AlertTitle>
-                Det var mer än en vecka sedan du synkade mot Fogis.
-              </AlertTitle>
-              <Spacer />
-              <Box>
-                <ButtonLink
-                  size="sm"
-                  colorScheme="blue"
-                  to="/connections/fogis"
-                >
-                  Gör det nu
-                </ButtonLink>
-              </Box>
-            </HStack>
-          </Alert>
-        ) : null}
+        {showFogisSync ? <FogisSyncAlert /> : null}
 
         <SimpleGrid columns={7} rowGap={2} columnGap={1}>
-          {days.map((day) => (
-            <Day
-              key={day.start.toMillis()}
-              day={day}
-              activities={activitiesByDay[day.start.toISO()] ?? []}
-            />
-          ))}
+          {data?.days.edges?.map((day) =>
+            day.node ? <Day key={day.cursor} day={day.node} /> : null
+          )}
         </SimpleGrid>
       </Stack>
     </Container>
   );
 }
 
-function Day({ day, activities }: { day: Interval; activities: Activity[] }) {
-  const isFuture = day.start.diffNow().toMillis() > 0;
-  const isPast = day.start.diffNow().toMillis() < 0;
+function Day({ day }: { day: CalendarDayFragment }) {
   const { timeZone } = useLoaderData<typeof loader>();
-  const isToday = day.contains(DateTime.now().setZone(timeZone));
+  const start = DateTime.fromISO(day.start, { zone: timeZone });
+  const isFuture = start.diffNow().toMillis() > 0;
+  const isPast = start.diffNow().toMillis() < 0;
+  const isToday = Interval.fromDateTimes(start, start.endOf("day")).contains(
+    DateTime.now().setZone(timeZone)
+  );
 
   return (
     <Box h="7rem">
@@ -203,7 +118,7 @@ function Day({ day, activities }: { day: Interval; activities: Activity[] }) {
           fontWeight="bold"
           display={["none", "block"]}
         >
-          {day.start.toFormat("yyyy-MM-dd")}
+          {day.date}
         </Box>
         <Box
           fontSize="xs"
@@ -211,35 +126,31 @@ function Day({ day, activities }: { day: Interval; activities: Activity[] }) {
           fontWeight="bold"
           display={["block", "none"]}
         >
-          {day.start.toFormat("dd")}
+          {start.toFormat("dd")}
         </Box>
         <Popover>
           <PopoverTrigger>
-            <DayPreview day={day} activities={activities} />
+            <DayPreview day={day} />
           </PopoverTrigger>
 
           <PopoverContent>
             <PopoverArrow />
             <PopoverHeader>
-              {day.start.toFormat("yyyy-MM-dd")}
+              {start.toFormat("yyyy-MM-dd")}
               <PopoverCloseButton />
             </PopoverHeader>
             <PopoverBody>
               <Stack>
-                {activities.map((activity) => (
-                  <Box key={activity.key}>
-                    {activity.type === "game"
-                      ? `Match: ${activity.game.homeTeam} - ${activity.game.awayTeam}`
-                      : activity.type === "activity"
-                      ? "Träning"
-                      : activity.type === "plannedActivity"
-                      ? "Planerad träning"
-                      : "Vila"}
-                  </Box>
-                ))}
+                {day.activities.edges.map((activityEdge) =>
+                  activityEdge.node ? (
+                    <Box key={activityEdge.cursor}>
+                      {activityEdge.node.__typename}
+                    </Box>
+                  ) : null
+                )}
                 <HStack w="100%">
                   <ButtonLink
-                    to={`/days/${day.start.toFormat("yyyy-MM-dd")}`}
+                    to={`/days/${start.toFormat("yyyy-MM-dd")}`}
                     size="sm"
                     flex={1}
                   >
@@ -247,7 +158,7 @@ function Day({ day, activities }: { day: Interval; activities: Activity[] }) {
                   </ButtonLink>
                   {isPast || isToday ? (
                     <ButtonLink
-                      to={`/activities/create?date=${day.start.toFormat(
+                      to={`/activities/create?date=${start.toFormat(
                         "yyyy-MM-dd"
                       )}`}
                       colorScheme="green"
@@ -262,7 +173,7 @@ function Day({ day, activities }: { day: Interval; activities: Activity[] }) {
                       colorScheme="green"
                       size="sm"
                       flex={1}
-                      day={day}
+                      dayStart={start}
                     >
                       Planera
                     </PlanButton>
@@ -277,7 +188,10 @@ function Day({ day, activities }: { day: Interval; activities: Activity[] }) {
   );
 }
 
-function PlanButton({ day, ...props }: ButtonProps & { day: Interval }) {
+function PlanButton({
+  dayStart,
+  ...props
+}: ButtonProps & { dayStart: DateTime }) {
   const [modalOpen, { toggle, close }] = useToggle();
   const { state } = useNavigation();
   const lastState = useRef(state);
@@ -311,7 +225,7 @@ function PlanButton({ day, ...props }: ButtonProps & { day: Interval }) {
                 <input
                   type="hidden"
                   name="date"
-                  value={day.start
+                  value={dayStart
                     .set({ hour: 12 })
                     .toFormat("yyyy-MM-dd'T'HH:mm")}
                 />
@@ -347,74 +261,79 @@ function PlanButton({ day, ...props }: ButtonProps & { day: Interval }) {
   );
 }
 
-const DayPreview = forwardRef<
-  HTMLButtonElement,
-  { day: Interval; activities: Activity[] }
->(({ day, activities, ...props }, ref) => {
-  const { timeZone } = useLoaderData<typeof loader>();
-  const generalProps = {
-    borderWidth: day.contains(DateTime.now().setZone(timeZone))
-      ? "thick"
-      : undefined,
-    opacity: day.start.diffNow().toMillis() > 0 ? 0.7 : undefined,
-    ...props,
-  };
+const DayPreview = forwardRef<HTMLButtonElement, { day: CalendarDayFragment }>(
+  ({ day, ...props }, ref) => {
+    const { timeZone } = useLoaderData<typeof loader>();
+    const start = DateTime.fromISO(day.start, { zone: timeZone });
+    const isFuture = start.diffNow().toMillis() > 0;
+    const isPast = start.endOf("day").diffNow().toMillis() < 0;
+    const dayInterval = Interval.fromDateTimes(start, start.endOf("day"));
+    const isToday = dayInterval.contains(DateTime.now().setZone(timeZone));
+    const generalProps = {
+      borderWidth: isToday ? "thick" : undefined,
+      opacity: isFuture ? 0.7 : undefined,
+      ...props,
+    };
 
-  if (activities.some((a) => a.type === "game")) {
-    return <GameDayPreview ref={ref} {...generalProps} />;
-  }
-  if (activities.some((a) => a.type === "activity")) {
-    const purposes = activities
-      .flatMap((a) =>
-        a.type === "activity"
-          ? [a.activity.primaryPurpose, a.activity.secondaryPurpose]
-          : []
-      )
-      .filter(Boolean);
-    const label =
-      purposes.map((p) => p?.shortLabel || p?.label).join(" + ") || "Träning";
+    const activities = day.activities.edges.flatMap((e) =>
+      e.node ? [e.node] : []
+    );
+
+    if (activities.some((a) => a.__typename === "FogisGame")) {
+      return <GameDayPreview ref={ref} {...generalProps} />;
+    }
+    if (activities.some((a) => a.__typename === "Exercise")) {
+      // const purposes = activities
+      //   .flatMap((a) =>
+      //     a.type === "activity"
+      //       ? [a.activity.primaryPurpose, a.activity.secondaryPurpose]
+      //       : []
+      //   )
+      //   .filter(Boolean);
+      // const label =
+      //   purposes.map((p) => p?.shortLabel || p?.label).join(" + ") || "Träning";
+      const label = "Träning";
+
+      return (
+        <ExerciseDayPreview ref={ref} {...generalProps}>
+          {label}
+        </ExerciseDayPreview>
+      );
+    }
+
+    if (isPast) {
+      return <RestDayPreview ref={ref} {...generalProps} />;
+    }
+
+    if (activities.some((a) => a.__typename === "PlannedExercise")) {
+      // const purposes = activities
+      //   .flatMap((a) =>
+      //     a.type === "activity"
+      //       ? [a.activity.primaryPurpose, a.activity.secondaryPurpose]
+      //       : []
+      //   )
+      //   .filter(Boolean);
+      // const label =
+      //   purposes.map((p) => p?.shortLabel || p?.label).join(" + ") || "Träning";
+      const label = "Träning";
+
+      return (
+        <ExerciseDayPreview ref={ref} {...generalProps}>
+          {label}
+        </ExerciseDayPreview>
+      );
+    }
 
     return (
-      <ExerciseDayPreview ref={ref} {...generalProps}>
-        {label}
-      </ExerciseDayPreview>
+      <BasePreview
+        bg="gray.500"
+        _hover={{ bg: "gray.600" }}
+        ref={ref}
+        {...generalProps}
+      />
     );
   }
-  if (
-    day.end.diffNow().toMillis() > 0 &&
-    activities.some((a) => a.type === "plannedActivity")
-  ) {
-    const purposes = activities
-      .flatMap((a) =>
-        a.type === "plannedActivity"
-          ? [
-              a.plannedActivity.primaryPurpose,
-              a.plannedActivity.secondaryPurpose,
-            ]
-          : []
-      )
-      .filter(Boolean);
-    const label =
-      purposes.map((p) => p?.shortLabel || p?.label).join(" + ") || "Träning";
-
-    return (
-      <ExerciseDayPreview ref={ref} {...generalProps}>
-        {label}
-      </ExerciseDayPreview>
-    );
-  }
-  if (day.start.diffNow().toMillis() < 0) {
-    return <RestDayPreview ref={ref} {...generalProps} />;
-  }
-  return (
-    <BasePreview
-      bg="gray.500"
-      _hover={{ bg: "gray.600" }}
-      ref={ref}
-      {...generalProps}
-    />
-  );
-});
+);
 
 const GameDayPreview = forwardRef<HTMLButtonElement, {}>((props, ref) => (
   <BasePreview bg="red.500" _hover={{ bg: "red.600" }} {...props} ref={ref}>

@@ -12,6 +12,7 @@ type Query {
   days(first: Int, after: String, last: Int, before: String): DayConnection!
 
   day(date: String!): Day
+  today: Day!
 }
 
 input ActivityFilter {

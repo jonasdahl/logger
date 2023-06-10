@@ -1,4 +1,4 @@
-export const typeDefinitions = `union Activity = Exercise | FogisGame
+export const typeDefinitions = `union Activity = Exercise | FogisGame | PlannedExercise
 
 interface ActivityBase {
   id: ID!
@@ -24,7 +24,8 @@ scalar DateTime
 
 type Day {
   activities(after: String, before: String, first: Int, last: Int): ActivityConnection!
-  start: DateTime
+  date: String!
+  start: DateTime!
 }
 
 type DayConnection {
@@ -56,11 +57,17 @@ type PageInfo {
   startCursor: String
 }
 
+type PlannedExercise implements ActivityBase {
+  id: ID!
+  start: DateTime!
+}
+
 type Query {
   activities(after: String, before: String, filter: ActivityFilter, first: Int, last: Int): ActivityConnection!
   day(date: String!): Day
   days(after: String, before: String, first: Int, last: Int): DayConnection!
   me: User
+  today: Day!
 }
 
 type User {

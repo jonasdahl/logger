@@ -31,6 +31,7 @@ export const queryResolvers: QueryResolvers = {
           gte: filter?.startFrom?.toJSDate() ?? undefined,
           lte: filter?.startTo?.toJSDate() ?? undefined,
         },
+        deletedAt: null,
       },
     });
     const activities = await db.activity.findMany({
@@ -40,6 +41,17 @@ export const queryResolvers: QueryResolvers = {
           gte: filter?.startFrom?.toJSDate() ?? undefined,
           lte: filter?.startTo?.toJSDate() ?? undefined,
         },
+        deletedAt: null,
+      },
+    });
+    const plannedActivities = await db.plannedActivity.findMany({
+      where: {
+        userId,
+        time: {
+          gte: filter?.startFrom?.toJSDate() ?? undefined,
+          lte: filter?.startTo?.toJSDate() ?? undefined,
+        },
+        deletedAt: null,
       },
     });
     return {
@@ -59,27 +71,27 @@ export const queryResolvers: QueryResolvers = {
             cursor: activity.id,
             node: { type: "Exercise" as const, value: activity },
           })),
+          ...plannedActivities.map((activity) => ({
+            cursor: activity.id,
+            node: { type: "PlannedExercise" as const, value: activity },
+          })),
         ],
         (x) => x.node.value.time,
         "asc"
       ),
     };
   },
-  days: (_, { after, before }) => {
+  days: (_, { after, before }, { timeZone }) => {
     if (!after) {
       throw new Error('Missing "after" argument');
     }
     if (!before) {
       throw new Error('Missing "before" argument');
     }
-    const start = DateTime.fromFormat(after, "yyyy-MM-dd", {
-      zone: "Europe/Stockholm", // TODO
-    })
+    const start = DateTime.fromFormat(after, "yyyy-MM-dd", { zone: timeZone })
       .startOf("day")
       .plus({ days: 1 });
-    const end = DateTime.fromFormat(before, "yyyy-MM-dd", {
-      zone: "Europe/Stockholm", // TODO
-    })
+    const end = DateTime.fromFormat(before, "yyyy-MM-dd", { zone: timeZone })
       .endOf("day")
       .minus({ days: 1 });
     const interval = Interval.fromDateTimes(start, end);
@@ -99,4 +111,5 @@ export const queryResolvers: QueryResolvers = {
       })),
     };
   },
+  today: (_, __, { timeZone }) => ({ start: DateTime.now().setZone(timeZone) }),
 };

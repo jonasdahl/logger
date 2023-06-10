@@ -1,5 +1,6 @@
 type Day {
-  start: DateTime
+  start: DateTime!
+  date: String!
   activities(
     first: Int
     after: String

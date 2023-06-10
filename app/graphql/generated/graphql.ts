@@ -4,6 +4,7 @@ import { ActivityModel } from '../types/activity/model';
 import { DayModel } from '../types/day/model';
 import { ExerciseModel } from '../types/exercise/model';
 import { FogisGameModel } from '../types/fogis-game/model';
+import { PlannedExerciseModel } from '../types/planned-exercise/model';
 import { UserModel } from '../types/user/model';
 import { Context } from '../context';
 export type Maybe<T> = T | null;
@@ -25,7 +26,7 @@ export type Scalars = {
   DateTime: { input: DateTime; output: DateTime; }
 };
 
-export type Activity = Exercise | FogisGame;
+export type Activity = Exercise | FogisGame | PlannedExercise;
 
 export type ActivityBase = {
   id: Scalars['ID']['output'];
@@ -52,7 +53,8 @@ export type ActivityFilter = {
 export type Day = {
   __typename?: 'Day';
   activities: ActivityConnection;
-  start: Maybe<Scalars['DateTime']['output']>;
+  date: Scalars['String']['output'];
+  start: Scalars['DateTime']['output'];
 };
 
 
@@ -97,12 +99,19 @@ export type PageInfo = {
   startCursor: Maybe<Scalars['String']['output']>;
 };
 
+export type PlannedExercise = ActivityBase & {
+  __typename?: 'PlannedExercise';
+  id: Scalars['ID']['output'];
+  start: Scalars['DateTime']['output'];
+};
+
 export type Query = {
   __typename?: 'Query';
   activities: ActivityConnection;
   day: Maybe<Day>;
   days: DayConnection;
   me: Maybe<User>;
+  today: Day;
 };
 
 
@@ -203,7 +212,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping of interface types */
 export type ResolversInterfaceTypes<RefType extends Record<string, unknown>> = {
-  ActivityBase: ( ExerciseModel ) | ( FogisGameModel );
+  ActivityBase: ( ExerciseModel ) | ( FogisGameModel ) | ( PlannedExerciseModel );
 };
 
 /** Mapping between all available schema types and the resolvers types */
@@ -223,6 +232,7 @@ export type ResolversTypes = {
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   PageInfo: ResolverTypeWrapper<PageInfo>;
+  PlannedExercise: ResolverTypeWrapper<PlannedExerciseModel>;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   User: ResolverTypeWrapper<UserModel>;
@@ -245,17 +255,18 @@ export type ResolversParentTypes = {
   ID: Scalars['ID']['output'];
   Int: Scalars['Int']['output'];
   PageInfo: PageInfo;
+  PlannedExercise: PlannedExerciseModel;
   Query: {};
   String: Scalars['String']['output'];
   User: UserModel;
 };
 
 export type ActivityResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Activity'] = ResolversParentTypes['Activity']> = {
-  __resolveType: TypeResolveFn<'Exercise' | 'FogisGame', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'Exercise' | 'FogisGame' | 'PlannedExercise', ParentType, ContextType>;
 };
 
 export type ActivityBaseResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ActivityBase'] = ResolversParentTypes['ActivityBase']> = {
-  __resolveType: TypeResolveFn<'Exercise' | 'FogisGame', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'Exercise' | 'FogisGame' | 'PlannedExercise', ParentType, ContextType>;
   id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   start: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
 };
@@ -278,7 +289,8 @@ export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversT
 
 export type DayResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Day'] = ResolversParentTypes['Day']> = {
   activities: Resolver<ResolversTypes['ActivityConnection'], ParentType, ContextType, Partial<DayActivitiesArgs>>;
-  start: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  date: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  start: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -316,11 +328,18 @@ export type PageInfoResolvers<ContextType = Context, ParentType extends Resolver
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type PlannedExerciseResolvers<ContextType = Context, ParentType extends ResolversParentTypes['PlannedExercise'] = ResolversParentTypes['PlannedExercise']> = {
+  id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  start: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type QueryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   activities: Resolver<ResolversTypes['ActivityConnection'], ParentType, ContextType, Partial<QueryActivitiesArgs>>;
   day: Resolver<Maybe<ResolversTypes['Day']>, ParentType, ContextType, RequireFields<QueryDayArgs, 'date'>>;
   days: Resolver<ResolversTypes['DayConnection'], ParentType, ContextType, Partial<QueryDaysArgs>>;
   me: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  today: Resolver<ResolversTypes['Day'], ParentType, ContextType>;
 };
 
 export type UserResolvers<ContextType = Context, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
@@ -341,6 +360,7 @@ export type Resolvers<ContextType = Context> = {
   Exercise: ExerciseResolvers<ContextType>;
   FogisGame: FogisGameResolvers<ContextType>;
   PageInfo: PageInfoResolvers<ContextType>;
+  PlannedExercise: PlannedExerciseResolvers<ContextType>;
   Query: QueryResolvers<ContextType>;
   User: UserResolvers<ContextType>;
 };
