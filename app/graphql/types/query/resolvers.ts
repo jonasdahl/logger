@@ -10,12 +10,28 @@ export const queryResolvers: QueryResolvers = {
     const user = await db.user.findUniqueOrThrow({ where: { id: userId } });
     return user;
   },
-  activities: async (_, __, { userId }) => {
+  activities: async (_, { filter }, { userId }) => {
     if (!userId) {
       throw new Error("Not authenticated");
     }
-    const fogisGames = await db.fogisGame.findMany({ where: { userId } });
-    const activities = await db.activity.findMany({ where: { userId } });
+    const fogisGames = await db.fogisGame.findMany({
+      where: {
+        userId,
+        time: {
+          gte: filter?.startFrom?.toJSDate() ?? undefined,
+          lte: filter?.startTo?.toJSDate() ?? undefined,
+        },
+      },
+    });
+    const activities = await db.activity.findMany({
+      where: {
+        userId,
+        time: {
+          gte: filter?.startFrom?.toJSDate() ?? undefined,
+          lte: filter?.startTo?.toJSDate() ?? undefined,
+        },
+      },
+    });
     return {
       pageInfo: {
         endCursor: null,

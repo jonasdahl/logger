@@ -15,6 +15,11 @@ type ActivityEdge {
   node: Activity
 }
 
+input ActivityFilter {
+  startFrom: DateTime
+  startTo: DateTime
+}
+
 scalar DateTime
 
 type Exercise implements ActivityBase {
@@ -37,7 +42,7 @@ type PageInfo {
 }
 
 type Query {
-  activities(after: String, before: String, first: Int, last: Int): ActivityConnection!
+  activities(after: String, before: String, filter: ActivityFilter, first: Int, last: Int): ActivityConnection!
   me: User
 }
 

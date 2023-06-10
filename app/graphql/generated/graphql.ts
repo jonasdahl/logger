@@ -42,6 +42,11 @@ export type ActivityEdge = {
   node: Maybe<Activity>;
 };
 
+export type ActivityFilter = {
+  startFrom: InputMaybe<Scalars['DateTime']['input']>;
+  startTo: InputMaybe<Scalars['DateTime']['input']>;
+};
+
 export type Exercise = ActivityBase & {
   __typename?: 'Exercise';
   id: Scalars['ID']['output'];
@@ -74,6 +79,7 @@ export type Query = {
 export type QueryActivitiesArgs = {
   after: InputMaybe<Scalars['String']['input']>;
   before: InputMaybe<Scalars['String']['input']>;
+  filter: InputMaybe<ActivityFilter>;
   first: InputMaybe<Scalars['Int']['input']>;
   last: InputMaybe<Scalars['Int']['input']>;
 };
@@ -163,6 +169,7 @@ export type ResolversTypes = {
   ActivityBase: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['ActivityBase']>;
   ActivityConnection: ResolverTypeWrapper<Omit<ActivityConnection, 'edges'> & { edges: Array<ResolversTypes['ActivityEdge']> }>;
   ActivityEdge: ResolverTypeWrapper<Omit<ActivityEdge, 'node'> & { node: Maybe<ResolversTypes['Activity']> }>;
+  ActivityFilter: ActivityFilter;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']['output']>;
   Exercise: ResolverTypeWrapper<ExerciseModel>;
@@ -181,6 +188,7 @@ export type ResolversParentTypes = {
   ActivityBase: ResolversInterfaceTypes<ResolversParentTypes>['ActivityBase'];
   ActivityConnection: Omit<ActivityConnection, 'edges'> & { edges: Array<ResolversParentTypes['ActivityEdge']> };
   ActivityEdge: Omit<ActivityEdge, 'node'> & { node: Maybe<ResolversParentTypes['Activity']> };
+  ActivityFilter: ActivityFilter;
   Boolean: Scalars['Boolean']['output'];
   DateTime: Scalars['DateTime']['output'];
   Exercise: ExerciseModel;

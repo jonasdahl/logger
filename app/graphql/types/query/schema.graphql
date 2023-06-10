@@ -5,5 +5,11 @@ type Query {
     after: String
     last: Int
     before: String
+    filter: ActivityFilter
   ): ActivityConnection!
+}
+
+input ActivityFilter {
+  startFrom: DateTime
+  startTo: DateTime
 }

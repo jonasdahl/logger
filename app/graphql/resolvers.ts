@@ -1,4 +1,6 @@
 import type { Resolvers } from "./generated/graphql";
+import { dateTimeScalar } from "./scalars/date-time/scalar";
+import { activityBaseResolvers } from "./types/activity-base/resolvers";
 import { activityConnectionResolvers } from "./types/activity-connection/resolvers";
 import { activityEdgeResolvers } from "./types/activity-edge/resolvers";
 import { activityResolvers } from "./types/activity/resolvers";
@@ -17,4 +19,6 @@ export const resolvers: Resolvers = {
   ActivityEdge: activityEdgeResolvers,
   Exercise: exerciseResolvers,
   FogisGame: fogisGameResolvers,
+  ActivityBase: activityBaseResolvers,
+  DateTime: dateTimeScalar,
 };
