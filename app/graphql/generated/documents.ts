@@ -54,6 +54,18 @@ export type DayActivitiesArgs = {
   last?: InputMaybe<Scalars['Int']['input']>;
 };
 
+export type DayConnection = {
+  __typename?: 'DayConnection';
+  edges: Array<DayEdge>;
+  pageInfo: PageInfo;
+};
+
+export type DayEdge = {
+  __typename?: 'DayEdge';
+  cursor: Scalars['String']['output'];
+  node?: Maybe<Day>;
+};
+
 export type Exercise = ActivityBase & {
   __typename?: 'Exercise';
   id: Scalars['ID']['output'];
@@ -80,6 +92,7 @@ export type Query = {
   __typename?: 'Query';
   activities: ActivityConnection;
   day?: Maybe<Day>;
+  days: DayConnection;
   me?: Maybe<User>;
 };
 
@@ -95,6 +108,14 @@ export type QueryActivitiesArgs = {
 
 export type QueryDayArgs = {
   date: Scalars['String']['input'];
+};
+
+
+export type QueryDaysArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type User = {

@@ -63,6 +63,18 @@ export type DayActivitiesArgs = {
   last: InputMaybe<Scalars['Int']['input']>;
 };
 
+export type DayConnection = {
+  __typename?: 'DayConnection';
+  edges: Array<DayEdge>;
+  pageInfo: PageInfo;
+};
+
+export type DayEdge = {
+  __typename?: 'DayEdge';
+  cursor: Scalars['String']['output'];
+  node: Maybe<Day>;
+};
+
 export type Exercise = ActivityBase & {
   __typename?: 'Exercise';
   id: Scalars['ID']['output'];
@@ -89,6 +101,7 @@ export type Query = {
   __typename?: 'Query';
   activities: ActivityConnection;
   day: Maybe<Day>;
+  days: DayConnection;
   me: Maybe<User>;
 };
 
@@ -104,6 +117,14 @@ export type QueryActivitiesArgs = {
 
 export type QueryDayArgs = {
   date: Scalars['String']['input'];
+};
+
+
+export type QueryDaysArgs = {
+  after: InputMaybe<Scalars['String']['input']>;
+  before: InputMaybe<Scalars['String']['input']>;
+  first: InputMaybe<Scalars['Int']['input']>;
+  last: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type User = {
@@ -195,6 +216,8 @@ export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']['output']>;
   Day: ResolverTypeWrapper<DayModel>;
+  DayConnection: ResolverTypeWrapper<Omit<DayConnection, 'edges'> & { edges: Array<ResolversTypes['DayEdge']> }>;
+  DayEdge: ResolverTypeWrapper<Omit<DayEdge, 'node'> & { node: Maybe<ResolversTypes['Day']> }>;
   Exercise: ResolverTypeWrapper<ExerciseModel>;
   FogisGame: ResolverTypeWrapper<FogisGameModel>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
@@ -215,6 +238,8 @@ export type ResolversParentTypes = {
   Boolean: Scalars['Boolean']['output'];
   DateTime: Scalars['DateTime']['output'];
   Day: DayModel;
+  DayConnection: Omit<DayConnection, 'edges'> & { edges: Array<ResolversParentTypes['DayEdge']> };
+  DayEdge: Omit<DayEdge, 'node'> & { node: Maybe<ResolversParentTypes['Day']> };
   Exercise: ExerciseModel;
   FogisGame: FogisGameModel;
   ID: Scalars['ID']['output'];
@@ -257,6 +282,18 @@ export type DayResolvers<ContextType = Context, ParentType extends ResolversPare
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type DayConnectionResolvers<ContextType = Context, ParentType extends ResolversParentTypes['DayConnection'] = ResolversParentTypes['DayConnection']> = {
+  edges: Resolver<Array<ResolversTypes['DayEdge']>, ParentType, ContextType>;
+  pageInfo: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DayEdgeResolvers<ContextType = Context, ParentType extends ResolversParentTypes['DayEdge'] = ResolversParentTypes['DayEdge']> = {
+  cursor: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node: Resolver<Maybe<ResolversTypes['Day']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type ExerciseResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Exercise'] = ResolversParentTypes['Exercise']> = {
   id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   start: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
@@ -282,6 +319,7 @@ export type PageInfoResolvers<ContextType = Context, ParentType extends Resolver
 export type QueryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   activities: Resolver<ResolversTypes['ActivityConnection'], ParentType, ContextType, Partial<QueryActivitiesArgs>>;
   day: Resolver<Maybe<ResolversTypes['Day']>, ParentType, ContextType, RequireFields<QueryDayArgs, 'date'>>;
+  days: Resolver<ResolversTypes['DayConnection'], ParentType, ContextType, Partial<QueryDaysArgs>>;
   me: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
 };
 
@@ -298,6 +336,8 @@ export type Resolvers<ContextType = Context> = {
   ActivityEdge: ActivityEdgeResolvers<ContextType>;
   DateTime: GraphQLScalarType;
   Day: DayResolvers<ContextType>;
+  DayConnection: DayConnectionResolvers<ContextType>;
+  DayEdge: DayEdgeResolvers<ContextType>;
   Exercise: ExerciseResolvers<ContextType>;
   FogisGame: FogisGameResolvers<ContextType>;
   PageInfo: PageInfoResolvers<ContextType>;

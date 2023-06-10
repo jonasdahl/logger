@@ -1,5 +1,5 @@
 import { orderBy } from "lodash";
-import { DateTime } from "luxon";
+import { DateTime, Interval } from "luxon";
 import { db } from "~/db.server";
 import type { QueryResolvers } from "~/graphql/generated/graphql";
 
@@ -63,6 +63,40 @@ export const queryResolvers: QueryResolvers = {
         (x) => x.node.value.time,
         "asc"
       ),
+    };
+  },
+  days: (_, { after, before }) => {
+    if (!after) {
+      throw new Error('Missing "after" argument');
+    }
+    if (!before) {
+      throw new Error('Missing "before" argument');
+    }
+    const start = DateTime.fromFormat(after, "yyyy-MM-dd", {
+      zone: "Europe/Stockholm", // TODO
+    })
+      .startOf("day")
+      .plus({ days: 1 });
+    const end = DateTime.fromFormat(before, "yyyy-MM-dd", {
+      zone: "Europe/Stockholm", // TODO
+    })
+      .endOf("day")
+      .minus({ days: 1 });
+    const interval = Interval.fromDateTimes(start, end);
+    const days = interval
+      .splitBy({ days: 1 })
+      .map((interval) => ({ start: interval.start }));
+    return {
+      pageInfo: {
+        hasNextPage: true,
+        hasPreviousPage: true,
+        endCursor: days[days.length - 1].start.toFormat("yyyy-MM-dd"),
+        startCursor: days[0].start.toFormat("yyyy-MM-dd"),
+      },
+      edges: days.map((day) => ({
+        cursor: day.start.toFormat("yyyy-MM-dd"),
+        node: day,
+      })),
     };
   },
 };

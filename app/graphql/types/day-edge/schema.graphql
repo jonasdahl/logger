@@ -1,0 +1,4 @@
+type DayEdge {
+  cursor: String!
+  node: Day
+}

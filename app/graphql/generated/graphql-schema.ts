@@ -27,6 +27,16 @@ type Day {
   start: DateTime
 }
 
+type DayConnection {
+  edges: [DayEdge!]!
+  pageInfo: PageInfo!
+}
+
+type DayEdge {
+  cursor: String!
+  node: Day
+}
+
 type Exercise implements ActivityBase {
   id: ID!
   start: DateTime!
@@ -49,6 +59,7 @@ type PageInfo {
 type Query {
   activities(after: String, before: String, filter: ActivityFilter, first: Int, last: Int): ActivityConnection!
   day(date: String!): Day
+  days(after: String, before: String, first: Int, last: Int): DayConnection!
   me: User
 }
 

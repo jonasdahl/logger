@@ -1,5 +1,6 @@
 type Query {
   me: User
+
   activities(
     first: Int
     after: String
@@ -7,6 +8,9 @@ type Query {
     before: String
     filter: ActivityFilter
   ): ActivityConnection!
+
+  days(first: Int, after: String, last: Int, before: String): DayConnection!
+
   day(date: String!): Day
 }
 
