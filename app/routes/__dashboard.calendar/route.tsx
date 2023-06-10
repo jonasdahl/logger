@@ -144,7 +144,25 @@ function Day({ day }: { day: CalendarDayFragment }) {
                 {day.activities.edges.map((activityEdge) =>
                   activityEdge.node ? (
                     <Box key={activityEdge.cursor}>
-                      {activityEdge.node.__typename}
+                      {activityEdge.node.__typename === "FogisGame"
+                        ? `${DateTime.fromISO(activityEdge.node.start, {
+                            zone: timeZone,
+                          }).toFormat("HH:mm")} ${
+                            activityEdge.node.homeTeam
+                          } - ${activityEdge.node.awayTeam}`
+                        : activityEdge.node.__typename === "PlannedExercise"
+                        ? `${DateTime.fromISO(activityEdge.node.start, {
+                            zone: timeZone,
+                          }).toFormat("HH:mm")} Planerad träning`
+                        : activityEdge.node.__typename === "Exercise"
+                        ? `${DateTime.fromISO(activityEdge.node.start, {
+                            zone: timeZone,
+                          }).toFormat("HH:mm")} Registrerad träning`
+                        : `${DateTime.fromISO(activityEdge.node.start, {
+                            zone: timeZone,
+                          }).toFormat("HH:mm")} ${
+                            activityEdge.node.__typename
+                          }`}
                     </Box>
                   ) : null
                 )}

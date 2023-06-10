@@ -20,6 +20,10 @@ fragment CalendarDay on Day {
         ... on ActivityBase {
           start
         }
+        ... on FogisGame {
+          homeTeam
+          awayTeam
+        }
       }
     }
   }
