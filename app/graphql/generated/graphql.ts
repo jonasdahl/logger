@@ -1,6 +1,7 @@
 import { DateTime } from 'luxon';
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 import { ActivityModel } from '../types/activity/model';
+import { DayModel } from '../types/day/model';
 import { ExerciseModel } from '../types/exercise/model';
 import { FogisGameModel } from '../types/fogis-game/model';
 import { UserModel } from '../types/user/model';
@@ -13,6 +14,7 @@ export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Mayb
 export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
 export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: { input: string | number; output: string; }
@@ -47,6 +49,20 @@ export type ActivityFilter = {
   startTo: InputMaybe<Scalars['DateTime']['input']>;
 };
 
+export type Day = {
+  __typename?: 'Day';
+  activities: ActivityConnection;
+  start: Maybe<Scalars['DateTime']['output']>;
+};
+
+
+export type DayActivitiesArgs = {
+  after: InputMaybe<Scalars['String']['input']>;
+  before: InputMaybe<Scalars['String']['input']>;
+  first: InputMaybe<Scalars['Int']['input']>;
+  last: InputMaybe<Scalars['Int']['input']>;
+};
+
 export type Exercise = ActivityBase & {
   __typename?: 'Exercise';
   id: Scalars['ID']['output'];
@@ -72,6 +88,7 @@ export type PageInfo = {
 export type Query = {
   __typename?: 'Query';
   activities: ActivityConnection;
+  day: Maybe<Day>;
   me: Maybe<User>;
 };
 
@@ -82,6 +99,11 @@ export type QueryActivitiesArgs = {
   filter: InputMaybe<ActivityFilter>;
   first: InputMaybe<Scalars['Int']['input']>;
   last: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryDayArgs = {
+  date: Scalars['String']['input'];
 };
 
 export type User = {
@@ -172,6 +194,7 @@ export type ResolversTypes = {
   ActivityFilter: ActivityFilter;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']['output']>;
+  Day: ResolverTypeWrapper<DayModel>;
   Exercise: ResolverTypeWrapper<ExerciseModel>;
   FogisGame: ResolverTypeWrapper<FogisGameModel>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
@@ -191,6 +214,7 @@ export type ResolversParentTypes = {
   ActivityFilter: ActivityFilter;
   Boolean: Scalars['Boolean']['output'];
   DateTime: Scalars['DateTime']['output'];
+  Day: DayModel;
   Exercise: ExerciseModel;
   FogisGame: FogisGameModel;
   ID: Scalars['ID']['output'];
@@ -227,6 +251,12 @@ export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversT
   name: 'DateTime';
 }
 
+export type DayResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Day'] = ResolversParentTypes['Day']> = {
+  activities: Resolver<ResolversTypes['ActivityConnection'], ParentType, ContextType, Partial<DayActivitiesArgs>>;
+  start: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type ExerciseResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Exercise'] = ResolversParentTypes['Exercise']> = {
   id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   start: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
@@ -251,6 +281,7 @@ export type PageInfoResolvers<ContextType = Context, ParentType extends Resolver
 
 export type QueryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   activities: Resolver<ResolversTypes['ActivityConnection'], ParentType, ContextType, Partial<QueryActivitiesArgs>>;
+  day: Resolver<Maybe<ResolversTypes['Day']>, ParentType, ContextType, RequireFields<QueryDayArgs, 'date'>>;
   me: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
 };
 
@@ -266,6 +297,7 @@ export type Resolvers<ContextType = Context> = {
   ActivityConnection: ActivityConnectionResolvers<ContextType>;
   ActivityEdge: ActivityEdgeResolvers<ContextType>;
   DateTime: GraphQLScalarType;
+  Day: DayResolvers<ContextType>;
   Exercise: ExerciseResolvers<ContextType>;
   FogisGame: FogisGameResolvers<ContextType>;
   PageInfo: PageInfoResolvers<ContextType>;

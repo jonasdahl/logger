@@ -22,6 +22,11 @@ input ActivityFilter {
 
 scalar DateTime
 
+type Day {
+  activities(after: String, before: String, first: Int, last: Int): ActivityConnection!
+  start: DateTime
+}
+
 type Exercise implements ActivityBase {
   id: ID!
   start: DateTime!
@@ -43,6 +48,7 @@ type PageInfo {
 
 type Query {
   activities(after: String, before: String, filter: ActivityFilter, first: Int, last: Int): ActivityConnection!
+  day(date: String!): Day
   me: User
 }
 

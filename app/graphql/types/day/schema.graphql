@@ -1,0 +1,9 @@
+type Day {
+  start: DateTime
+  activities(
+    first: Int
+    after: String
+    last: Int
+    before: String
+  ): ActivityConnection!
+}

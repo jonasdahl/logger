@@ -1,45 +1,26 @@
 import { orderBy } from "lodash";
-import { DateTime } from "luxon";
 import { db } from "~/db.server";
-import type { QueryResolvers } from "~/graphql/generated/graphql";
+import type { DayResolvers } from "~/graphql/generated/graphql";
 
-export const queryResolvers: QueryResolvers = {
-  me: async (_, __, { userId }) => {
-    if (!userId) {
-      return null;
-    }
-    const user = await db.user.findUniqueOrThrow({ where: { id: userId } });
-    return user;
-  },
-  day: async (_, { date }) => {
-    const parsed = DateTime.fromFormat(date, "yyyy-MM-dd", {
-      zone: "Europe/Stockholm", // TODO
-    });
-    if (!parsed.isValid) {
-      throw new Error("Invalid date");
-    }
-    return { start: parsed };
-  },
-  activities: async (_, { filter }, { userId }) => {
+export const dayResolvers: DayResolvers = {
+  start: (parent) => parent.start,
+  activities: async (parent, _, { userId }) => {
+    const start = parent.start.startOf("day");
+    const end = parent.start.endOf("day");
+
     if (!userId) {
       throw new Error("Not authenticated");
     }
     const fogisGames = await db.fogisGame.findMany({
       where: {
         userId,
-        time: {
-          gte: filter?.startFrom?.toJSDate() ?? undefined,
-          lte: filter?.startTo?.toJSDate() ?? undefined,
-        },
+        time: { gte: start.toJSDate(), lte: end.toJSDate() },
       },
     });
     const activities = await db.activity.findMany({
       where: {
         userId,
-        time: {
-          gte: filter?.startFrom?.toJSDate() ?? undefined,
-          lte: filter?.startTo?.toJSDate() ?? undefined,
-        },
+        time: { gte: start.toJSDate(), lte: end.toJSDate() },
       },
     });
     return {

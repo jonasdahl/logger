@@ -40,6 +40,20 @@ export type ActivityFilter = {
   startTo?: InputMaybe<Scalars['DateTime']['input']>;
 };
 
+export type Day = {
+  __typename?: 'Day';
+  activities: ActivityConnection;
+  start?: Maybe<Scalars['DateTime']['output']>;
+};
+
+
+export type DayActivitiesArgs = {
+  after?: InputMaybe<Scalars['String']['input']>;
+  before?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+};
+
 export type Exercise = ActivityBase & {
   __typename?: 'Exercise';
   id: Scalars['ID']['output'];
@@ -65,6 +79,7 @@ export type PageInfo = {
 export type Query = {
   __typename?: 'Query';
   activities: ActivityConnection;
+  day?: Maybe<Day>;
   me?: Maybe<User>;
 };
 
@@ -75,6 +90,11 @@ export type QueryActivitiesArgs = {
   filter?: InputMaybe<ActivityFilter>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryDayArgs = {
+  date: Scalars['String']['input'];
 };
 
 export type User = {
