@@ -144,25 +144,10 @@ function Day({ day }: { day: CalendarDayFragment }) {
                 {day.activities.edges.map((activityEdge) =>
                   activityEdge.node ? (
                     <Box key={activityEdge.cursor}>
-                      {activityEdge.node.__typename === "FogisGame"
-                        ? `${DateTime.fromISO(activityEdge.node.start, {
-                            zone: timeZone,
-                          }).toFormat("HH:mm")} ${
-                            activityEdge.node.homeTeam
-                          } - ${activityEdge.node.awayTeam}`
-                        : activityEdge.node.__typename === "PlannedExercise"
-                        ? `${DateTime.fromISO(activityEdge.node.start, {
-                            zone: timeZone,
-                          }).toFormat("HH:mm")} Planerad träning`
-                        : activityEdge.node.__typename === "Exercise"
-                        ? `${DateTime.fromISO(activityEdge.node.start, {
-                            zone: timeZone,
-                          }).toFormat("HH:mm")} Registrerad träning`
-                        : `${DateTime.fromISO(activityEdge.node.start, {
-                            zone: timeZone,
-                          }).toFormat("HH:mm")} ${
-                            activityEdge.node.__typename
-                          }`}
+                      {DateTime.fromISO(activityEdge.node.start, {
+                        zone: timeZone,
+                      }).toFormat("HH:mm")}{" "}
+                      {activityEdge.node.title}
                     </Box>
                   ) : null
                 )}
@@ -301,16 +286,15 @@ const DayPreview = forwardRef<HTMLButtonElement, { day: CalendarDayFragment }>(
       return <GameDayPreview ref={ref} {...generalProps} />;
     }
     if (activities.some((a) => a.__typename === "Exercise")) {
-      // const purposes = activities
-      //   .flatMap((a) =>
-      //     a.type === "activity"
-      //       ? [a.activity.primaryPurpose, a.activity.secondaryPurpose]
-      //       : []
-      //   )
-      //   .filter(Boolean);
-      // const label =
-      //   purposes.map((p) => p?.shortLabel || p?.label).join(" + ") || "Träning";
-      const label = "Träning";
+      const purposes = activities
+        .flatMap((a) =>
+          a.__typename === "Exercise"
+            ? [a.primaryPurpose, a.secondaryPurpose]
+            : []
+        )
+        .filter(Boolean);
+      const label =
+        purposes.map((p) => p?.shortLabel || p?.label).join(" + ") || "Träning";
 
       return (
         <ExerciseDayPreview ref={ref} {...generalProps}>
@@ -324,16 +308,15 @@ const DayPreview = forwardRef<HTMLButtonElement, { day: CalendarDayFragment }>(
     }
 
     if (activities.some((a) => a.__typename === "PlannedExercise")) {
-      // const purposes = activities
-      //   .flatMap((a) =>
-      //     a.type === "activity"
-      //       ? [a.activity.primaryPurpose, a.activity.secondaryPurpose]
-      //       : []
-      //   )
-      //   .filter(Boolean);
-      // const label =
-      //   purposes.map((p) => p?.shortLabel || p?.label).join(" + ") || "Träning";
-      const label = "Träning";
+      const purposes = activities
+        .flatMap((a) =>
+          a.__typename === "PlannedExercise"
+            ? [a.primaryPurpose, a.secondaryPurpose]
+            : []
+        )
+        .filter(Boolean);
+      const label =
+        purposes.map((p) => p?.shortLabel || p?.label).join(" + ") || "Träning";
 
       return (
         <ExerciseDayPreview ref={ref} {...generalProps}>

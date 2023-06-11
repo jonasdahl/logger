@@ -1,0 +1,4 @@
+type ExercisePurpose {
+  label: String!
+  shortLabel: String
+}

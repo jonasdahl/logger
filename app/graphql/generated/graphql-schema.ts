@@ -3,6 +3,7 @@ export const typeDefinitions = `union Activity = Exercise | FogisGame | PlannedE
 interface ActivityBase {
   id: ID!
   start: DateTime!
+  title: String!
 }
 
 type ActivityConnection {
@@ -40,7 +41,15 @@ type DayEdge {
 
 type Exercise implements ActivityBase {
   id: ID!
+  primaryPurpose: ExercisePurpose
+  secondaryPurpose: ExercisePurpose
   start: DateTime!
+  title: String!
+}
+
+type ExercisePurpose {
+  label: String!
+  shortLabel: String
 }
 
 type FogisGame implements ActivityBase {
@@ -48,6 +57,7 @@ type FogisGame implements ActivityBase {
   homeTeam: String!
   id: ID!
   start: DateTime!
+  title: String!
 }
 
 type PageInfo {
@@ -59,7 +69,10 @@ type PageInfo {
 
 type PlannedExercise implements ActivityBase {
   id: ID!
+  primaryPurpose: ExercisePurpose
+  secondaryPurpose: ExercisePurpose
   start: DateTime!
+  title: String!
 }
 
 type Query {

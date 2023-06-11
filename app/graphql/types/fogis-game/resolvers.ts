@@ -6,4 +6,6 @@ export const fogisGameResolvers: FogisGameResolvers = {
   homeTeam: (parent) => parent.value.homeTeam,
   awayTeam: (parent) => parent.value.awayTeam,
   start: (parent) => DateTime.fromJSDate(parent.value.time),
+  title: (parent) =>
+    `Match: ${parent.value.homeTeam} - ${parent.value.awayTeam}`,
 };

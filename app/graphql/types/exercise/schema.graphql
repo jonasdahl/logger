@@ -1,4 +1,8 @@
 type Exercise implements ActivityBase {
   id: ID!
   start: DateTime!
+  title: String!
+
+  primaryPurpose: ExercisePurpose
+  secondaryPurpose: ExercisePurpose
 }

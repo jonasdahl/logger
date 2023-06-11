@@ -3,6 +3,7 @@ import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from '
 import { ActivityModel } from '../types/activity/model';
 import { DayModel } from '../types/day/model';
 import { ExerciseModel } from '../types/exercise/model';
+import { ExercisePurposeModel } from '../types/exercise-purpose/model';
 import { FogisGameModel } from '../types/fogis-game/model';
 import { PlannedExerciseModel } from '../types/planned-exercise/model';
 import { UserModel } from '../types/user/model';
@@ -31,6 +32,7 @@ export type Activity = Exercise | FogisGame | PlannedExercise;
 export type ActivityBase = {
   id: Scalars['ID']['output'];
   start: Scalars['DateTime']['output'];
+  title: Scalars['String']['output'];
 };
 
 export type ActivityConnection = {
@@ -80,7 +82,16 @@ export type DayEdge = {
 export type Exercise = ActivityBase & {
   __typename?: 'Exercise';
   id: Scalars['ID']['output'];
+  primaryPurpose: Maybe<ExercisePurpose>;
+  secondaryPurpose: Maybe<ExercisePurpose>;
   start: Scalars['DateTime']['output'];
+  title: Scalars['String']['output'];
+};
+
+export type ExercisePurpose = {
+  __typename?: 'ExercisePurpose';
+  label: Scalars['String']['output'];
+  shortLabel: Maybe<Scalars['String']['output']>;
 };
 
 export type FogisGame = ActivityBase & {
@@ -89,6 +100,7 @@ export type FogisGame = ActivityBase & {
   homeTeam: Scalars['String']['output'];
   id: Scalars['ID']['output'];
   start: Scalars['DateTime']['output'];
+  title: Scalars['String']['output'];
 };
 
 export type PageInfo = {
@@ -102,7 +114,10 @@ export type PageInfo = {
 export type PlannedExercise = ActivityBase & {
   __typename?: 'PlannedExercise';
   id: Scalars['ID']['output'];
+  primaryPurpose: Maybe<ExercisePurpose>;
+  secondaryPurpose: Maybe<ExercisePurpose>;
   start: Scalars['DateTime']['output'];
+  title: Scalars['String']['output'];
 };
 
 export type Query = {
@@ -228,6 +243,7 @@ export type ResolversTypes = {
   DayConnection: ResolverTypeWrapper<Omit<DayConnection, 'edges'> & { edges: Array<ResolversTypes['DayEdge']> }>;
   DayEdge: ResolverTypeWrapper<Omit<DayEdge, 'node'> & { node: Maybe<ResolversTypes['Day']> }>;
   Exercise: ResolverTypeWrapper<ExerciseModel>;
+  ExercisePurpose: ResolverTypeWrapper<ExercisePurposeModel>;
   FogisGame: ResolverTypeWrapper<FogisGameModel>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
@@ -251,6 +267,7 @@ export type ResolversParentTypes = {
   DayConnection: Omit<DayConnection, 'edges'> & { edges: Array<ResolversParentTypes['DayEdge']> };
   DayEdge: Omit<DayEdge, 'node'> & { node: Maybe<ResolversParentTypes['Day']> };
   Exercise: ExerciseModel;
+  ExercisePurpose: ExercisePurposeModel;
   FogisGame: FogisGameModel;
   ID: Scalars['ID']['output'];
   Int: Scalars['Int']['output'];
@@ -269,6 +286,7 @@ export type ActivityBaseResolvers<ContextType = Context, ParentType extends Reso
   __resolveType: TypeResolveFn<'Exercise' | 'FogisGame' | 'PlannedExercise', ParentType, ContextType>;
   id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   start: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  title: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 };
 
 export type ActivityConnectionResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ActivityConnection'] = ResolversParentTypes['ActivityConnection']> = {
@@ -308,7 +326,16 @@ export type DayEdgeResolvers<ContextType = Context, ParentType extends Resolvers
 
 export type ExerciseResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Exercise'] = ResolversParentTypes['Exercise']> = {
   id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  primaryPurpose: Resolver<Maybe<ResolversTypes['ExercisePurpose']>, ParentType, ContextType>;
+  secondaryPurpose: Resolver<Maybe<ResolversTypes['ExercisePurpose']>, ParentType, ContextType>;
   start: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  title: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ExercisePurposeResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ExercisePurpose'] = ResolversParentTypes['ExercisePurpose']> = {
+  label: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  shortLabel: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -317,6 +344,7 @@ export type FogisGameResolvers<ContextType = Context, ParentType extends Resolve
   homeTeam: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   start: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  title: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -330,7 +358,10 @@ export type PageInfoResolvers<ContextType = Context, ParentType extends Resolver
 
 export type PlannedExerciseResolvers<ContextType = Context, ParentType extends ResolversParentTypes['PlannedExercise'] = ResolversParentTypes['PlannedExercise']> = {
   id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  primaryPurpose: Resolver<Maybe<ResolversTypes['ExercisePurpose']>, ParentType, ContextType>;
+  secondaryPurpose: Resolver<Maybe<ResolversTypes['ExercisePurpose']>, ParentType, ContextType>;
   start: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  title: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -358,6 +389,7 @@ export type Resolvers<ContextType = Context> = {
   DayConnection: DayConnectionResolvers<ContextType>;
   DayEdge: DayEdgeResolvers<ContextType>;
   Exercise: ExerciseResolvers<ContextType>;
+  ExercisePurpose: ExercisePurposeResolvers<ContextType>;
   FogisGame: FogisGameResolvers<ContextType>;
   PageInfo: PageInfoResolvers<ContextType>;
   PlannedExercise: PlannedExerciseResolvers<ContextType>;

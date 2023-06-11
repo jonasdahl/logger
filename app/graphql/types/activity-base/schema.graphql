@@ -1,4 +1,5 @@
 interface ActivityBase {
   start: DateTime!
   id: ID!
+  title: String!
 }

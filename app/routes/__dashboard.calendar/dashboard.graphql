@@ -16,15 +16,40 @@ fragment CalendarDay on Day {
     edges {
       cursor
       node {
-        __typename
-        ... on ActivityBase {
-          start
-        }
-        ... on FogisGame {
-          homeTeam
-          awayTeam
-        }
+        ...CalendarActivity
       }
+    }
+  }
+}
+
+fragment CalendarActivity on Activity {
+  __typename
+  ... on ActivityBase {
+    start
+    title
+  }
+  ... on FogisGame {
+    homeTeam
+    awayTeam
+  }
+  ... on Exercise {
+    primaryPurpose {
+      label
+      shortLabel
+    }
+    secondaryPurpose {
+      label
+      shortLabel
+    }
+  }
+  ... on PlannedExercise {
+    primaryPurpose {
+      label
+      shortLabel
+    }
+    secondaryPurpose {
+      label
+      shortLabel
     }
   }
 }
