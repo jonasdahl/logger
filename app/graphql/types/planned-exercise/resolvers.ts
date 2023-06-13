@@ -1,4 +1,5 @@
 import { DateTime } from "luxon";
+import { db } from "~/db.server";
 import type { PlannedExerciseResolvers } from "~/graphql/generated/graphql";
 
 export const plannedExerciseResolvers: PlannedExerciseResolvers = {
