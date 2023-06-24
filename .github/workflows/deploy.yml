@@ -80,6 +80,6 @@ jobs:
       - name: Deploy
         uses: fjogeleit/http-request-action@v1
         with:
-          url: "https://logger-pod-killer.addem.se/"
+          url: "https://logger-deployment-restarter.addem.se/"
           method: "POST"
           bearerToken: ${{ secrets.DEPLOY_SECRET }}
