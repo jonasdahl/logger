@@ -44,13 +44,13 @@ export async function loader({ request, params }: LoaderArgs) {
     document: CalendarDocument,
     variables: {
       after: monthStart
-        .minus({ days: 1 })
         .startOf("week")
+        .minus({ days: 1 })
         .toFormat("yyyy-MM-dd"),
       before: monthStart
         .endOf("month")
         .endOf("week")
-        .plus({ days: 2 })
+        .plus({ days: 1 })
         .toFormat("yyyy-MM-dd"),
     },
     request,
