@@ -97,19 +97,21 @@ export const queryResolvers: QueryResolvers = {
     const interval = Interval.fromDateTimes(start, end);
     const days = interval
       .splitBy({ days: 1 })
-      .map((interval) => ({ start: interval.start }));
+      .map((interval) => ({ start: interval.start! }));
     return {
       pageInfo: {
         hasNextPage: true,
         hasPreviousPage: true,
-        endCursor: days[days.length - 1].start.toFormat("yyyy-MM-dd"),
-        startCursor: days[0].start.toFormat("yyyy-MM-dd"),
+        endCursor: days[days.length - 1].start!.toFormat("yyyy-MM-dd"),
+        startCursor: days[0].start!.toFormat("yyyy-MM-dd"),
       },
       edges: days.map((day) => ({
-        cursor: day.start.toFormat("yyyy-MM-dd"),
+        cursor: day.start!.toFormat("yyyy-MM-dd"),
         node: day,
       })),
     };
   },
-  today: (_, __, { timeZone }) => ({ start: DateTime.now().setZone(timeZone) }),
+  today: (_, __, { timeZone }) => ({
+    start: DateTime.now()!.setZone(timeZone)!,
+  }),
 };

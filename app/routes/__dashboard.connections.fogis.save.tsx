@@ -27,7 +27,7 @@ export async function action({ request }: ActionArgs) {
     data: toAdd.map((game) => ({
       gameId: game.id,
       userId: user.id,
-      time: DateTime.fromISO(game.time).toJSDate(),
+      time: DateTime.fromISO(game.time!).toJSDate(),
       homeTeam: game.homeTeam.name,
       awayTeam: game.awayTeam.name,
       facility: game.location.name,

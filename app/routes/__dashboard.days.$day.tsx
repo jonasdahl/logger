@@ -89,7 +89,7 @@ export default function DashboardIndex() {
 
   const { pathname } = useLocation();
 
-  const day = DateTime.fromISO(dayStart).setZone(timeZone);
+  const day = DateTime.fromISO(dayStart!).setZone(timeZone);
   const dayBefore = day.minus({ days: 1 });
   const dayAfter = day.plus({ days: 1 });
 

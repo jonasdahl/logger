@@ -125,7 +125,7 @@ export default function Fogis() {
                             />
                           </Td>
                           <Td>
-                            {DateTime.fromISO(game.time).toFormat(
+                            {DateTime.fromISO(game.time!).toFormat(
                               "yyyy-MM-dd HH:mm"
                             )}
                             <input
