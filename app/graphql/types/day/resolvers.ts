@@ -5,7 +5,7 @@ import type { DayResolvers } from "~/graphql/generated/graphql";
 export const dayResolvers: DayResolvers = {
   start: (parent) => parent.start,
   date: (parent) => parent.start.toFormat("yyyy-MM-dd"),
-  activities: async (parent, _, { userId }) => {
+  activities: async (parent, { includeHidden = true }, { userId }) => {
     const start = parent.start.startOf("day");
     const end = parent.start.endOf("day");
 
@@ -24,6 +24,7 @@ export const dayResolvers: DayResolvers = {
         userId,
         time: { gte: start.toJSDate(), lte: end.toJSDate() },
         deletedAt: null,
+        isHiddenFromOverview: includeHidden ? undefined : false,
       },
     });
     const plannedActivities = await db.plannedActivity.findMany({

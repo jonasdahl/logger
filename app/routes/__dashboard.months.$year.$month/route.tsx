@@ -70,11 +70,11 @@ export async function loader({ request, params }: LoaderArgs) {
 export default function DashboardIndex() {
   const { data, start, end, timeZone } = useLoaderData<typeof loader>();
   const month = Interval.fromDateTimes(
-    DateTime.fromISO(start, { zone: timeZone }),
-    DateTime.fromISO(end, { zone: timeZone })
+    DateTime.fromISO(start!, { zone: timeZone }),
+    DateTime.fromISO(end!, { zone: timeZone })
   );
-  const previousMonth = month.start.minus({ months: 1 });
-  const nextMonth = month.start.plus({ months: 1 });
+  const previousMonth = month.start!.minus({ months: 1 });
+  const nextMonth = month.start!.plus({ months: 1 });
   const now = DateTime.now().setZone(timeZone);
 
   return (
@@ -109,7 +109,7 @@ export default function DashboardIndex() {
             <Spacer />
             <Heading as="h1" size="sm">
               {upperFirst(
-                month.start.toFormat("LLLL yyyy", { locale: "sv-SE" })
+                month.start!.toFormat("LLLL yyyy", { locale: "sv-SE" })
               )}
             </Heading>
             <Spacer />

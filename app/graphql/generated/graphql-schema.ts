@@ -24,7 +24,7 @@ input ActivityFilter {
 scalar DateTime
 
 type Day {
-  activities(after: String, before: String, first: Int, last: Int): ActivityConnection!
+  activities(after: String, before: String, first: Int, includeHidden: Boolean, last: Int): ActivityConnection!
   date: String!
   start: DateTime!
 }
@@ -41,6 +41,7 @@ type DayEdge {
 
 type Exercise implements ActivityBase {
   id: ID!
+  isHiddenFromOverview: Boolean!
   primaryPurpose: ExercisePurpose
   secondaryPurpose: ExercisePurpose
   start: DateTime!

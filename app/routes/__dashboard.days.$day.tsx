@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Container,
   HStack,
   Heading,
@@ -16,7 +17,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { LoaderArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { useLoaderData, useLocation } from "@remix-run/react";
+import { Form, useLoaderData, useLocation } from "@remix-run/react";
 import { DateTime } from "luxon";
 import { authenticator } from "~/auth.server";
 import { ButtonLink } from "~/components/button-link";
@@ -195,6 +196,19 @@ export default function DashboardIndex() {
                     >
                       Radera
                     </ButtonLink>
+                  </Box>
+                  <Box>
+                    <Form method="post" action={`/activities/${e.id}/hide`}>
+                      {e.isHiddenFromOverview ? (
+                        <Button size="sm" colorScheme="green" type="submit">
+                          Visa i översikten
+                        </Button>
+                      ) : (
+                        <Button size="sm" colorScheme="yellow" type="submit">
+                          Dölj i översikten
+                        </Button>
+                      )}
+                    </Form>
                   </Box>
                 </HStack>
               </Box>

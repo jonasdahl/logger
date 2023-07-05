@@ -80,6 +80,8 @@ model Activity {
   secondaryPurpose   ActivityPurpose? @relation(name: "secondaryPurpose", fields: [secondaryPurposeId], references: [id])
   secondaryPurposeId String?
 
+  isHiddenFromOverview Boolean @default(false)
+
   fromPlannedActivity   PlannedActivity? @relation(fields: [fromPlannedActivityId], references: [id])
   fromPlannedActivityId String?
 

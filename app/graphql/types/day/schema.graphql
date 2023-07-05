@@ -6,5 +6,6 @@ type Day {
     after: String
     last: Int
     before: String
+    includeHidden: Boolean
   ): ActivityConnection!
 }

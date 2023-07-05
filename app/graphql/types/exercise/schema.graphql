@@ -2,6 +2,7 @@ type Exercise implements ActivityBase {
   id: ID!
   start: DateTime!
   title: String!
+  isHiddenFromOverview: Boolean!
 
   primaryPurpose: ExercisePurpose
   secondaryPurpose: ExercisePurpose

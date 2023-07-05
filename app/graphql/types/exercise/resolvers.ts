@@ -18,4 +18,5 @@ export const exerciseResolvers: ExerciseResolvers = {
           where: { id: parent.value.secondaryPurposeId },
         })
       : null,
+  isHiddenFromOverview: (parent) => parent.value.isHiddenFromOverview,
 };

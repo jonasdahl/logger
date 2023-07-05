@@ -33,6 +33,7 @@ fragment CalendarActivity on Activity {
     awayTeam
   }
   ... on Exercise {
+    isHiddenFromOverview
     primaryPurpose {
       label
       shortLabel

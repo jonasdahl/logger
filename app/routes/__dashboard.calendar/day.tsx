@@ -217,9 +217,11 @@ const DayPreview = forwardRef<HTMLButtonElement, { day: CalendarDayFragment }>(
       ...props,
     };
 
-    const activities = day.activities.edges.flatMap((e) =>
-      e.node ? [e.node] : []
-    );
+    const activities = day.activities.edges
+      .filter(
+        (x) => x.node?.__typename !== "Exercise" || !x.node.isHiddenFromOverview
+      )
+      .flatMap((e) => (e.node ? [e.node] : []));
 
     if (activities.some((a) => a.__typename === "FogisGame")) {
       return <GameDayPreview ref={ref} {...generalProps} />;

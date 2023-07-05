@@ -64,6 +64,7 @@ export type DayActivitiesArgs = {
   after: InputMaybe<Scalars['String']['input']>;
   before: InputMaybe<Scalars['String']['input']>;
   first: InputMaybe<Scalars['Int']['input']>;
+  includeHidden: InputMaybe<Scalars['Boolean']['input']>;
   last: InputMaybe<Scalars['Int']['input']>;
 };
 
@@ -82,6 +83,7 @@ export type DayEdge = {
 export type Exercise = ActivityBase & {
   __typename?: 'Exercise';
   id: Scalars['ID']['output'];
+  isHiddenFromOverview: Scalars['Boolean']['output'];
   primaryPurpose: Maybe<ExercisePurpose>;
   secondaryPurpose: Maybe<ExercisePurpose>;
   start: Scalars['DateTime']['output'];
@@ -326,6 +328,7 @@ export type DayEdgeResolvers<ContextType = Context, ParentType extends Resolvers
 
 export type ExerciseResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Exercise'] = ResolversParentTypes['Exercise']> = {
   id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  isHiddenFromOverview: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   primaryPurpose: Resolver<Maybe<ResolversTypes['ExercisePurpose']>, ParentType, ContextType>;
   secondaryPurpose: Resolver<Maybe<ResolversTypes['ExercisePurpose']>, ParentType, ContextType>;
   start: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
