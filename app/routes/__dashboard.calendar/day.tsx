@@ -161,6 +161,8 @@ function PlanButton({
     lastState.current = state;
   }, [close, state]);
 
+  const location = useLocation();
+
   return (
     <>
       <Button {...props} onClick={toggle} />
@@ -172,7 +174,7 @@ function PlanButton({
             <ValidatedForm
               validator={createPlannedActivityValidator}
               method="post"
-              action="/planned-activities/create?returnTo=/calendar"
+              action={`/planned-activities/create?returnTo=${location.pathname}`}
             >
               <ModalHeader>
                 Planera
