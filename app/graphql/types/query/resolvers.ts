@@ -54,6 +54,15 @@ export const queryResolvers: QueryResolvers = {
         deletedAt: null,
       },
     });
+    const physicalTests = await db.physicalTest.findMany({
+      where: {
+        userId,
+        time: {
+          gte: filter?.startFrom?.toJSDate() ?? undefined,
+          lte: filter?.startTo?.toJSDate() ?? undefined,
+        },
+      },
+    });
     return {
       pageInfo: {
         endCursor: null,
@@ -74,6 +83,10 @@ export const queryResolvers: QueryResolvers = {
           ...plannedActivities.map((activity) => ({
             cursor: activity.id,
             node: { type: "PlannedExercise" as const, value: activity },
+          })),
+          ...physicalTests.map((activity) => ({
+            cursor: activity.id,
+            node: { type: "PhysicalTest" as const, value: activity },
           })),
         ],
         (x) => x.node.value.time,

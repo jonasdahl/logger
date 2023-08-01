@@ -19,7 +19,7 @@ import {
   PopoverTrigger,
   Stack,
 } from "@chakra-ui/react";
-import { useLoaderData, useNavigation } from "@remix-run/react";
+import { useLoaderData, useLocation, useNavigation } from "@remix-run/react";
 import { DateTime, Interval } from "luxon";
 import type { ReactNode } from "react";
 import { forwardRef, useEffect, useRef } from "react";
@@ -47,6 +47,8 @@ export function Day({
   const isToday = Interval.fromDateTimes(start, start.endOf("day")).contains(
     DateTime.now().setZone(timeZone)
   );
+
+  const location = useLocation();
 
   return (
     <Box h="7rem" opacity={opacity}>
@@ -90,37 +92,50 @@ export function Day({
                     </Box>
                   ) : null
                 )}
-                <HStack w="100%">
-                  <ButtonLink
-                    to={`/days/${start.toFormat("yyyy-MM-dd")}`}
-                    size="sm"
-                    flex={1}
-                  >
-                    Visa dag
-                  </ButtonLink>
-                  {isPast || isToday ? (
+                <Box w="100%" maxW="100%" overflowX="auto">
+                  <HStack shouldWrapChildren>
                     <ButtonLink
-                      to={`/activities/create?date=${start.toFormat(
-                        "yyyy-MM-dd"
-                      )}`}
-                      colorScheme="green"
+                      to={`/days/${start.toFormat("yyyy-MM-dd")}`}
                       size="sm"
                       flex={1}
                     >
-                      Registrera
+                      Visa dag
                     </ButtonLink>
-                  ) : null}
-                  {isFuture || isToday ? (
-                    <PlanButton
-                      colorScheme="green"
+                    {isPast || isToday ? (
+                      <ButtonLink
+                        to={`/activities/create?date=${start.toFormat(
+                          "yyyy-MM-dd"
+                        )}`}
+                        colorScheme="green"
+                        size="sm"
+                        flex={1}
+                      >
+                        Registrera
+                      </ButtonLink>
+                    ) : null}
+                    {isFuture || isToday ? (
+                      <PlanButton
+                        colorScheme="green"
+                        size="sm"
+                        flex={1}
+                        dayStart={start}
+                      >
+                        Planera
+                      </PlanButton>
+                    ) : null}
+
+                    <ButtonLink
+                      to={`/tests/create?date=${start.toFormat(
+                        "yyyy-MM-dd"
+                      )}&redirectTo=${location.pathname}`}
+                      colorScheme="yellow"
                       size="sm"
                       flex={1}
-                      dayStart={start}
                     >
-                      Planera
-                    </PlanButton>
-                  ) : null}
-                </HStack>
+                      Löptest
+                    </ButtonLink>
+                  </HStack>
+                </Box>
               </Stack>
             </PopoverBody>
           </PopoverContent>
@@ -226,6 +241,9 @@ const DayPreview = forwardRef<HTMLButtonElement, { day: CalendarDayFragment }>(
     if (activities.some((a) => a.__typename === "FogisGame")) {
       return <GameDayPreview ref={ref} {...generalProps} />;
     }
+    if (activities.some((a) => a.__typename === "PhysicalTest")) {
+      return <TestDayPreview ref={ref} {...generalProps} />;
+    }
     if (activities.some((a) => a.__typename === "Exercise")) {
       const purposes = activities
         .flatMap((a) =>
@@ -276,6 +294,18 @@ const DayPreview = forwardRef<HTMLButtonElement, { day: CalendarDayFragment }>(
     );
   }
 );
+
+const TestDayPreview = forwardRef<HTMLButtonElement, {}>((props, ref) => (
+  <BasePreview
+    bg="yellow.500"
+    _hover={{ bg: "yellow.600" }}
+    color="black"
+    {...props}
+    ref={ref}
+  >
+    Löptest
+  </BasePreview>
+));
 
 const GameDayPreview = forwardRef<HTMLButtonElement, {}>((props, ref) => (
   <BasePreview bg="red.500" _hover={{ bg: "red.600" }} {...props} ref={ref}>

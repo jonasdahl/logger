@@ -34,6 +34,12 @@ export const dayResolvers: DayResolvers = {
         deletedAt: null,
       },
     });
+    const physicalTests = await db.physicalTest.findMany({
+      where: {
+        userId,
+        time: { gte: start.toJSDate(), lte: end.toJSDate() },
+      },
+    });
     return {
       pageInfo: {
         endCursor: null,
@@ -54,6 +60,10 @@ export const dayResolvers: DayResolvers = {
           ...plannedActivities.map((activity) => ({
             cursor: activity.id,
             node: { type: "PlannedExercise" as const, value: activity },
+          })),
+          ...physicalTests.map((physicalTest) => ({
+            cursor: physicalTest.id,
+            node: { type: "PhysicalTest" as const, value: physicalTest },
           })),
         ],
         (x) => x.node.value.time,

@@ -28,6 +28,9 @@ fragment CalendarActivity on Activity {
     start
     title
   }
+  ... on PhysicalTest {
+    title
+  }
   ... on FogisGame {
     homeTeam
     awayTeam

@@ -1,4 +1,4 @@
-export const typeDefinitions = `union Activity = Exercise | FogisGame | PlannedExercise
+export const typeDefinitions = `union Activity = Exercise | FogisGame | PhysicalTest | PlannedExercise
 
 interface ActivityBase {
   id: ID!
@@ -40,6 +40,8 @@ type DayEdge {
 }
 
 type Exercise implements ActivityBase {
+  comment: String
+  description: String
   id: ID!
   isHiddenFromOverview: Boolean!
   primaryPurpose: ExercisePurpose
@@ -68,7 +70,15 @@ type PageInfo {
   startCursor: String
 }
 
+type PhysicalTest implements ActivityBase {
+  id: ID!
+  start: DateTime!
+  title: String!
+}
+
 type PlannedExercise implements ActivityBase {
+  comment: String
+  description: String
   id: ID!
   primaryPurpose: ExercisePurpose
   secondaryPurpose: ExercisePurpose

@@ -5,6 +5,7 @@ import { DayModel } from '../types/day/model';
 import { ExerciseModel } from '../types/exercise/model';
 import { ExercisePurposeModel } from '../types/exercise-purpose/model';
 import { FogisGameModel } from '../types/fogis-game/model';
+import { PhysicalTestModel } from '../types/physical-test/model';
 import { PlannedExerciseModel } from '../types/planned-exercise/model';
 import { UserModel } from '../types/user/model';
 import { Context } from '../context';
@@ -27,7 +28,7 @@ export type Scalars = {
   DateTime: { input: DateTime; output: DateTime; }
 };
 
-export type Activity = Exercise | FogisGame | PlannedExercise;
+export type Activity = Exercise | FogisGame | PhysicalTest | PlannedExercise;
 
 export type ActivityBase = {
   id: Scalars['ID']['output'];
@@ -82,6 +83,8 @@ export type DayEdge = {
 
 export type Exercise = ActivityBase & {
   __typename?: 'Exercise';
+  comment: Maybe<Scalars['String']['output']>;
+  description: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
   isHiddenFromOverview: Scalars['Boolean']['output'];
   primaryPurpose: Maybe<ExercisePurpose>;
@@ -113,8 +116,17 @@ export type PageInfo = {
   startCursor: Maybe<Scalars['String']['output']>;
 };
 
+export type PhysicalTest = ActivityBase & {
+  __typename?: 'PhysicalTest';
+  id: Scalars['ID']['output'];
+  start: Scalars['DateTime']['output'];
+  title: Scalars['String']['output'];
+};
+
 export type PlannedExercise = ActivityBase & {
   __typename?: 'PlannedExercise';
+  comment: Maybe<Scalars['String']['output']>;
+  description: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
   primaryPurpose: Maybe<ExercisePurpose>;
   secondaryPurpose: Maybe<ExercisePurpose>;
@@ -229,7 +241,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping of interface types */
 export type ResolversInterfaceTypes<RefType extends Record<string, unknown>> = {
-  ActivityBase: ( ExerciseModel ) | ( FogisGameModel ) | ( PlannedExerciseModel );
+  ActivityBase: ( ExerciseModel ) | ( FogisGameModel ) | ( PhysicalTestModel ) | ( PlannedExerciseModel );
 };
 
 /** Mapping between all available schema types and the resolvers types */
@@ -250,6 +262,7 @@ export type ResolversTypes = {
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   PageInfo: ResolverTypeWrapper<PageInfo>;
+  PhysicalTest: ResolverTypeWrapper<PhysicalTestModel>;
   PlannedExercise: ResolverTypeWrapper<PlannedExerciseModel>;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
@@ -274,6 +287,7 @@ export type ResolversParentTypes = {
   ID: Scalars['ID']['output'];
   Int: Scalars['Int']['output'];
   PageInfo: PageInfo;
+  PhysicalTest: PhysicalTestModel;
   PlannedExercise: PlannedExerciseModel;
   Query: {};
   String: Scalars['String']['output'];
@@ -281,11 +295,11 @@ export type ResolversParentTypes = {
 };
 
 export type ActivityResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Activity'] = ResolversParentTypes['Activity']> = {
-  __resolveType: TypeResolveFn<'Exercise' | 'FogisGame' | 'PlannedExercise', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'Exercise' | 'FogisGame' | 'PhysicalTest' | 'PlannedExercise', ParentType, ContextType>;
 };
 
 export type ActivityBaseResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ActivityBase'] = ResolversParentTypes['ActivityBase']> = {
-  __resolveType: TypeResolveFn<'Exercise' | 'FogisGame' | 'PlannedExercise', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'Exercise' | 'FogisGame' | 'PhysicalTest' | 'PlannedExercise', ParentType, ContextType>;
   id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   start: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   title: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -327,6 +341,8 @@ export type DayEdgeResolvers<ContextType = Context, ParentType extends Resolvers
 };
 
 export type ExerciseResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Exercise'] = ResolversParentTypes['Exercise']> = {
+  comment: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  description: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   isHiddenFromOverview: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   primaryPurpose: Resolver<Maybe<ResolversTypes['ExercisePurpose']>, ParentType, ContextType>;
@@ -359,7 +375,16 @@ export type PageInfoResolvers<ContextType = Context, ParentType extends Resolver
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type PhysicalTestResolvers<ContextType = Context, ParentType extends ResolversParentTypes['PhysicalTest'] = ResolversParentTypes['PhysicalTest']> = {
+  id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  start: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  title: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type PlannedExerciseResolvers<ContextType = Context, ParentType extends ResolversParentTypes['PlannedExercise'] = ResolversParentTypes['PlannedExercise']> = {
+  comment: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  description: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   primaryPurpose: Resolver<Maybe<ResolversTypes['ExercisePurpose']>, ParentType, ContextType>;
   secondaryPurpose: Resolver<Maybe<ResolversTypes['ExercisePurpose']>, ParentType, ContextType>;
@@ -395,6 +420,7 @@ export type Resolvers<ContextType = Context> = {
   ExercisePurpose: ExercisePurposeResolvers<ContextType>;
   FogisGame: FogisGameResolvers<ContextType>;
   PageInfo: PageInfoResolvers<ContextType>;
+  PhysicalTest: PhysicalTestResolvers<ContextType>;
   PlannedExercise: PlannedExerciseResolvers<ContextType>;
   Query: QueryResolvers<ContextType>;
   User: UserResolvers<ContextType>;

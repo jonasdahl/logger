@@ -19,4 +19,6 @@ export const exerciseResolvers: ExerciseResolvers = {
         })
       : null,
   isHiddenFromOverview: (parent) => parent.value.isHiddenFromOverview,
+  comment: (parent) => parent.value.comment,
+  description: (parent) => parent.value.description,
 };

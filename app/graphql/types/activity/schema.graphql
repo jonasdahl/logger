@@ -1,1 +1,1 @@
-union Activity = FogisGame | Exercise | PlannedExercise
+union Activity = FogisGame | Exercise | PlannedExercise | PhysicalTest

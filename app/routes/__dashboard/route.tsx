@@ -38,7 +38,7 @@ export async function loader({ request }: LoaderArgs) {
     variables: {},
   });
 
-  return json({ isAdmin: await isAdmin(userId), email: data?.me?.email });
+  return json({ isAdmin: !!(await isAdmin(userId)), email: data?.me?.email });
 }
 
 export default function Dashboard() {
@@ -48,7 +48,7 @@ export default function Dashboard() {
     <Box>
       <Box bg="blue.700" boxShadow="lg" fontWeight="bold">
         <HStack h="100%" py={3} pr={3} pl={5} spacing={5}>
-          <Link to="/calendar" color="white">
+          <Link to="/" color="white">
             Kalender
           </Link>
           <Spacer />

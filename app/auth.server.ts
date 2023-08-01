@@ -36,16 +36,22 @@ authenticator.use(
 
 export async function isAdmin(userId: string) {
   const user = await db.user.findUnique({ where: { id: userId } });
+  if (!user) {
+    return false;
+  }
+  if (process.env.NODE_ENV === "development") {
+    return user;
+  }
   if (user?.email === "jonas@jdahl.se") {
-    return true;
+    return user;
   }
   return false;
 }
 
 export async function assertIsAdmin(userId: string) {
-  const user = await db.user.findUnique({ where: { id: userId } });
-  if (user?.email !== "jonas@jdahl.se") {
-    throw unauthorized({ user });
+  const adminUser = await isAdmin(userId);
+  if (!adminUser) {
+    throw unauthorized({ user: adminUser });
   }
 }
 

@@ -1,0 +1,41 @@
+query ShowDay($date: String!) {
+  day(date: $date) {
+    activities {
+      edges {
+        node {
+          __typename
+          ... on ActivityBase {
+            id
+            start
+            title
+          }
+          ... on FogisGame {
+            homeTeam
+            awayTeam
+          }
+          ... on PlannedExercise {
+            primaryPurpose {
+              label
+            }
+            secondaryPurpose {
+              label
+            }
+            description
+            comment
+          }
+          ... on Exercise {
+            primaryPurpose {
+              label
+            }
+            secondaryPurpose {
+              label
+            }
+            description
+            comment
+            isHiddenFromOverview
+          }
+        }
+      }
+    }
+  }
+}

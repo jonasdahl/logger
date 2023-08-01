@@ -77,7 +77,7 @@ export async function syncPolarUser({
     }
   );
 
-  if (data?.exercises.length || (await isAdmin(userId))) {
+  if (data?.exercises.length || !!(await isAdmin(userId))) {
     const pushes = await db.pushSubscription.findMany({ where: { userId } });
     for (const push of pushes) {
       await notify(

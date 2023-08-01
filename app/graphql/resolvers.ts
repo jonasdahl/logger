@@ -11,6 +11,7 @@ import { exercisePurposeResolvers } from "./types/exercise-purpose/resolvers";
 import { exerciseResolvers } from "./types/exercise/resolvers";
 import { fogisGameResolvers } from "./types/fogis-game/resolvers";
 import { pageInfoResolvers } from "./types/page-info/resolvers";
+import { physicalTestResolvers } from "./types/physical-test/resolvers";
 import { plannedExerciseResolvers } from "./types/planned-exercise/resolvers";
 import { queryResolvers } from "./types/query/resolvers";
 import { userResolvers } from "./types/user/resolvers";
@@ -31,4 +32,5 @@ export const resolvers: Resolvers = {
   DayEdge: dayEdgeResolvers,
   PlannedExercise: plannedExerciseResolvers,
   ExercisePurpose: exercisePurposeResolvers,
+  PhysicalTest: physicalTestResolvers,
 };

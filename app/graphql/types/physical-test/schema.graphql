@@ -1,0 +1,5 @@
+type PhysicalTest implements ActivityBase {
+  id: ID!
+  start: DateTime!
+  title: String!
+}

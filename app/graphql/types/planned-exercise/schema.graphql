@@ -5,4 +5,7 @@ type PlannedExercise implements ActivityBase {
 
   primaryPurpose: ExercisePurpose
   secondaryPurpose: ExercisePurpose
+
+  comment: String
+  description: String
 }

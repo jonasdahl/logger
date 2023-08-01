@@ -18,4 +18,6 @@ export const plannedExerciseResolvers: PlannedExerciseResolvers = {
           where: { id: parent.value.secondaryPurposeId },
         })
       : null,
+  comment: (parent) => parent.value.comment,
+  description: (parent) => parent.value.description,
 };
