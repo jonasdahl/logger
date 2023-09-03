@@ -12,6 +12,12 @@ query Calendar($after: String!, $before: String!) {
 fragment CalendarDay on Day {
   start
   date
+
+  heartRateSummary {
+    secondsInZone4: secondsInZone(heartRateZone: Zone4)
+    secondsInZone5: secondsInZone(heartRateZone: Zone5)
+  }
+
   activities {
     edges {
       cursor
@@ -45,6 +51,8 @@ fragment CalendarActivity on Activity {
       label
       shortLabel
     }
+    comment
+    description
   }
   ... on PlannedExercise {
     primaryPurpose {

@@ -26,6 +26,7 @@ scalar DateTime
 type Day {
   activities(after: String, before: String, first: Int, includeHidden: Boolean, last: Int): ActivityConnection!
   date: String!
+  heartRateSummary: HeartRateSummary
   start: DateTime!
 }
 
@@ -61,6 +62,18 @@ type FogisGame implements ActivityBase {
   id: ID!
   start: DateTime!
   title: String!
+}
+
+type HeartRateSummary {
+  secondsInZone(heartRateZone: HeartRateZone): Int
+}
+
+enum HeartRateZone {
+  Zone1
+  Zone2
+  Zone3
+  Zone4
+  Zone5
 }
 
 type PageInfo {

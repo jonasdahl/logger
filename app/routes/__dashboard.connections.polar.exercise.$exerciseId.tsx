@@ -50,7 +50,6 @@ export async function loader({ request, params }: LoaderArgs) {
   });
 
   return json({
-    exercise,
     maxPulse,
     samples: z
       .array(
@@ -67,11 +66,7 @@ export async function loader({ request, params }: LoaderArgs) {
 }
 
 export default function PolarExercise() {
-  const {
-    exercise,
-    samples,
-    maxPulse: maxHeartRate,
-  } = useLoaderData<typeof loader>();
+  const { samples, maxPulse: maxHeartRate } = useLoaderData<typeof loader>();
   const heartRateSamples = samples
     .filter((s) => s.sampleType === "0")
     .flatMap((s) =>

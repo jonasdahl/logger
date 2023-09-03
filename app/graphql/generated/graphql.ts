@@ -5,6 +5,7 @@ import { DayModel } from '../types/day/model';
 import { ExerciseModel } from '../types/exercise/model';
 import { ExercisePurposeModel } from '../types/exercise-purpose/model';
 import { FogisGameModel } from '../types/fogis-game/model';
+import { HeartRateSummaryModel } from '../types/heart-rate-summary/model';
 import { PhysicalTestModel } from '../types/physical-test/model';
 import { PlannedExerciseModel } from '../types/planned-exercise/model';
 import { UserModel } from '../types/user/model';
@@ -57,6 +58,7 @@ export type Day = {
   __typename?: 'Day';
   activities: ActivityConnection;
   date: Scalars['String']['output'];
+  heartRateSummary: Maybe<HeartRateSummary>;
   start: Scalars['DateTime']['output'];
 };
 
@@ -107,6 +109,24 @@ export type FogisGame = ActivityBase & {
   start: Scalars['DateTime']['output'];
   title: Scalars['String']['output'];
 };
+
+export type HeartRateSummary = {
+  __typename?: 'HeartRateSummary';
+  secondsInZone: Maybe<Scalars['Int']['output']>;
+};
+
+
+export type HeartRateSummarySecondsInZoneArgs = {
+  heartRateZone: InputMaybe<HeartRateZone>;
+};
+
+export enum HeartRateZone {
+  Zone1 = 'Zone1',
+  Zone2 = 'Zone2',
+  Zone3 = 'Zone3',
+  Zone4 = 'Zone4',
+  Zone5 = 'Zone5'
+}
 
 export type PageInfo = {
   __typename?: 'PageInfo';
@@ -259,6 +279,8 @@ export type ResolversTypes = {
   Exercise: ResolverTypeWrapper<ExerciseModel>;
   ExercisePurpose: ResolverTypeWrapper<ExercisePurposeModel>;
   FogisGame: ResolverTypeWrapper<FogisGameModel>;
+  HeartRateSummary: ResolverTypeWrapper<HeartRateSummaryModel>;
+  HeartRateZone: HeartRateZone;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   PageInfo: ResolverTypeWrapper<PageInfo>;
@@ -284,6 +306,7 @@ export type ResolversParentTypes = {
   Exercise: ExerciseModel;
   ExercisePurpose: ExercisePurposeModel;
   FogisGame: FogisGameModel;
+  HeartRateSummary: HeartRateSummaryModel;
   ID: Scalars['ID']['output'];
   Int: Scalars['Int']['output'];
   PageInfo: PageInfo;
@@ -324,6 +347,7 @@ export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversT
 export type DayResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Day'] = ResolversParentTypes['Day']> = {
   activities: Resolver<ResolversTypes['ActivityConnection'], ParentType, ContextType, Partial<DayActivitiesArgs>>;
   date: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  heartRateSummary: Resolver<Maybe<ResolversTypes['HeartRateSummary']>, ParentType, ContextType>;
   start: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -364,6 +388,11 @@ export type FogisGameResolvers<ContextType = Context, ParentType extends Resolve
   id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   start: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   title: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type HeartRateSummaryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['HeartRateSummary'] = ResolversParentTypes['HeartRateSummary']> = {
+  secondsInZone: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, Partial<HeartRateSummarySecondsInZoneArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -419,6 +448,7 @@ export type Resolvers<ContextType = Context> = {
   Exercise: ExerciseResolvers<ContextType>;
   ExercisePurpose: ExercisePurposeResolvers<ContextType>;
   FogisGame: FogisGameResolvers<ContextType>;
+  HeartRateSummary: HeartRateSummaryResolvers<ContextType>;
   PageInfo: PageInfoResolvers<ContextType>;
   PhysicalTest: PhysicalTestResolvers<ContextType>;
   PlannedExercise: PlannedExerciseResolvers<ContextType>;

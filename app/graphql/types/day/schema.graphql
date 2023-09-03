@@ -8,4 +8,5 @@ type Day {
     before: String
     includeHidden: Boolean
   ): ActivityConnection!
+  heartRateSummary: HeartRateSummary
 }

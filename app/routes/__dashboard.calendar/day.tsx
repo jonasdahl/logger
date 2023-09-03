@@ -20,7 +20,7 @@ import {
   Stack,
 } from "@chakra-ui/react";
 import { useLoaderData, useLocation, useNavigation } from "@remix-run/react";
-import { DateTime, Interval } from "luxon";
+import { DateTime, Duration, Interval } from "luxon";
 import type { ReactNode } from "react";
 import { forwardRef, useEffect, useRef } from "react";
 import { ValidatedForm } from "remix-validated-form";
@@ -86,14 +86,56 @@ export function Day({
               <Stack>
                 {day.activities.edges.map((activityEdge) =>
                   activityEdge.node ? (
-                    <Box key={activityEdge.cursor}>
-                      {DateTime.fromISO(activityEdge.node.start, {
-                        zone: timeZone,
-                      }).toFormat("HH:mm")}{" "}
-                      {activityEdge.node.title}
-                    </Box>
+                    <HStack key={activityEdge.cursor} alignItems="flex-start">
+                      <Box fontWeight="bold">
+                        {DateTime.fromISO(activityEdge.node.start, {
+                          zone: timeZone,
+                        }).toFormat("HH:mm")}
+                      </Box>
+                      <Stack spacing={0}>
+                        <Box fontWeight="bold">{activityEdge.node.title}</Box>
+                        {activityEdge.node.__typename === "Exercise" ? (
+                          <>
+                            {activityEdge.node.primaryPurpose ? (
+                              <Box>{`Primärt syfte: ${activityEdge.node.primaryPurpose.label}`}</Box>
+                            ) : null}
+                            {activityEdge.node.secondaryPurpose ? (
+                              <Box>{`Sekundärt syfte: ${activityEdge.node.secondaryPurpose.label}`}</Box>
+                            ) : null}
+                            {activityEdge.node.description ? (
+                              <Box>{`Beskrivning: ${activityEdge.node.description}`}</Box>
+                            ) : null}
+                            {activityEdge.node.comment ? (
+                              <Box>{`Kommentar: ${activityEdge.node.comment}`}</Box>
+                            ) : null}
+                          </>
+                        ) : null}
+                      </Stack>
+                    </HStack>
                   ) : null
                 )}
+
+                {day.heartRateSummary?.secondsInZone4 ? (
+                  <Box>
+                    Tid i zon 4:{" "}
+                    {Duration.fromMillis(
+                      day.heartRateSummary.secondsInZone4 * 1000
+                    )
+                      .shiftTo("minutes", "seconds")
+                      .toFormat("m'min' ss's'")}
+                  </Box>
+                ) : null}
+                {day.heartRateSummary?.secondsInZone5 ? (
+                  <Box>
+                    Tid i zon 5:{" "}
+                    {Duration.fromMillis(
+                      day.heartRateSummary.secondsInZone5 * 1000
+                    )
+                      .shiftTo("minutes", "seconds")
+                      .toFormat("m'min' ss's'")}
+                  </Box>
+                ) : null}
+
                 <Box w="100%" maxW="100%" overflowX="auto">
                   <HStack shouldWrapChildren>
                     <ButtonLink

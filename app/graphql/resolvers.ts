@@ -10,6 +10,7 @@ import { dayResolvers } from "./types/day/resolvers";
 import { exercisePurposeResolvers } from "./types/exercise-purpose/resolvers";
 import { exerciseResolvers } from "./types/exercise/resolvers";
 import { fogisGameResolvers } from "./types/fogis-game/resolvers";
+import { heartRateSummaryResolvers } from "./types/heart-rate-summary/resolvers";
 import { pageInfoResolvers } from "./types/page-info/resolvers";
 import { physicalTestResolvers } from "./types/physical-test/resolvers";
 import { plannedExerciseResolvers } from "./types/planned-exercise/resolvers";
@@ -33,4 +34,5 @@ export const resolvers: Resolvers = {
   PlannedExercise: plannedExerciseResolvers,
   ExercisePurpose: exercisePurposeResolvers,
   PhysicalTest: physicalTestResolvers,
+  HeartRateSummary: heartRateSummaryResolvers,
 };

@@ -1,0 +1,11 @@
+type HeartRateSummary {
+  secondsInZone(heartRateZone: HeartRateZone): Int
+}
+
+enum HeartRateZone {
+  Zone1
+  Zone2
+  Zone3
+  Zone4
+  Zone5
+}
