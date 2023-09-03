@@ -55,6 +55,6 @@ export const heartRateSummaryResolvers: HeartRateSummaryResolvers = {
     if (!zone) {
       return null;
     }
-    return sum(zone.samples.map((s) => s.durationSeconds)) * 1000;
+    return sum(zone.samples.map((s) => s.durationSeconds));
   },
 };
