@@ -13,6 +13,7 @@ import { SubmitButton } from "~/components/form/submit-button";
 import { Textarea } from "~/components/form/textarea";
 import { validate } from "~/components/form/validate.server";
 import { db } from "~/db.server";
+import { HiddenReturnToInput } from "~/services/return-to";
 import { getTimeZoneFromRequest } from "~/time";
 
 const validator = withZod(
@@ -29,6 +30,7 @@ const validator = withZod(
       .string()
       .transform((s) => (s === "null" ? undefined : s))
       .optional(),
+    returnTo: z.string().optional(),
   })
 );
 
@@ -63,6 +65,7 @@ export async function action({ request }: ActionArgs) {
   });
 
   const redirectTo =
+    data.returnTo ??
     url.searchParams.get("returnTo") ??
     `/days/${DateTime.now().toFormat("yyyy-MM-dd")}`;
 
@@ -118,6 +121,7 @@ export default function DashboardIndex() {
   return (
     <Container py={5}>
       <ValidatedForm validator={validator} method="post">
+        <HiddenReturnToInput />
         <Stack spacing={5}>
           <Heading>Skapa aktivitet</Heading>
           {plannedActivity ? (

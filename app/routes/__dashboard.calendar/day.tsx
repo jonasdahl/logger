@@ -30,6 +30,7 @@ import { SubmitButton } from "~/components/form/submit-button";
 import { Textarea } from "~/components/form/textarea";
 import type { CalendarDayFragment } from "~/graphql/generated/documents";
 import { useToggle } from "~/hooks/use-toggle";
+import { useReturnToUrl } from "~/services/return-to";
 import { createPlannedActivityValidator } from "../__dashboard.planned-activities.create";
 import type { loader } from "./route";
 
@@ -49,6 +50,7 @@ export function Day({
   );
 
   const location = useLocation();
+  const returnTo = useReturnToUrl();
 
   return (
     <Box h="7rem" opacity={opacity}>
@@ -105,7 +107,7 @@ export function Day({
                       <ButtonLink
                         to={`/activities/create?date=${start.toFormat(
                           "yyyy-MM-dd"
-                        )}`}
+                        )}&returnTo=${returnTo}`}
                         colorScheme="green"
                         size="sm"
                         flex={1}
