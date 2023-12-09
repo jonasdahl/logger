@@ -15,7 +15,7 @@ import {
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import type { LoaderArgs } from "@remix-run/node";
+import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Form, useLoaderData, useLocation } from "@remix-run/react";
 import { DateTime } from "luxon";
@@ -28,7 +28,7 @@ import { ShowDayDocument } from "~/graphql/generated/documents";
 import { gql } from "~/graphql/graphql.server";
 import { getTimeZoneFromRequest } from "~/time";
 
-export async function loader({ request, params }: LoaderArgs) {
+export async function loader({ request, params }: LoaderFunctionArgs) {
   const { id } = await authenticator.isAuthenticated(request, {
     failureRedirect: "/login",
   });

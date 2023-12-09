@@ -1,4 +1,4 @@
-import type { ActionArgs } from "@remix-run/node";
+import type { ActionFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { DateTime } from "luxon";
 import { z } from "zod";
@@ -6,7 +6,7 @@ import { authenticator } from "~/auth.server";
 import { db } from "~/db.server";
 import { getTimeZoneFromRequest } from "~/time";
 
-export async function action({ request }: ActionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   const user = await authenticator.isAuthenticated(request, {
     failureRedirect: "/login",
   });

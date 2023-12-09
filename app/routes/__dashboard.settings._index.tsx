@@ -15,13 +15,13 @@ import {
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import type { LoaderArgs } from "@remix-run/node";
+import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import type { ReactNode } from "react";
 import { assertIsAdmin, authenticator } from "~/auth.server";
 import { Link } from "~/components/link";
 
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
   const sessionUser = await authenticator.isAuthenticated(request, {
     failureRedirect: "/login",
   });

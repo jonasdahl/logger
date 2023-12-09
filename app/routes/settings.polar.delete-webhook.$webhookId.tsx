@@ -1,10 +1,10 @@
-import type { ActionArgs } from "@remix-run/node";
+import type { ActionFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { z } from "zod";
 import { assertIsAdmin, authenticator } from "~/auth.server";
 import { polarClientId, polarClientSecret } from "~/secrets.server";
 
-export async function action({ request, params }: ActionArgs) {
+export async function action({ request, params }: ActionFunctionArgs) {
   const sessionUser = await authenticator.isAuthenticated(request, {
     failureRedirect: "/login",
   });

@@ -13,7 +13,7 @@ import {
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import type { LoaderArgs } from "@remix-run/node";
+import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { upperFirst } from "lodash";
@@ -30,7 +30,7 @@ import { Day } from "../__dashboard.calendar/day";
 
 const paramsType = z.object({ year: z.string(), month: z.string() });
 
-export async function loader({ request, params }: LoaderArgs) {
+export async function loader({ request, params }: LoaderFunctionArgs) {
   await authenticator.isAuthenticated(request, { failureRedirect: "/login" });
   const timeZone = getTimeZoneFromRequest(request);
 

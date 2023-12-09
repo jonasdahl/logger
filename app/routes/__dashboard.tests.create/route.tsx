@@ -1,5 +1,5 @@
 import { Box, Container, Heading, Stack } from "@chakra-ui/react";
-import type { ActionArgs } from "@remix-run/node";
+import type { ActionFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { useSearchParams } from "@remix-run/react";
 import { withZod } from "@remix-validated-form/with-zod";
@@ -15,7 +15,7 @@ import { getTimeZoneFromRequest } from "~/time";
 
 const validator = withZod(z.object({ date: z.string() }));
 
-export async function action({ request }: ActionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   const url = new URL(request.url);
   const { id: userId } = await authenticator.isAuthenticated(request, {
     failureRedirect: "/",

@@ -1,11 +1,11 @@
-import type { ActionArgs } from "@remix-run/node";
+import type { ActionFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { db } from "~/db.server";
 import { webhookPayload } from "~/polar/schemas/webhook-payload";
 import { syncPolarUser } from "~/polar/sync-polar-user.server";
 import { validateWebhook } from "~/polar/validate-webhook.server";
 
-export async function action({ request }: ActionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   console.log("Polar webhook request: ", [...request.headers.values()]);
 
   if (request.headers.get("polar-webhook-event") === "PING") {

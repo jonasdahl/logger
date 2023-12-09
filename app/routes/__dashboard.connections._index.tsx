@@ -7,7 +7,7 @@ import {
   Spacer,
   Stack,
 } from "@chakra-ui/react";
-import type { LoaderArgs } from "@remix-run/node";
+import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
 import { pick } from "lodash";
@@ -16,7 +16,7 @@ import { authenticator } from "~/auth.server";
 import { ButtonLink } from "~/components/button-link";
 import { db } from "~/db.server";
 
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
   const sessionUser = await authenticator.isAuthenticated(request, {
     failureRedirect: "/login",
   });

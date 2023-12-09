@@ -1,11 +1,11 @@
 import { Button, Container, Heading, Stack } from "@chakra-ui/react";
-import type { LoaderArgs } from "@remix-run/node";
+import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Form } from "@remix-run/react";
 import { authenticator } from "~/auth.server";
 import { db } from "~/db.server";
 
-export async function action({ request }: LoaderArgs) {
+export async function action({ request }: LoaderFunctionArgs) {
   const user = await authenticator.isAuthenticated(request, {
     failureRedirect: "/connections",
   });

@@ -11,7 +11,7 @@ import {
   Td,
   Tr,
 } from "@chakra-ui/react";
-import type { ActionArgs, LoaderArgs } from "@remix-run/node";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import {
   Form,
@@ -37,7 +37,7 @@ const validator = withZod(
   })
 );
 
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
   const userSession = await authenticator.isAuthenticated(request, {
     failureRedirect: "/login",
   });
@@ -49,7 +49,7 @@ export async function loader({ request }: LoaderArgs) {
   return json({ fogisUsername: user.fogisUsername });
 }
 
-export async function action({ request }: ActionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   const { username, password } = await validate({ request, validator });
 
   const syncStart = DateTime.now().minus({ days: 30 });

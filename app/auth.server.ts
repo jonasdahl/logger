@@ -2,7 +2,6 @@ import type { User as PrismaUser } from "@prisma/client";
 import { compare, hash } from "bcrypt";
 import { Authenticator } from "remix-auth";
 import { FormStrategy } from "remix-auth-form";
-import { unauthorized } from "remix-utils";
 import { z } from "zod";
 import { db } from "./db.server";
 import { session } from "./session.server";
@@ -51,7 +50,7 @@ export async function isAdmin(userId: string) {
 export async function assertIsAdmin(userId: string) {
   const adminUser = await isAdmin(userId);
   if (!adminUser) {
-    throw unauthorized({ user: adminUser });
+    throw new Error("Not authorized"); // TODO Status code
   }
 }
 

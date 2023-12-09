@@ -18,12 +18,11 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import type { LoaderArgs } from "@remix-run/node";
+import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData, useLocation } from "@remix-run/react";
 import { sum } from "lodash";
 import { Duration } from "luxon";
-import { ClientOnly } from "remix-utils";
 import { z } from "zod";
 import { authenticator } from "~/auth.server";
 import {
@@ -33,10 +32,11 @@ import {
   AnimatedLineSeries,
   XYChart,
 } from "~/components/charts/xy-chart.client";
+import { ClientOnly } from "~/components/client-only";
 import { Link } from "~/components/link";
 import { db } from "~/db.server";
 
-export async function loader({ request, params }: LoaderArgs) {
+export async function loader({ request, params }: LoaderFunctionArgs) {
   const user = await authenticator.isAuthenticated(request, {
     failureRedirect: "/connections",
   });

@@ -11,7 +11,7 @@ import {
   Td,
   Tr,
 } from "@chakra-ui/react";
-import type { ActionArgs, LoaderArgs } from "@remix-run/node";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
 import { withZod } from "@remix-validated-form/with-zod";
@@ -28,7 +28,7 @@ import { polarClientId, polarClientSecret } from "~/secrets.server";
 
 const validator = withZod(z.object({ url: z.string().url() }));
 
-export async function action({ request }: ActionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   const sessionUser = await authenticator.isAuthenticated(request, {
     failureRedirect: "/login",
   });
@@ -79,7 +79,7 @@ export async function action({ request }: ActionArgs) {
   return redirect("/settings/polar");
 }
 
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
   const sessionUser = await authenticator.isAuthenticated(request, {
     failureRedirect: "/login",
   });

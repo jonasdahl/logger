@@ -10,14 +10,14 @@ import {
   Input,
   Stack,
 } from "@chakra-ui/react";
-import type { ActionArgs, LoaderArgs } from "@remix-run/node";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
 import { authenticator } from "~/auth.server";
 import { Link } from "~/components/link";
 import { commitSession, getSessionFromRequest } from "~/session.server";
 
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
   await authenticator.isAuthenticated(request, {
     successRedirect: "/",
   });
@@ -30,7 +30,7 @@ export async function loader({ request }: LoaderArgs) {
   );
 }
 
-export async function action({ request }: ActionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   return await authenticator.authenticate("user-pass", request, {
     successRedirect: "/",
     failureRedirect: "/login",

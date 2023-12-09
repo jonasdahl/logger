@@ -1,5 +1,5 @@
 import { Alert, Box, Container, Heading, Stack } from "@chakra-ui/react";
-import type { ActionArgs, LoaderArgs } from "@remix-run/node";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useLoaderData, useSearchParams } from "@remix-run/react";
 import { withZod } from "@remix-validated-form/with-zod";
@@ -34,7 +34,7 @@ const validator = withZod(
   })
 );
 
-export async function action({ request }: ActionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   const url = new URL(request.url);
   const { id: userId } = await authenticator.isAuthenticated(request, {
     failureRedirect: "/",
@@ -72,7 +72,7 @@ export async function action({ request }: ActionArgs) {
   return redirect(redirectTo);
 }
 
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
   const userInfo = await authenticator.isAuthenticated(request, {
     failureRedirect: "/",
   });

@@ -1,5 +1,5 @@
 import { Box, Button, Container, Heading, Stack } from "@chakra-ui/react";
-import type { ActionArgs, LoaderArgs } from "@remix-run/node";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Form } from "@remix-run/react";
 import { DateTime } from "luxon";
@@ -7,7 +7,7 @@ import { authenticator } from "~/auth.server";
 import { db } from "~/db.server";
 import { getTimeZoneFromRequest } from "~/time";
 
-export async function action({ request, params }: ActionArgs) {
+export async function action({ request, params }: ActionFunctionArgs) {
   const { id: userId } = await authenticator.isAuthenticated(request, {
     failureRedirect: "/",
   });
@@ -30,7 +30,7 @@ export async function action({ request, params }: ActionArgs) {
   );
 }
 
-export async function loader({ request, params }: LoaderArgs) {
+export async function loader({ request, params }: LoaderFunctionArgs) {
   const { id: userId } = await authenticator.isAuthenticated(request, {
     failureRedirect: "/",
   });

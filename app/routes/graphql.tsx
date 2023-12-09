@@ -1,8 +1,8 @@
-import type { ActionArgs } from "@remix-run/node";
+import type { ActionFunctionArgs } from "@remix-run/node";
 import { parse } from "graphql";
 import { gql } from "~/graphql/graphql.server";
 
-export async function action({ request }: ActionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   const params = (await request.json()) as any;
   const result = await gql({
     document: parse(params.query),

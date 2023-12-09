@@ -1,5 +1,5 @@
 import { Box, Container, HStack, SimpleGrid, Stack } from "@chakra-ui/react";
-import type { LoaderArgs } from "@remix-run/node";
+import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { DateTime } from "luxon";
@@ -13,7 +13,7 @@ import { Day } from "./day";
 import { FogisSyncAlert } from "./fogis-sync-alert";
 import { OnboardingAlert } from "./onboarding-alert";
 
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
   const user = await authenticator.isAuthenticated(request, {
     failureRedirect: "/login",
   });

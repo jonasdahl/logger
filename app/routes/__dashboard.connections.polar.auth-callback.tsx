@@ -1,4 +1,4 @@
-import type { LoaderArgs } from "@remix-run/node";
+import type { LoaderFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { z } from "zod";
 import { authenticator } from "~/auth.server";
@@ -10,7 +10,7 @@ import {
 } from "~/secrets.server";
 import { commitSession, getSessionFromRequest } from "~/session.server";
 
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
   const user = await authenticator.isAuthenticated(request, {
     failureRedirect: "/login",
   });

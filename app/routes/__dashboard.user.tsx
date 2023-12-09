@@ -1,5 +1,5 @@
 import { Box, Button, Container, Heading, Stack } from "@chakra-ui/react";
-import type { LoaderArgs } from "@remix-run/node";
+import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
 import { withZod } from "@remix-validated-form/with-zod";
@@ -34,7 +34,7 @@ const validator = withZod(
   ])
 );
 
-export async function action({ request }: LoaderArgs) {
+export async function action({ request }: LoaderFunctionArgs) {
   const sessionUser = await authenticator.isAuthenticated(request, {
     failureRedirect: "/",
   });
@@ -58,7 +58,7 @@ export async function action({ request }: LoaderArgs) {
   return redirect(redirectTo);
 }
 
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
   const sessionUser = await authenticator.isAuthenticated(request, {
     failureRedirect: "/",
   });

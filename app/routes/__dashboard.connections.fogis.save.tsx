@@ -1,5 +1,5 @@
 import { RefereeRole } from "@prisma/client";
-import type { ActionArgs, SerializeFrom } from "@remix-run/node";
+import type { ActionFunctionArgs, SerializeFrom } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { DateTime } from "luxon";
 import { z } from "zod";
@@ -8,7 +8,7 @@ import { db } from "~/db.server";
 import type { FogisGameType } from "~/fogis/parseGamesFromTableRows";
 import { commitSession, getSessionFromRequest } from "~/session.server";
 
-export async function action({ request }: ActionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   const user = await authenticator.isAuthenticated(request, {
     failureRedirect: "/login",
   });

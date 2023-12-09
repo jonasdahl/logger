@@ -1,4 +1,4 @@
-import type { ActionArgs } from "@remix-run/node";
+import type { ActionFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { z } from "zod";
 import { authenticator } from "~/auth.server";
@@ -13,7 +13,7 @@ const payloadType = z.object({
   }),
 });
 
-export async function action({ request }: ActionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   const res = payloadType.parse(await request.json());
   const { id: userId } = await authenticator.isAuthenticated(request, {
     failureRedirect: "/login",

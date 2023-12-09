@@ -1,12 +1,12 @@
 import { Box, Button, Container, Heading, Stack } from "@chakra-ui/react";
-import type { ActionArgs, LoaderArgs } from "@remix-run/node";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
 import { assertIsAdmin, authenticator } from "~/auth.server";
 import { db } from "~/db.server";
 import { notify } from "~/push/notifications.server";
 
-export async function action({ request }: ActionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   const sessionUser = await authenticator.isAuthenticated(request, {
     failureRedirect: "/login",
   });
@@ -29,7 +29,7 @@ export async function action({ request }: ActionArgs) {
   return redirect("/settings/notifications");
 }
 
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
   const sessionUser = await authenticator.isAuthenticated(request, {
     failureRedirect: "/login",
   });

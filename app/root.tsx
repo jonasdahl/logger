@@ -1,7 +1,7 @@
 import { ChakraProvider, ColorModeScript, extendTheme } from "@chakra-ui/react";
 import { config } from "@fortawesome/fontawesome-svg-core";
 import faStyles from "@fortawesome/fontawesome-svg-core/styles.css";
-import type { LinksFunction, V2_MetaFunction } from "@remix-run/node";
+import type { LinksFunction, MetaFunction } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -13,7 +13,7 @@ import {
 
 config.autoAddCss = false;
 
-export const meta: V2_MetaFunction = () => [
+export const meta: MetaFunction = () => [
   { charSet: "utf-8" },
   { title: "Träningsdagbok" },
   { name: "viewport", content: "width=device-width,initial-scale=1" },

@@ -1,10 +1,10 @@
-import type { ActionArgs } from "@remix-run/node";
+import type { ActionFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { authenticator } from "~/auth.server";
 import { db } from "~/db.server";
 import { syncPolarUser } from "~/polar/sync-polar-user.server";
 
-export async function action({ request }: ActionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   const { id } = await authenticator.isAuthenticated(request, {
     failureRedirect: "/",
   });
