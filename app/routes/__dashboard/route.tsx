@@ -49,8 +49,9 @@ export default function Dashboard() {
       <Box bg="blue.700" boxShadow="lg" fontWeight="bold">
         <HStack h="100%" py={3} pr={3} pl={5} spacing={5}>
           <Link to="/" color="white">
-            Kalender
+            Start
           </Link>
+
           <Spacer />
           <Menu>
             <Tooltip label={email}>

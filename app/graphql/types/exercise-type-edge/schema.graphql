@@ -1,0 +1,4 @@
+type ExerciseTypeEdge {
+  cursor: String!
+  node: ExerciseType
+}

@@ -1,0 +1,4 @@
+type ExerciseType {
+  id: ID!
+  name: String!
+}

@@ -1,0 +1,10 @@
+query CreateExerciseItem {
+  exerciseTypes {
+    edges {
+      node {
+        id
+        name
+      }
+    }
+  }
+}

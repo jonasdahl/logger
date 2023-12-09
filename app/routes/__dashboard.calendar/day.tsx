@@ -28,6 +28,7 @@ import { ButtonLink } from "~/components/button-link";
 import { Select } from "~/components/form/select";
 import { SubmitButton } from "~/components/form/submit-button";
 import { Textarea } from "~/components/form/textarea";
+import { Link } from "~/components/link";
 import type { CalendarDayFragment } from "~/graphql/generated/documents";
 import { useToggle } from "~/hooks/use-toggle";
 import { useReturnToUrl } from "~/services/return-to";
@@ -93,7 +94,15 @@ export function Day({
                         }).toFormat("HH:mm")}
                       </Box>
                       <Stack spacing={0}>
-                        <Box fontWeight="bold">{activityEdge.node.title}</Box>
+                        <Box fontWeight="bold">
+                          {activityEdge.node.__typename === "Exercise" ? (
+                            <Link to={`/exercises/${activityEdge.node.id}`}>
+                              {activityEdge.node.title}
+                            </Link>
+                          ) : (
+                            <>{activityEdge.node.title}</>
+                          )}
+                        </Box>
                         {activityEdge.node.__typename === "Exercise" ? (
                           <>
                             {activityEdge.node.primaryPurpose ? (

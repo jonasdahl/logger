@@ -31,17 +31,21 @@ fragment CalendarDay on Day {
 fragment CalendarActivity on Activity {
   __typename
   ... on ActivityBase {
+    id
     start
     title
   }
   ... on PhysicalTest {
+    id
     title
   }
   ... on FogisGame {
+    id
     homeTeam
     awayTeam
   }
   ... on Exercise {
+    id
     isHiddenFromOverview
     primaryPurpose {
       label
@@ -55,6 +59,7 @@ fragment CalendarActivity on Activity {
     description
   }
   ... on PlannedExercise {
+    id
     primaryPurpose {
       label
       shortLabel

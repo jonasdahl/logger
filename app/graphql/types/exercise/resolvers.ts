@@ -21,4 +21,22 @@ export const exerciseResolvers: ExerciseResolvers = {
   isHiddenFromOverview: (parent) => parent.value.isHiddenFromOverview,
   comment: (parent) => parent.value.comment,
   description: (parent) => parent.value.description,
+  items: async (parent) => {
+    const exerciseItems = await db.exerciseItem.findMany({
+      where: { activityId: parent.value.id },
+      orderBy: { order: "asc" },
+    });
+    return {
+      edges: exerciseItems.map((exerciseItem) => ({
+        cursor: exerciseItem.id,
+        node: exerciseItem,
+      })),
+      pageInfo: {
+        hasNextPage: false,
+        hasPreviousPage: false,
+        startCursor: exerciseItems[0]?.id ?? null,
+        endCursor: exerciseItems[exerciseItems.length - 1]?.id ?? null,
+      },
+    };
+  },
 };

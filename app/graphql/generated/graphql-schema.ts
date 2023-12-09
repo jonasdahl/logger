@@ -45,15 +45,47 @@ type Exercise implements ActivityBase {
   description: String
   id: ID!
   isHiddenFromOverview: Boolean!
+  items: ExerciseItemConnection!
   primaryPurpose: ExercisePurpose
   secondaryPurpose: ExercisePurpose
   start: DateTime!
   title: String!
 }
 
+type ExerciseItem {
+  exercise: Exercise!
+  exerciseType: ExerciseType!
+  id: ID!
+}
+
+type ExerciseItemConnection {
+  edges: [ExerciseItemEdge!]!
+  pageInfo: PageInfo!
+}
+
+type ExerciseItemEdge {
+  cursor: String!
+  node: ExerciseItem
+}
+
 type ExercisePurpose {
   label: String!
   shortLabel: String
+}
+
+type ExerciseType {
+  id: ID!
+  name: String!
+}
+
+type ExerciseTypeConnection {
+  edges: [ExerciseTypeEdge!]!
+  pageInfo: PageInfo!
+}
+
+type ExerciseTypeEdge {
+  cursor: String!
+  node: ExerciseType
 }
 
 type FogisGame implements ActivityBase {
@@ -101,8 +133,11 @@ type PlannedExercise implements ActivityBase {
 
 type Query {
   activities(after: String, before: String, filter: ActivityFilter, first: Int, last: Int): ActivityConnection!
+  activity(id: ID!): Activity
   day(date: String!): Day
   days(after: String, before: String, first: Int, last: Int): DayConnection!
+  exercise(id: ID!): Exercise
+  exerciseTypes: ExerciseTypeConnection!
   me: User
   today: Day!
 }

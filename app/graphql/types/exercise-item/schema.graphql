@@ -1,0 +1,5 @@
+type ExerciseItem {
+  id: ID!
+  exerciseType: ExerciseType!
+  exercise: Exercise!
+}

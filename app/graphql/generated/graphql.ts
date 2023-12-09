@@ -3,7 +3,9 @@ import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from '
 import { ActivityModel } from '../types/activity/model';
 import { DayModel } from '../types/day/model';
 import { ExerciseModel } from '../types/exercise/model';
+import { ExerciseItemModel } from '../types/exercise-item/model';
 import { ExercisePurposeModel } from '../types/exercise-purpose/model';
+import { ExerciseTypeModel } from '../types/exercise-type/model';
 import { FogisGameModel } from '../types/fogis-game/model';
 import { HeartRateSummaryModel } from '../types/heart-rate-summary/model';
 import { PhysicalTestModel } from '../types/physical-test/model';
@@ -89,16 +91,54 @@ export type Exercise = ActivityBase & {
   description: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
   isHiddenFromOverview: Scalars['Boolean']['output'];
+  items: ExerciseItemConnection;
   primaryPurpose: Maybe<ExercisePurpose>;
   secondaryPurpose: Maybe<ExercisePurpose>;
   start: Scalars['DateTime']['output'];
   title: Scalars['String']['output'];
 };
 
+export type ExerciseItem = {
+  __typename?: 'ExerciseItem';
+  exercise: Exercise;
+  exerciseType: ExerciseType;
+  id: Scalars['ID']['output'];
+};
+
+export type ExerciseItemConnection = {
+  __typename?: 'ExerciseItemConnection';
+  edges: Array<ExerciseItemEdge>;
+  pageInfo: PageInfo;
+};
+
+export type ExerciseItemEdge = {
+  __typename?: 'ExerciseItemEdge';
+  cursor: Scalars['String']['output'];
+  node: Maybe<ExerciseItem>;
+};
+
 export type ExercisePurpose = {
   __typename?: 'ExercisePurpose';
   label: Scalars['String']['output'];
   shortLabel: Maybe<Scalars['String']['output']>;
+};
+
+export type ExerciseType = {
+  __typename?: 'ExerciseType';
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+};
+
+export type ExerciseTypeConnection = {
+  __typename?: 'ExerciseTypeConnection';
+  edges: Array<ExerciseTypeEdge>;
+  pageInfo: PageInfo;
+};
+
+export type ExerciseTypeEdge = {
+  __typename?: 'ExerciseTypeEdge';
+  cursor: Scalars['String']['output'];
+  node: Maybe<ExerciseType>;
 };
 
 export type FogisGame = ActivityBase & {
@@ -157,8 +197,11 @@ export type PlannedExercise = ActivityBase & {
 export type Query = {
   __typename?: 'Query';
   activities: ActivityConnection;
+  activity: Maybe<Activity>;
   day: Maybe<Day>;
   days: DayConnection;
+  exercise: Maybe<Exercise>;
+  exerciseTypes: ExerciseTypeConnection;
   me: Maybe<User>;
   today: Day;
 };
@@ -173,6 +216,11 @@ export type QueryActivitiesArgs = {
 };
 
 
+export type QueryActivityArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
 export type QueryDayArgs = {
   date: Scalars['String']['input'];
 };
@@ -183,6 +231,11 @@ export type QueryDaysArgs = {
   before: InputMaybe<Scalars['String']['input']>;
   first: InputMaybe<Scalars['Int']['input']>;
   last: InputMaybe<Scalars['Int']['input']>;
+};
+
+
+export type QueryExerciseArgs = {
+  id: Scalars['ID']['input'];
 };
 
 export type User = {
@@ -277,7 +330,13 @@ export type ResolversTypes = {
   DayConnection: ResolverTypeWrapper<Omit<DayConnection, 'edges'> & { edges: Array<ResolversTypes['DayEdge']> }>;
   DayEdge: ResolverTypeWrapper<Omit<DayEdge, 'node'> & { node: Maybe<ResolversTypes['Day']> }>;
   Exercise: ResolverTypeWrapper<ExerciseModel>;
+  ExerciseItem: ResolverTypeWrapper<ExerciseItemModel>;
+  ExerciseItemConnection: ResolverTypeWrapper<Omit<ExerciseItemConnection, 'edges'> & { edges: Array<ResolversTypes['ExerciseItemEdge']> }>;
+  ExerciseItemEdge: ResolverTypeWrapper<Omit<ExerciseItemEdge, 'node'> & { node: Maybe<ResolversTypes['ExerciseItem']> }>;
   ExercisePurpose: ResolverTypeWrapper<ExercisePurposeModel>;
+  ExerciseType: ResolverTypeWrapper<ExerciseTypeModel>;
+  ExerciseTypeConnection: ResolverTypeWrapper<Omit<ExerciseTypeConnection, 'edges'> & { edges: Array<ResolversTypes['ExerciseTypeEdge']> }>;
+  ExerciseTypeEdge: ResolverTypeWrapper<Omit<ExerciseTypeEdge, 'node'> & { node: Maybe<ResolversTypes['ExerciseType']> }>;
   FogisGame: ResolverTypeWrapper<FogisGameModel>;
   HeartRateSummary: ResolverTypeWrapper<HeartRateSummaryModel>;
   HeartRateZone: HeartRateZone;
@@ -304,7 +363,13 @@ export type ResolversParentTypes = {
   DayConnection: Omit<DayConnection, 'edges'> & { edges: Array<ResolversParentTypes['DayEdge']> };
   DayEdge: Omit<DayEdge, 'node'> & { node: Maybe<ResolversParentTypes['Day']> };
   Exercise: ExerciseModel;
+  ExerciseItem: ExerciseItemModel;
+  ExerciseItemConnection: Omit<ExerciseItemConnection, 'edges'> & { edges: Array<ResolversParentTypes['ExerciseItemEdge']> };
+  ExerciseItemEdge: Omit<ExerciseItemEdge, 'node'> & { node: Maybe<ResolversParentTypes['ExerciseItem']> };
   ExercisePurpose: ExercisePurposeModel;
+  ExerciseType: ExerciseTypeModel;
+  ExerciseTypeConnection: Omit<ExerciseTypeConnection, 'edges'> & { edges: Array<ResolversParentTypes['ExerciseTypeEdge']> };
+  ExerciseTypeEdge: Omit<ExerciseTypeEdge, 'node'> & { node: Maybe<ResolversParentTypes['ExerciseType']> };
   FogisGame: FogisGameModel;
   HeartRateSummary: HeartRateSummaryModel;
   ID: Scalars['ID']['output'];
@@ -369,6 +434,7 @@ export type ExerciseResolvers<ContextType = Context, ParentType extends Resolver
   description: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   isHiddenFromOverview: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  items: Resolver<ResolversTypes['ExerciseItemConnection'], ParentType, ContextType>;
   primaryPurpose: Resolver<Maybe<ResolversTypes['ExercisePurpose']>, ParentType, ContextType>;
   secondaryPurpose: Resolver<Maybe<ResolversTypes['ExercisePurpose']>, ParentType, ContextType>;
   start: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
@@ -376,9 +442,46 @@ export type ExerciseResolvers<ContextType = Context, ParentType extends Resolver
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type ExerciseItemResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ExerciseItem'] = ResolversParentTypes['ExerciseItem']> = {
+  exercise: Resolver<ResolversTypes['Exercise'], ParentType, ContextType>;
+  exerciseType: Resolver<ResolversTypes['ExerciseType'], ParentType, ContextType>;
+  id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ExerciseItemConnectionResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ExerciseItemConnection'] = ResolversParentTypes['ExerciseItemConnection']> = {
+  edges: Resolver<Array<ResolversTypes['ExerciseItemEdge']>, ParentType, ContextType>;
+  pageInfo: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ExerciseItemEdgeResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ExerciseItemEdge'] = ResolversParentTypes['ExerciseItemEdge']> = {
+  cursor: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node: Resolver<Maybe<ResolversTypes['ExerciseItem']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type ExercisePurposeResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ExercisePurpose'] = ResolversParentTypes['ExercisePurpose']> = {
   label: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   shortLabel: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ExerciseTypeResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ExerciseType'] = ResolversParentTypes['ExerciseType']> = {
+  id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  name: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ExerciseTypeConnectionResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ExerciseTypeConnection'] = ResolversParentTypes['ExerciseTypeConnection']> = {
+  edges: Resolver<Array<ResolversTypes['ExerciseTypeEdge']>, ParentType, ContextType>;
+  pageInfo: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ExerciseTypeEdgeResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ExerciseTypeEdge'] = ResolversParentTypes['ExerciseTypeEdge']> = {
+  cursor: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node: Resolver<Maybe<ResolversTypes['ExerciseType']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -424,8 +527,11 @@ export type PlannedExerciseResolvers<ContextType = Context, ParentType extends R
 
 export type QueryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   activities: Resolver<ResolversTypes['ActivityConnection'], ParentType, ContextType, Partial<QueryActivitiesArgs>>;
+  activity: Resolver<Maybe<ResolversTypes['Activity']>, ParentType, ContextType, RequireFields<QueryActivityArgs, 'id'>>;
   day: Resolver<Maybe<ResolversTypes['Day']>, ParentType, ContextType, RequireFields<QueryDayArgs, 'date'>>;
   days: Resolver<ResolversTypes['DayConnection'], ParentType, ContextType, Partial<QueryDaysArgs>>;
+  exercise: Resolver<Maybe<ResolversTypes['Exercise']>, ParentType, ContextType, RequireFields<QueryExerciseArgs, 'id'>>;
+  exerciseTypes: Resolver<ResolversTypes['ExerciseTypeConnection'], ParentType, ContextType>;
   me: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   today: Resolver<ResolversTypes['Day'], ParentType, ContextType>;
 };
@@ -446,7 +552,13 @@ export type Resolvers<ContextType = Context> = {
   DayConnection: DayConnectionResolvers<ContextType>;
   DayEdge: DayEdgeResolvers<ContextType>;
   Exercise: ExerciseResolvers<ContextType>;
+  ExerciseItem: ExerciseItemResolvers<ContextType>;
+  ExerciseItemConnection: ExerciseItemConnectionResolvers<ContextType>;
+  ExerciseItemEdge: ExerciseItemEdgeResolvers<ContextType>;
   ExercisePurpose: ExercisePurposeResolvers<ContextType>;
+  ExerciseType: ExerciseTypeResolvers<ContextType>;
+  ExerciseTypeConnection: ExerciseTypeConnectionResolvers<ContextType>;
+  ExerciseTypeEdge: ExerciseTypeEdgeResolvers<ContextType>;
   FogisGame: FogisGameResolvers<ContextType>;
   HeartRateSummary: HeartRateSummaryResolvers<ContextType>;
   PageInfo: PageInfoResolvers<ContextType>;

@@ -1,0 +1,4 @@
+type ExerciseTypeConnection {
+  pageInfo: PageInfo!
+  edges: [ExerciseTypeEdge!]!
+}

@@ -11,6 +11,57 @@ export const queryResolvers: QueryResolvers = {
     const user = await db.user.findUniqueOrThrow({ where: { id: userId } });
     return user;
   },
+  activity: async (_, { id }, { userId }) => {
+    if (!userId) {
+      return null;
+    }
+    // TODO More activities
+    const activity = await db.activity.findUnique({
+      where: { id: id as string, userId },
+    });
+    if (!activity) {
+      return null;
+    }
+    return { type: "Exercise", value: activity };
+  },
+  exercise: async (_, { id }, { userId }) => {
+    if (!userId) {
+      return null;
+    }
+    const exercise = await db.activity.findUnique({
+      where: { id: id as string, userId },
+    });
+    if (!exercise) {
+      return null;
+    }
+    return { type: "Exercise", value: exercise };
+  },
+  exerciseTypes: async (_, __, { userId }) => {
+    if (!userId) {
+      return {
+        edges: [],
+        pageInfo: {
+          startCursor: null,
+          endCursor: null,
+          hasNextPage: false,
+          hasPreviousPage: false,
+        },
+      };
+    }
+    const nodes = await db.exerciseType.findMany({
+      where: { OR: [{ userId }, { userId: null }], deletedAt: null },
+    });
+    return {
+      edges: nodes.map((node) => ({ cursor: node.id, node })),
+      pageInfo: {
+        startCursor: nodes[0]?.id,
+        endCursor: nodes[nodes.length - 1]?.id,
+        hasNextPage: false,
+        hasPreviousPage: false,
+      },
+    };
+  },
+
   day: async (_, { date }) => {
     const parsed = DateTime.fromFormat(date, "yyyy-MM-dd", {
       zone: "Europe/Stockholm", // TODO

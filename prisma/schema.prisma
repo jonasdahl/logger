@@ -29,6 +29,7 @@ model User {
   plannedActivities PlannedActivity[]
   pushSubscriptions PushSubscription[]
   physicalTests     PhysicalTest[]
+  exerciseTypes     ExerciseType[]
 }
 
 model PushSubscription {
@@ -70,6 +71,17 @@ model FogisGame {
   deletedAt DateTime?
 }
 
+model ExerciseType {
+  id            String         @id @default(uuid())
+  name          String
+  userId        String?
+  user          User?          @relation(fields: [userId], references: [id])
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  deletedAt     DateTime?
+  exerciseItems ExerciseItem[]
+}
+
 model Activity {
   id          String   @id @default(uuid())
   time        DateTime
@@ -88,6 +100,24 @@ model Activity {
 
   userId String
   user   User   @relation(fields: [userId], references: [id])
+
+  exerciseItems ExerciseItem[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+}
+
+model ExerciseItem {
+  id String @id @default(uuid())
+
+  activityId String
+  activity   Activity @relation(fields: [activityId], references: [id])
+
+  exerciseTypeId String
+  exerciseType   ExerciseType @relation(fields: [exerciseTypeId], references: [id])
+
+  order Float
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt

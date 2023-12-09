@@ -7,7 +7,13 @@ import { activityResolvers } from "./types/activity/resolvers";
 import { dayConnectionResolvers } from "./types/day-connection/resolvers";
 import { dayEdgeResolvers } from "./types/day-edge/resolvers";
 import { dayResolvers } from "./types/day/resolvers";
+import { exerciseItemConnectionResolvers } from "./types/exercise-item-connection/resolvers";
+import { exerciseItemEdgeResolvers } from "./types/exercise-item-edge/resolvers";
+import { exerciseItemResolvers } from "./types/exercise-item/resolvers";
 import { exercisePurposeResolvers } from "./types/exercise-purpose/resolvers";
+import { exerciseTypeConnectionResolvers } from "./types/exercise-type-connection/resolvers";
+import { exerciseTypeEdgeResolvers } from "./types/exercise-type-edge/resolvers";
+import { exerciseTypeResolvers } from "./types/exercise-type/resolvers";
 import { exerciseResolvers } from "./types/exercise/resolvers";
 import { fogisGameResolvers } from "./types/fogis-game/resolvers";
 import { heartRateSummaryResolvers } from "./types/heart-rate-summary/resolvers";
@@ -35,4 +41,10 @@ export const resolvers: Resolvers = {
   ExercisePurpose: exercisePurposeResolvers,
   PhysicalTest: physicalTestResolvers,
   HeartRateSummary: heartRateSummaryResolvers,
+  ExerciseType: exerciseTypeResolvers,
+  ExerciseTypeConnection: exerciseTypeConnectionResolvers,
+  ExerciseTypeEdge: exerciseTypeEdgeResolvers,
+  ExerciseItem: exerciseItemResolvers,
+  ExerciseItemConnection: exerciseItemConnectionResolvers,
+  ExerciseItemEdge: exerciseItemEdgeResolvers,
 };

@@ -1,0 +1,17 @@
+query ExerciseDetails($exerciseId: ID!) {
+  exercise(id: $exerciseId) {
+    id
+    items {
+      edges {
+        cursor
+        node {
+          id
+          exerciseType {
+            id
+            name
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,4 +1,4 @@
-import { Container, SimpleGrid } from "@chakra-ui/react";
+import { ButtonProps, Container, SimpleGrid } from "@chakra-ui/react";
 
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
@@ -18,7 +18,7 @@ export default function Index() {
 
   return (
     <Container py={6}>
-      <SimpleGrid minChildWidth={250}>
+      <SimpleGrid minChildWidth={250} gap={4}>
         <Item
           to={`/months/${DateTime.now()
             .setZone(timeZone)
@@ -26,11 +26,27 @@ export default function Index() {
         >
           Månadsvy
         </Item>
+
+        <Item to={`/activities/live`} colorScheme="green">
+          Träna nu
+        </Item>
       </SimpleGrid>
     </Container>
   );
 }
 
-function Item({ to, children }: { to: string; children: ReactNode }) {
-  return <ButtonLink to={to}>{children}</ButtonLink>;
+function Item({
+  to,
+  children,
+  colorScheme,
+}: {
+  to: string;
+  children: ReactNode;
+  colorScheme?: ButtonProps["colorScheme"];
+}) {
+  return (
+    <ButtonLink to={to} colorScheme={colorScheme}>
+      {children}
+    </ButtonLink>
+  );
 }
