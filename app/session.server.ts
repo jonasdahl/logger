@@ -28,7 +28,7 @@ export const session = createCookieSessionStorage<
     //
     // expires: new Date(Date.now() + 60_000),
     httpOnly: true,
-    // maxAge: 60,
+    maxAge: 60 * 60 * 24 * 60, // 60 days
     path: "/", // remember to add this so the cookie will work in all routes
     sameSite: "lax",
     secrets: [appSecret],
@@ -38,7 +38,7 @@ export const session = createCookieSessionStorage<
 
 const { getSession, commitSession, destroySession } = session;
 
-export { getSession, commitSession, destroySession };
+export { commitSession, destroySession, getSession };
 
 export function getSessionFromRequest(request: Request) {
   return getSession(request.headers.get("Cookie"));
