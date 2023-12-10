@@ -242,7 +242,7 @@ export default function Activity() {
 
                 <Stack>
                   {edge.node.amount.map((set) => {
-                    const loads = set.loads
+                    const loads = set.loads.length
                       ? ` (${set.loads
                           .map(
                             (load) =>
