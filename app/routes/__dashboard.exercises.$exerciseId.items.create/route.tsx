@@ -41,13 +41,15 @@ const schema = z.intersection(
   z.object({
     exerciseTypeId: z.string(),
     returnTo: z.string().optional(),
-    loadAmount: z.array(
-      z.object({
-        amountValue: z.coerce.number(),
-        loadUnit: z.string(),
-        loadTypeId: z.string(),
-      })
-    ),
+    loadAmount: z
+      .array(
+        z.object({
+          amountValue: z.coerce.number(),
+          loadUnit: z.string(),
+          loadTypeId: z.string(),
+        })
+      )
+      .optional(),
   }),
 
   z.union([
@@ -120,7 +122,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
           amountRepetitions:
             data.amountType === "repetitions" ? data.repetitions : undefined,
           loads: {
-            create: data.loadAmount.map(
+            create: data.loadAmount?.map(
               ({ amountValue, loadTypeId, loadUnit }) => ({
                 amountValue,
                 exerciseLoadTypeId: loadTypeId,
