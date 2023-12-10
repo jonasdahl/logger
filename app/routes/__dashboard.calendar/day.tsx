@@ -17,6 +17,7 @@ import {
   PopoverContent,
   PopoverHeader,
   PopoverTrigger,
+  Portal,
   Stack,
 } from "@chakra-ui/react";
 import { useLoaderData, useLocation, useNavigation } from "@remix-run/react";
@@ -77,132 +78,134 @@ export function Day({
             <DayPreview day={day} />
           </PopoverTrigger>
 
-          <PopoverContent>
-            <PopoverArrow />
-            <PopoverHeader>
-              {start.toFormat("yyyy-MM-dd")}
-              <PopoverCloseButton />
-            </PopoverHeader>
-            <PopoverBody>
-              <Stack>
-                {day.activities.edges.map((activityEdge) =>
-                  activityEdge.node ? (
-                    <HStack key={activityEdge.cursor} alignItems="flex-start">
-                      <Box fontWeight="bold">
-                        {DateTime.fromISO(activityEdge.node.start, {
-                          zone: timeZone,
-                        }).toFormat("HH:mm")}
-                      </Box>
-                      <Stack spacing={0}>
+          <Portal>
+            <PopoverContent>
+              <PopoverArrow />
+              <PopoverHeader>
+                {start.toFormat("yyyy-MM-dd")}
+                <PopoverCloseButton />
+              </PopoverHeader>
+              <PopoverBody>
+                <Stack>
+                  {day.activities.edges.map((activityEdge) =>
+                    activityEdge.node ? (
+                      <HStack key={activityEdge.cursor} alignItems="flex-start">
                         <Box fontWeight="bold">
-                          {activityEdge.node.__typename === "Exercise" ? (
-                            <Link to={`/exercises/${activityEdge.node.id}`}>
-                              {activityEdge.node.title}
-                            </Link>
-                          ) : (
-                            <>{activityEdge.node.title}</>
-                          )}
+                          {DateTime.fromISO(activityEdge.node.start, {
+                            zone: timeZone,
+                          }).toFormat("HH:mm")}
                         </Box>
-                        {activityEdge.node.__typename === "Exercise" ? (
-                          <>
-                            {activityEdge.node.primaryPurpose ? (
-                              <Box>{`Primärt syfte: ${activityEdge.node.primaryPurpose.label}`}</Box>
-                            ) : null}
-                            {activityEdge.node.secondaryPurpose ? (
-                              <Box>{`Sekundärt syfte: ${activityEdge.node.secondaryPurpose.label}`}</Box>
-                            ) : null}
-                            {activityEdge.node.description ? (
-                              <Box>{`Beskrivning: ${activityEdge.node.description}`}</Box>
-                            ) : null}
-                            {activityEdge.node.comment ? (
-                              <Box>{`Kommentar: ${activityEdge.node.comment}`}</Box>
-                            ) : null}
-                          </>
-                        ) : null}
-                      </Stack>
-                    </HStack>
-                  ) : null
-                )}
+                        <Stack spacing={0}>
+                          <Box fontWeight="bold">
+                            {activityEdge.node.__typename === "Exercise" ? (
+                              <Link to={`/exercises/${activityEdge.node.id}`}>
+                                {activityEdge.node.title}
+                              </Link>
+                            ) : (
+                              <>{activityEdge.node.title}</>
+                            )}
+                          </Box>
+                          {activityEdge.node.__typename === "Exercise" ? (
+                            <>
+                              {activityEdge.node.primaryPurpose ? (
+                                <Box>{`Primärt syfte: ${activityEdge.node.primaryPurpose.label}`}</Box>
+                              ) : null}
+                              {activityEdge.node.secondaryPurpose ? (
+                                <Box>{`Sekundärt syfte: ${activityEdge.node.secondaryPurpose.label}`}</Box>
+                              ) : null}
+                              {activityEdge.node.description ? (
+                                <Box>{`Beskrivning: ${activityEdge.node.description}`}</Box>
+                              ) : null}
+                              {activityEdge.node.comment ? (
+                                <Box>{`Kommentar: ${activityEdge.node.comment}`}</Box>
+                              ) : null}
+                            </>
+                          ) : null}
+                        </Stack>
+                      </HStack>
+                    ) : null
+                  )}
 
-                {day.heartRateSummary?.secondsInZone4 ? (
-                  <Box>
-                    Tid i zon 4:{" "}
-                    {Duration.fromMillis(
-                      day.heartRateSummary.secondsInZone4 * 1000
-                    )
-                      .shiftTo("minutes", "seconds")
-                      .toFormat("m'min' ss's'")}
-                  </Box>
-                ) : null}
-                {day.heartRateSummary?.secondsInZone5 ? (
-                  <Box>
-                    Tid i zon 5:{" "}
-                    {Duration.fromMillis(
-                      day.heartRateSummary.secondsInZone5 * 1000
-                    )
-                      .shiftTo("minutes", "seconds")
-                      .toFormat("m'min' ss's'")}
-                  </Box>
-                ) : null}
+                  {day.heartRateSummary?.secondsInZone4 ? (
+                    <Box>
+                      Tid i zon 4:{" "}
+                      {Duration.fromMillis(
+                        day.heartRateSummary.secondsInZone4 * 1000
+                      )
+                        .shiftTo("minutes", "seconds")
+                        .toFormat("m'min' ss's'")}
+                    </Box>
+                  ) : null}
+                  {day.heartRateSummary?.secondsInZone5 ? (
+                    <Box>
+                      Tid i zon 5:{" "}
+                      {Duration.fromMillis(
+                        day.heartRateSummary.secondsInZone5 * 1000
+                      )
+                        .shiftTo("minutes", "seconds")
+                        .toFormat("m'min' ss's'")}
+                    </Box>
+                  ) : null}
 
-                <Box w="100%" maxW="100%" overflowX="auto">
-                  <HStack shouldWrapChildren>
-                    <ButtonLink
-                      to={`/days/${start.toFormat("yyyy-MM-dd")}`}
-                      size="sm"
-                      flex={1}
-                    >
-                      Visa dag
-                    </ButtonLink>
-                    {isPast || isToday ? (
+                  <Box w="100%" maxW="100%" overflowX="auto">
+                    <HStack shouldWrapChildren>
                       <ButtonLink
-                        to={`/activities/create?date=${start.toFormat(
-                          "yyyy-MM-dd"
-                        )}&returnTo=${returnTo}`}
-                        colorScheme="green"
+                        to={`/days/${start.toFormat("yyyy-MM-dd")}`}
                         size="sm"
                         flex={1}
                       >
-                        Registrera
+                        Visa dag
                       </ButtonLink>
-                    ) : null}
-                    {isFuture || isToday ? (
-                      <PlanButton
-                        colorScheme="green"
+                      {isPast || isToday ? (
+                        <ButtonLink
+                          to={`/activities/create?date=${start.toFormat(
+                            "yyyy-MM-dd"
+                          )}&returnTo=${returnTo}`}
+                          colorScheme="green"
+                          size="sm"
+                          flex={1}
+                        >
+                          Registrera
+                        </ButtonLink>
+                      ) : null}
+                      {isFuture || isToday ? (
+                        <PlanButton
+                          colorScheme="green"
+                          size="sm"
+                          flex={1}
+                          dayStart={start}
+                        >
+                          Planera
+                        </PlanButton>
+                      ) : null}
+
+                      <ButtonLink
+                        to={`/tests/create?date=${start.toFormat(
+                          "yyyy-MM-dd"
+                        )}&redirectTo=${location.pathname}`}
+                        colorScheme="yellow"
                         size="sm"
                         flex={1}
-                        dayStart={start}
                       >
-                        Planera
-                      </PlanButton>
-                    ) : null}
+                        Löptest
+                      </ButtonLink>
 
-                    <ButtonLink
-                      to={`/tests/create?date=${start.toFormat(
-                        "yyyy-MM-dd"
-                      )}&redirectTo=${location.pathname}`}
-                      colorScheme="yellow"
-                      size="sm"
-                      flex={1}
-                    >
-                      Löptest
-                    </ButtonLink>
-
-                    <ButtonLink
-                      to={`/games/create?date=${start.toFormat(
-                        "yyyy-MM-dd"
-                      )}&redirectTo=${location.pathname}`}
-                      colorScheme="red"
-                      size="sm"
-                      flex={1}
-                    >
-                      Match
-                    </ButtonLink>
-                  </HStack>
-                </Box>
-              </Stack>
-            </PopoverBody>
-          </PopoverContent>
+                      <ButtonLink
+                        to={`/games/create?date=${start.toFormat(
+                          "yyyy-MM-dd"
+                        )}&redirectTo=${location.pathname}`}
+                        colorScheme="red"
+                        size="sm"
+                        flex={1}
+                      >
+                        Match
+                      </ButtonLink>
+                    </HStack>
+                  </Box>
+                </Stack>
+              </PopoverBody>
+            </PopoverContent>
+          </Portal>
         </Popover>
       </Stack>
     </Box>
