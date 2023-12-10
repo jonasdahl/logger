@@ -1,5 +1,5 @@
 # base node image
-FROM node:gallium-bullseye-slim@sha256:0b889cbf70af3740c8caaee425be6a26f2e7f3ceffdb94a83b6d236eea1b421e as base
+FROM node:slim@sha256:21a626e56b50b95ac0c8263b4b413e80819a2a267579f034ab454218664c08a9 as base
 RUN npm i -g pnpm
 
 # Install all node_modules, including dev dependencies
