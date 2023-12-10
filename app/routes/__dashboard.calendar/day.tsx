@@ -147,61 +147,65 @@ export function Day({
                     </Box>
                   ) : null}
 
-                  <Box w="100%" maxW="100%" overflowX="auto">
-                    <HStack shouldWrapChildren>
+                  <HStack
+                    shouldWrapChildren
+                    wrap="wrap"
+                    gap={3}
+                    rowGap={2}
+                    spacing={0}
+                  >
+                    <ButtonLink
+                      to={`/days/${start.toFormat("yyyy-MM-dd")}`}
+                      size="sm"
+                      flex={1}
+                    >
+                      Visa dag
+                    </ButtonLink>
+                    {isPast || isToday ? (
                       <ButtonLink
-                        to={`/days/${start.toFormat("yyyy-MM-dd")}`}
-                        size="sm"
-                        flex={1}
-                      >
-                        Visa dag
-                      </ButtonLink>
-                      {isPast || isToday ? (
-                        <ButtonLink
-                          to={`/activities/create?date=${start.toFormat(
-                            "yyyy-MM-dd"
-                          )}&returnTo=${returnTo}`}
-                          colorScheme="green"
-                          size="sm"
-                          flex={1}
-                        >
-                          Registrera
-                        </ButtonLink>
-                      ) : null}
-                      {isFuture || isToday ? (
-                        <PlanButton
-                          colorScheme="green"
-                          size="sm"
-                          flex={1}
-                          dayStart={start}
-                        >
-                          Planera
-                        </PlanButton>
-                      ) : null}
-
-                      <ButtonLink
-                        to={`/tests/create?date=${start.toFormat(
+                        to={`/activities/create?date=${start.toFormat(
                           "yyyy-MM-dd"
-                        )}&redirectTo=${location.pathname}`}
-                        colorScheme="yellow"
+                        )}&returnTo=${returnTo}`}
+                        colorScheme="green"
                         size="sm"
                         flex={1}
                       >
-                        Löptest
+                        Registrera
                       </ButtonLink>
+                    ) : null}
+                    {isFuture || isToday ? (
+                      <PlanButton
+                        colorScheme="green"
+                        size="sm"
+                        flex={1}
+                        dayStart={start}
+                      >
+                        Planera
+                      </PlanButton>
+                    ) : null}
 
-                      <ButtonLink
-                        to={`/games/create?date=${start.toFormat(
-                          "yyyy-MM-dd"
-                        )}&redirectTo=${location.pathname}`}
-                        colorScheme="red"
-                        size="sm"
-                        flex={1}
-                      >
-                        Match
-                      </ButtonLink>
-                    </HStack>
-                  </Box>
+                    <ButtonLink
+                      to={`/tests/create?date=${start.toFormat(
+                        "yyyy-MM-dd"
+                      )}&redirectTo=${location.pathname}`}
+                      colorScheme="yellow"
+                      size="sm"
+                      flex={1}
+                    >
+                      Löptest
+                    </ButtonLink>
+
+                    <ButtonLink
+                      to={`/games/create?date=${start.toFormat(
+                        "yyyy-MM-dd"
+                      )}&redirectTo=${location.pathname}`}
+                      colorScheme="red"
+                      size="sm"
+                      flex={1}
+                    >
+                      Match
+                    </ButtonLink>
+                  </HStack>
                 </Stack>
               </PopoverBody>
             </PopoverContent>
