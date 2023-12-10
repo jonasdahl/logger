@@ -71,7 +71,7 @@ export default function Activity() {
   const data = useLoaderData<typeof loader>();
 
   return (
-    <Container py={5}>
+    <Container py={5} maxW="container.xl">
       <Stack spacing={5}>
         <HStack>
           <Heading as="h1">Övningstyper</Heading>
