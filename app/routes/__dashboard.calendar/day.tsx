@@ -187,6 +187,17 @@ export function Day({
                     >
                       Löptest
                     </ButtonLink>
+
+                    <ButtonLink
+                      to={`/games/create?date=${start.toFormat(
+                        "yyyy-MM-dd"
+                      )}&redirectTo=${location.pathname}`}
+                      colorScheme="red"
+                      size="sm"
+                      flex={1}
+                    >
+                      Match
+                    </ButtonLink>
                   </HStack>
                 </Box>
               </Stack>
@@ -293,7 +304,11 @@ const DayPreview = forwardRef<HTMLButtonElement, { day: CalendarDayFragment }>(
       )
       .flatMap((e) => (e.node ? [e.node] : []));
 
-    if (activities.some((a) => a.__typename === "FogisGame")) {
+    if (
+      activities.some(
+        (a) => a.__typename === "FogisGame" || a.__typename === "CustomGame"
+      )
+    ) {
       return <GameDayPreview ref={ref} {...generalProps} />;
     }
     if (activities.some((a) => a.__typename === "PhysicalTest")) {

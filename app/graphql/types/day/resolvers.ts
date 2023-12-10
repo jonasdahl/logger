@@ -14,6 +14,13 @@ export const dayResolvers: DayResolvers = {
     if (!userId) {
       throw new Error("Not authenticated");
     }
+    const customGames = await db.customGame.findMany({
+      where: {
+        userId,
+        time: { gte: start.toJSDate(), lte: end.toJSDate() },
+        deletedAt: null,
+      },
+    });
     const fogisGames = await db.fogisGame.findMany({
       where: {
         userId,
@@ -51,6 +58,10 @@ export const dayResolvers: DayResolvers = {
       },
       edges: orderBy(
         [
+          ...customGames.map((customGame) => ({
+            cursor: customGame.id,
+            node: { type: "CustomGame" as const, value: customGame },
+          })),
           ...fogisGames.map((fogisGame) => ({
             cursor: fogisGame.id,
             node: { type: "FogisGame" as const, value: fogisGame },

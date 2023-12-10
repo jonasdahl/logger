@@ -75,6 +75,16 @@ export const queryResolvers: QueryResolvers = {
     if (!userId) {
       throw new Error("Not authenticated");
     }
+    const customGames = await db.customGame.findMany({
+      where: {
+        userId,
+        time: {
+          gte: filter?.startFrom?.toJSDate() ?? undefined,
+          lte: filter?.startTo?.toJSDate() ?? undefined,
+        },
+        deletedAt: null,
+      },
+    });
     const fogisGames = await db.fogisGame.findMany({
       where: {
         userId,
@@ -123,6 +133,10 @@ export const queryResolvers: QueryResolvers = {
       },
       edges: orderBy(
         [
+          ...customGames.map((customGame) => ({
+            cursor: customGame.id,
+            node: { type: "CustomGame" as const, value: customGame },
+          })),
           ...fogisGames.map((fogisGame) => ({
             cursor: fogisGame.id,
             node: { type: "FogisGame" as const, value: fogisGame },

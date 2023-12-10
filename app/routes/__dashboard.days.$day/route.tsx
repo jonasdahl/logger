@@ -193,6 +193,22 @@ export default function DashboardIndex() {
                 );
               }
 
+              if (e.node?.__typename === "CustomGame") {
+                return (
+                  <Box
+                    key={e.node.id}
+                    bg="red.50"
+                    borderRadius="md"
+                    padding={3}
+                  >
+                    {DateTime.fromISO(e.node.start)
+                      .setZone(timeZone)
+                      .toFormat("HH:mm")}{" "}
+                    {e.node.title}
+                  </Box>
+                );
+              }
+
               if (e.node?.__typename === "FogisGame") {
                 return (
                   <Box

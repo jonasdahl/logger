@@ -30,6 +30,7 @@ model User {
   pushSubscriptions PushSubscription[]
   physicalTests     PhysicalTest[]
   exerciseTypes     ExerciseType[]
+  customGames       CustomGame[]
 }
 
 model PushSubscription {
@@ -62,6 +63,26 @@ model FogisGame {
   positionLatitude  Float?
   role              RefereeRole
   gameId            String
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+}
+
+model CustomGame {
+  id String @id @default(uuid())
+
+  time              DateTime
+  homeTeam          String?
+  awayTeam          String?
+  facility          String?
+  positionLongitude Float?
+  positionLatitude  Float?
+  role              RefereeRole?
+  gameId            String?
 
   userId String
   user   User   @relation(fields: [userId], references: [id])

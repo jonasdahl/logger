@@ -1,4 +1,4 @@
-export const typeDefinitions = `union Activity = Exercise | FogisGame | PhysicalTest | PlannedExercise
+export const typeDefinitions = `union Activity = CustomGame | Exercise | FogisGame | PhysicalTest | PlannedExercise
 
 interface ActivityBase {
   id: ID!
@@ -24,6 +24,12 @@ input ActivityFilter {
 enum AmountType {
   Repetitions
   Time
+}
+
+type CustomGame implements ActivityBase {
+  id: ID!
+  start: DateTime!
+  title: String!
 }
 
 scalar DateTime

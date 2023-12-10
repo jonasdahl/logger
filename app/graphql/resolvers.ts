@@ -4,6 +4,7 @@ import { activityBaseResolvers } from "./types/activity-base/resolvers";
 import { activityConnectionResolvers } from "./types/activity-connection/resolvers";
 import { activityEdgeResolvers } from "./types/activity-edge/resolvers";
 import { activityResolvers } from "./types/activity/resolvers";
+import { customGameResolvers } from "./types/custom-game/resolvers";
 import { dayConnectionResolvers } from "./types/day-connection/resolvers";
 import { dayEdgeResolvers } from "./types/day-edge/resolvers";
 import { dayResolvers } from "./types/day/resolvers";
@@ -59,4 +60,5 @@ export const resolvers: Resolvers = {
   ExerciseDurationTime: exerciseDurationTimeResolvers,
   ExerciseLoad: exerciseLoadResolvers,
   ExerciseLoadType: exerciseLoadTypeResolvers,
+  CustomGame: customGameResolvers,
 };

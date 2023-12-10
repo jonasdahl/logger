@@ -1,0 +1,5 @@
+type CustomGame implements ActivityBase {
+  id: ID!
+  start: DateTime!
+  title: String!
+}
