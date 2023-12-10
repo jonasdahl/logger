@@ -2,4 +2,5 @@ type ExerciseItem {
   id: ID!
   exerciseType: ExerciseType!
   exercise: Exercise!
+  amount: [ExerciseAmount!]!
 }

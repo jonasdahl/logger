@@ -23,7 +23,7 @@ export const exerciseResolvers: ExerciseResolvers = {
   description: (parent) => parent.value.description,
   items: async (parent) => {
     const exerciseItems = await db.exerciseItem.findMany({
-      where: { activityId: parent.value.id },
+      where: { activityId: parent.value.id, deletedAt: null },
       orderBy: { order: "asc" },
     });
     return {

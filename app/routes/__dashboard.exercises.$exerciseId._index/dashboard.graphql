@@ -10,6 +10,25 @@ query ExerciseDetails($exerciseId: ID!) {
             id
             name
           }
+          amount {
+            __typename
+            loads {
+              unit
+              value
+              type {
+                name
+              }
+            }
+            duration {
+              __typename
+              ... on ExerciseDurationRepetitions {
+                repetitions
+              }
+              ... on ExerciseDurationTime {
+                durationSeconds
+              }
+            }
+          }
         }
       }
     }

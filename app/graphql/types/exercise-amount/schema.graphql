@@ -1,0 +1,4 @@
+type ExerciseAmount {
+  loads: [ExerciseLoad!]!
+  duration: ExerciseDuration!
+}

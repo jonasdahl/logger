@@ -1,4 +1,11 @@
 type ExerciseType {
   id: ID!
   name: String!
+  defaultAmountType: AmountType!
+  loadTypes: [ExerciseLoadType!]!
+}
+
+enum AmountType {
+  Repetitions
+  Time
 }

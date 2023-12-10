@@ -21,6 +21,11 @@ input ActivityFilter {
   startTo: DateTime
 }
 
+enum AmountType {
+  Repetitions
+  Time
+}
+
 scalar DateTime
 
 type Day {
@@ -52,7 +57,23 @@ type Exercise implements ActivityBase {
   title: String!
 }
 
+type ExerciseAmount {
+  duration: ExerciseDuration!
+  loads: [ExerciseLoad!]!
+}
+
+union ExerciseDuration = ExerciseDurationRepetitions | ExerciseDurationTime
+
+type ExerciseDurationRepetitions {
+  repetitions: Int!
+}
+
+type ExerciseDurationTime {
+  durationSeconds: Int!
+}
+
 type ExerciseItem {
+  amount: [ExerciseAmount!]!
   exercise: Exercise!
   exerciseType: ExerciseType!
   id: ID!
@@ -68,13 +89,27 @@ type ExerciseItemEdge {
   node: ExerciseItem
 }
 
+type ExerciseLoad {
+  type: ExerciseLoadType!
+  unit: String
+  value: Float!
+}
+
+type ExerciseLoadType {
+  id: ID!
+  name: String!
+  unit: String
+}
+
 type ExercisePurpose {
   label: String!
   shortLabel: String
 }
 
 type ExerciseType {
+  defaultAmountType: AmountType!
   id: ID!
+  loadTypes: [ExerciseLoadType!]!
   name: String!
 }
 

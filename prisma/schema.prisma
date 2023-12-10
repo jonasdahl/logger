@@ -71,15 +71,39 @@ model FogisGame {
   deletedAt DateTime?
 }
 
+enum ExerciseAmountType {
+  Time
+  Distance
+  Repetitions
+}
+
 model ExerciseType {
-  id            String         @id @default(uuid())
-  name          String
-  userId        String?
-  user          User?          @relation(fields: [userId], references: [id])
+  id                        String             @id @default(uuid())
+  name                      String
+  defaultExerciseAmountType ExerciseAmountType @default(Time)
+  loads                     ExerciseLoadType[]
+
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id])
+
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
   deletedAt     DateTime?
   exerciseItems ExerciseItem[]
+}
+
+model ExerciseLoadType {
+  id   String  @id @default(uuid())
+  name String
+  unit String?
+
+  exerciseTypeId String
+  exerciseType   ExerciseType @relation(fields: [exerciseTypeId], references: [id])
+
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+  deletedAt      DateTime?
+  performedLoads ExerciseItemLoad[]
 }
 
 model Activity {
@@ -117,7 +141,41 @@ model ExerciseItem {
   exerciseTypeId String
   exerciseType   ExerciseType @relation(fields: [exerciseTypeId], references: [id])
 
+  loadAmounts ExerciseItemLoadAmount[]
+
   order Float
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+}
+
+model ExerciseItemLoadAmount {
+  id String @id @default(uuid())
+
+  exerciseItemId String
+  exerciseItem   ExerciseItem @relation(fields: [exerciseItemId], references: [id])
+
+  amountType            ExerciseAmountType
+  amountDurationSeconds Int?
+  amountRepetitions     Int?
+  loads                 ExerciseItemLoad[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+}
+
+model ExerciseItemLoad {
+  id String @id @default(uuid())
+
+  exerciseItemLoadAmountId String
+  exerciseItemLoadAmount   ExerciseItemLoadAmount @relation(fields: [exerciseItemLoadAmountId], references: [id])
+
+  exerciseLoadTypeId String
+  exerciseLoadType   ExerciseLoadType @relation(fields: [exerciseLoadTypeId], references: [id])
+
+  amountValue Float
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt

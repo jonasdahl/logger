@@ -7,9 +7,15 @@ import { activityResolvers } from "./types/activity/resolvers";
 import { dayConnectionResolvers } from "./types/day-connection/resolvers";
 import { dayEdgeResolvers } from "./types/day-edge/resolvers";
 import { dayResolvers } from "./types/day/resolvers";
+import { exerciseAmountResolvers } from "./types/exercise-amount/resolvers";
+import { exerciseDurationRepetitionsResolvers } from "./types/exercise-duration-repetitions/resolvers";
+import { exerciseDurationTimeResolvers } from "./types/exercise-duration-time/resolvers";
+import { exerciseDurationResolvers } from "./types/exercise-duration/resolvers";
 import { exerciseItemConnectionResolvers } from "./types/exercise-item-connection/resolvers";
 import { exerciseItemEdgeResolvers } from "./types/exercise-item-edge/resolvers";
 import { exerciseItemResolvers } from "./types/exercise-item/resolvers";
+import { exerciseLoadTypeResolvers } from "./types/exercise-load-type/resolvers";
+import { exerciseLoadResolvers } from "./types/exercise-load/resolvers";
 import { exercisePurposeResolvers } from "./types/exercise-purpose/resolvers";
 import { exerciseTypeConnectionResolvers } from "./types/exercise-type-connection/resolvers";
 import { exerciseTypeEdgeResolvers } from "./types/exercise-type-edge/resolvers";
@@ -47,4 +53,10 @@ export const resolvers: Resolvers = {
   ExerciseItem: exerciseItemResolvers,
   ExerciseItemConnection: exerciseItemConnectionResolvers,
   ExerciseItemEdge: exerciseItemEdgeResolvers,
+  ExerciseAmount: exerciseAmountResolvers,
+  ExerciseDuration: exerciseDurationResolvers,
+  ExerciseDurationRepetitions: exerciseDurationRepetitionsResolvers,
+  ExerciseDurationTime: exerciseDurationTimeResolvers,
+  ExerciseLoad: exerciseLoadResolvers,
+  ExerciseLoadType: exerciseLoadTypeResolvers,
 };
