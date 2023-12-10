@@ -140,7 +140,8 @@ export default function Activity() {
   const data = useLoaderData<typeof loader>();
   const [searchParams] = useSearchParams();
   const defaultExerciseTypeId =
-    searchParams.get("createdExerciseTypeId") ?? undefined;
+    searchParams.get("createdExerciseTypeId") ??
+    data?.exerciseTypes?.edges[0]?.node?.id;
   const [exerciseTypeId, setExerciseTypeId] = useState(defaultExerciseTypeId);
   const exerciseType = data?.exerciseTypes.edges.find(
     (e) => e.node?.id === exerciseTypeId
