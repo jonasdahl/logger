@@ -27,7 +27,7 @@ export default function Index() {
           Månadsvy
         </Item>
 
-        <Item to={`/activities/live`} colorScheme="green">
+        <Item to={`/exercises/live`} colorScheme="green">
           Träna nu
         </Item>
       </SimpleGrid>

@@ -50,6 +50,7 @@ export const queryResolvers: QueryResolvers = {
     }
     const nodes = await db.exerciseType.findMany({
       where: { OR: [{ userId }, { userId: null }], deletedAt: null },
+      orderBy: { name: "asc" },
     });
     return {
       edges: nodes.map((node) => ({ cursor: node.id, node })),
