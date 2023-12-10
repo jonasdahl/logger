@@ -147,7 +147,7 @@ export default function Activity() {
   )?.node;
 
   return (
-    <Container py={5}>
+    <Container py={5} maxW="container.xl">
       <HiddenReturnToInput />
       <ValidatedForm method="post" validator={validator}>
         <Stack spacing={5}>
