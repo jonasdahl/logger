@@ -1,5 +1,5 @@
 # base node image
-FROM node:slim@sha256:21a626e56b50b95ac0c8263b4b413e80819a2a267579f034ab454218664c08a9 as base
+FROM node:current-bullseye-slim@sha256:38804fe940240eebb0a059e181d794fba8a43da8e6e8abea453ff4ceb3ba4c9c as base
 RUN npm i -g pnpm
 
 # Install all node_modules, including dev dependencies
