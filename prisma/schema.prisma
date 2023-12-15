@@ -177,10 +177,10 @@ model ExerciseItemLoadAmount {
   exerciseItemId String
   exerciseItem   ExerciseItem @relation(fields: [exerciseItemId], references: [id])
 
-  amountType            ExerciseAmountType
-  amountDurationSeconds Int?
-  amountRepetitions     Int?
-  loads                 ExerciseItemLoad[]
+  amountType                 ExerciseAmountType
+  amountDurationMilliSeconds Int?
+  amountRepetitions          Int?
+  loads                      ExerciseItemLoad[]
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt

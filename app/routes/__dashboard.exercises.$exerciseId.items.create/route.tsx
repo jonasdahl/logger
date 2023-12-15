@@ -252,6 +252,7 @@ export default function Activity() {
                       type="number"
                       name="durationSeconds"
                       placeholder="Sekunder"
+                      step={0.01}
                     />
                   </HStack>
                 </FormControl>
