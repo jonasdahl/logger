@@ -4,11 +4,13 @@ import { ActivityModel } from '../types/activity/model';
 import { CustomGameModel } from '../types/custom-game/model';
 import { DayModel } from '../types/day/model';
 import { ExerciseModel } from '../types/exercise/model';
+import { ExerciseAmountModel } from '../types/exercise-amount/model';
 import { ExerciseItemModel } from '../types/exercise-item/model';
 import { ExerciseLoadTypeModel } from '../types/exercise-load-type/model';
 import { ExercisePurposeModel } from '../types/exercise-purpose/model';
 import { ExerciseTypeModel } from '../types/exercise-type/model';
 import { ExerciseTypeHistoryModel } from '../types/exercise-type-history/model';
+import { ExerciseTypeHistoryDayAmountModel } from '../types/exercise-type-history-day-amount/model';
 import { FogisGameModel } from '../types/fogis-game/model';
 import { HeartRateSummaryModel } from '../types/heart-rate-summary/model';
 import { PhysicalTestModel } from '../types/physical-test/model';
@@ -194,7 +196,14 @@ export type ExerciseTypeEdge = {
 
 export type ExerciseTypeHistory = {
   __typename?: 'ExerciseTypeHistory';
+  dayAmounts: Array<ExerciseTypeHistoryDayAmount>;
   name: Scalars['String']['output'];
+};
+
+export type ExerciseTypeHistoryDayAmount = {
+  __typename?: 'ExerciseTypeHistoryDayAmount';
+  dayAmounts: Array<ExerciseAmount>;
+  dayStart: Scalars['DateTime']['output'];
 };
 
 export type FogisGame = ActivityBase & {
@@ -399,7 +408,7 @@ export type ResolversTypes = {
   DayConnection: ResolverTypeWrapper<Omit<DayConnection, 'edges'> & { edges: Array<ResolversTypes['DayEdge']> }>;
   DayEdge: ResolverTypeWrapper<Omit<DayEdge, 'node'> & { node: Maybe<ResolversTypes['Day']> }>;
   Exercise: ResolverTypeWrapper<ExerciseModel>;
-  ExerciseAmount: ResolverTypeWrapper<Omit<ExerciseAmount, 'duration' | 'loads'> & { duration: ResolversTypes['ExerciseDuration'], loads: Array<ResolversTypes['ExerciseLoad']> }>;
+  ExerciseAmount: ResolverTypeWrapper<ExerciseAmountModel>;
   ExerciseDuration: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['ExerciseDuration']>;
   ExerciseDurationRepetitions: ResolverTypeWrapper<ExerciseDurationRepetitions>;
   ExerciseDurationTime: ResolverTypeWrapper<ExerciseDurationTime>;
@@ -413,6 +422,7 @@ export type ResolversTypes = {
   ExerciseTypeConnection: ResolverTypeWrapper<Omit<ExerciseTypeConnection, 'edges'> & { edges: Array<ResolversTypes['ExerciseTypeEdge']> }>;
   ExerciseTypeEdge: ResolverTypeWrapper<Omit<ExerciseTypeEdge, 'node'> & { node: Maybe<ResolversTypes['ExerciseType']> }>;
   ExerciseTypeHistory: ResolverTypeWrapper<ExerciseTypeHistoryModel>;
+  ExerciseTypeHistoryDayAmount: ResolverTypeWrapper<ExerciseTypeHistoryDayAmountModel>;
   Float: ResolverTypeWrapper<Scalars['Float']['output']>;
   FogisGame: ResolverTypeWrapper<FogisGameModel>;
   HeartRateSummary: ResolverTypeWrapper<HeartRateSummaryModel>;
@@ -441,7 +451,7 @@ export type ResolversParentTypes = {
   DayConnection: Omit<DayConnection, 'edges'> & { edges: Array<ResolversParentTypes['DayEdge']> };
   DayEdge: Omit<DayEdge, 'node'> & { node: Maybe<ResolversParentTypes['Day']> };
   Exercise: ExerciseModel;
-  ExerciseAmount: Omit<ExerciseAmount, 'duration' | 'loads'> & { duration: ResolversParentTypes['ExerciseDuration'], loads: Array<ResolversParentTypes['ExerciseLoad']> };
+  ExerciseAmount: ExerciseAmountModel;
   ExerciseDuration: ResolversUnionTypes<ResolversParentTypes>['ExerciseDuration'];
   ExerciseDurationRepetitions: ExerciseDurationRepetitions;
   ExerciseDurationTime: ExerciseDurationTime;
@@ -455,6 +465,7 @@ export type ResolversParentTypes = {
   ExerciseTypeConnection: Omit<ExerciseTypeConnection, 'edges'> & { edges: Array<ResolversParentTypes['ExerciseTypeEdge']> };
   ExerciseTypeEdge: Omit<ExerciseTypeEdge, 'node'> & { node: Maybe<ResolversParentTypes['ExerciseType']> };
   ExerciseTypeHistory: ExerciseTypeHistoryModel;
+  ExerciseTypeHistoryDayAmount: ExerciseTypeHistoryDayAmountModel;
   Float: Scalars['Float']['output'];
   FogisGame: FogisGameModel;
   HeartRateSummary: HeartRateSummaryModel;
@@ -617,7 +628,14 @@ export type ExerciseTypeEdgeResolvers<ContextType = Context, ParentType extends 
 };
 
 export type ExerciseTypeHistoryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ExerciseTypeHistory'] = ResolversParentTypes['ExerciseTypeHistory']> = {
+  dayAmounts: Resolver<Array<ResolversTypes['ExerciseTypeHistoryDayAmount']>, ParentType, ContextType>;
   name: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ExerciseTypeHistoryDayAmountResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ExerciseTypeHistoryDayAmount'] = ResolversParentTypes['ExerciseTypeHistoryDayAmount']> = {
+  dayAmounts: Resolver<Array<ResolversTypes['ExerciseAmount']>, ParentType, ContextType>;
+  dayStart: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -704,6 +722,7 @@ export type Resolvers<ContextType = Context> = {
   ExerciseTypeConnection: ExerciseTypeConnectionResolvers<ContextType>;
   ExerciseTypeEdge: ExerciseTypeEdgeResolvers<ContextType>;
   ExerciseTypeHistory: ExerciseTypeHistoryResolvers<ContextType>;
+  ExerciseTypeHistoryDayAmount: ExerciseTypeHistoryDayAmountResolvers<ContextType>;
   FogisGame: FogisGameResolvers<ContextType>;
   HeartRateSummary: HeartRateSummaryResolvers<ContextType>;
   PageInfo: PageInfoResolvers<ContextType>;

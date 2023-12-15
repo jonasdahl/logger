@@ -1,4 +1,3 @@
-import { ExerciseAmountType } from "@prisma/client";
 import { db } from "~/db.server";
 import { type ExerciseItemResolvers } from "~/graphql/generated/graphql";
 
@@ -29,69 +28,6 @@ export const exerciseItemResolvers: ExerciseItemResolvers = {
       },
     });
 
-    return exerciseItem.loadAmounts.map((loadAmount) => {
-      return {
-        duration:
-          loadAmount.amountType === ExerciseAmountType.Repetitions &&
-          loadAmount.amountRepetitions
-            ? {
-                __typename: "ExerciseDurationRepetitions",
-                repetitions: loadAmount.amountRepetitions,
-              }
-            : loadAmount.amountType === ExerciseAmountType.Time &&
-              loadAmount.amountDurationMilliSeconds
-            ? {
-                __typename: "ExerciseDurationTime",
-                durationSeconds: loadAmount.amountDurationMilliSeconds / 1000,
-              }
-            : {
-                __typename: "ExerciseDurationTime",
-                durationSeconds: 0,
-              },
-        loads: loadAmount.loads.map((load) => ({
-          unit: load.exerciseLoadType.unit,
-          value: load.amountValue,
-          type: load.exerciseLoadType,
-        })),
-      };
-    });
-    // return [
-
-    //   {
-    //     duration: {
-    //       __typename: "ExerciseDurationTime",
-    //       durationSeconds: 2 * 60,
-    //     },
-    //     load: { unit: null, value: 6 },
-    //   },
-    //   {
-    //     duration: { __typename: "ExerciseDurationTime", durationSeconds: 45 },
-    //     load: { unit: null, value: 13 },
-    //   },
-    //   {
-    //     duration: { __typename: "ExerciseDurationTime", durationSeconds: 30 },
-    //     load: { unit: null, value: 6 },
-    //   },
-    //   {
-    //     duration: { __typename: "ExerciseDurationTime", durationSeconds: 45 },
-    //     load: { unit: null, value: 13 },
-    //   },
-    //   {
-    //     duration: { __typename: "ExerciseDurationTime", durationSeconds: 30 },
-    //     load: { unit: null, value: 6 },
-    //   },
-    //   {
-    //     duration: { __typename: "ExerciseDurationTime", durationSeconds: 45 },
-    //     load: { unit: null, value: 13 },
-    //   },
-    //   {
-    //     duration: { __typename: "ExerciseDurationTime", durationSeconds: 30 },
-    //     load: { unit: null, value: 6 },
-    //   },
-    //   {
-    //     duration: { __typename: "ExerciseDurationTime", durationSeconds: 45 },
-    //     load: { unit: null, value: 13 },
-    //   },
-    // ];
+    return exerciseItem.loadAmounts;
   },
 };

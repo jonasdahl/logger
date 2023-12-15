@@ -131,7 +131,13 @@ type ExerciseTypeEdge {
 }
 
 type ExerciseTypeHistory {
+  dayAmounts: [ExerciseTypeHistoryDayAmount!]!
   name: String!
+}
+
+type ExerciseTypeHistoryDayAmount {
+  dayAmounts: [ExerciseAmount!]!
+  dayStart: DateTime!
 }
 
 type FogisGame implements ActivityBase {

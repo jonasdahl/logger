@@ -178,7 +178,7 @@ model ExerciseItemLoadAmount {
   exerciseItem   ExerciseItem @relation(fields: [exerciseItemId], references: [id])
 
   amountType                 ExerciseAmountType
-  amountDurationMilliSeconds Int?
+  amountDurationMilliSeconds BigInt?
   amountRepetitions          Int?
   loads                      ExerciseItemLoad[]
 

@@ -1,3 +1,4 @@
 type ExerciseTypeHistory {
   name: String!
+  dayAmounts: [ExerciseTypeHistoryDayAmount!]!
 }

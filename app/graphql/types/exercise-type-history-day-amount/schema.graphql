@@ -1,0 +1,4 @@
+type ExerciseTypeHistoryDayAmount {
+  dayStart: DateTime!
+  dayAmounts: [ExerciseAmount!]!
+}

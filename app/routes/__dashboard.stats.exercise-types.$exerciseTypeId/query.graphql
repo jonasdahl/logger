@@ -2,5 +2,28 @@ query StatsExerciseType($exerciseTypeId: ID!) {
   exerciseType(id: $exerciseTypeId) {
     id
     name
+    history {
+      dayAmounts {
+        dayStart
+        dayAmounts {
+          duration {
+            __typename
+            ... on ExerciseDurationTime {
+              durationSeconds
+            }
+            ... on ExerciseDurationRepetitions {
+              repetitions
+            }
+          }
+          loads {
+            type {
+              name
+            }
+            value
+            unit
+          }
+        }
+      }
+    }
   }
 }
