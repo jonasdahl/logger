@@ -127,7 +127,7 @@ export type ExerciseDurationRepetitions = {
 
 export type ExerciseDurationTime = {
   __typename?: 'ExerciseDurationTime';
-  durationSeconds: Scalars['Int']['output'];
+  durationSeconds: Scalars['Float']['output'];
 };
 
 export type ExerciseItem = {
@@ -536,7 +536,7 @@ export type ExerciseDurationRepetitionsResolvers<ContextType = Context, ParentTy
 };
 
 export type ExerciseDurationTimeResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ExerciseDurationTime'] = ResolversParentTypes['ExerciseDurationTime']> = {
-  durationSeconds: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  durationSeconds: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 

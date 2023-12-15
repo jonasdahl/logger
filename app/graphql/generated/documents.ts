@@ -110,7 +110,7 @@ export type ExerciseDurationRepetitions = {
 
 export type ExerciseDurationTime = {
   readonly __typename?: 'ExerciseDurationTime';
-  readonly durationSeconds: Scalars['Int']['output'];
+  readonly durationSeconds: Scalars['Float']['output'];
 };
 
 export type ExerciseItem = {

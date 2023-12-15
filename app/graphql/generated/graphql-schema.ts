@@ -75,7 +75,7 @@ type ExerciseDurationRepetitions {
 }
 
 type ExerciseDurationTime {
-  durationSeconds: Int!
+  durationSeconds: Float!
 }
 
 type ExerciseItem {

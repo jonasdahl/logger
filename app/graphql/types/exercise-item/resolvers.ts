@@ -39,10 +39,10 @@ export const exerciseItemResolvers: ExerciseItemResolvers = {
                 repetitions: loadAmount.amountRepetitions,
               }
             : loadAmount.amountType === ExerciseAmountType.Time &&
-              loadAmount.amountDurationSeconds
+              loadAmount.amountDurationMilliSeconds
             ? {
                 __typename: "ExerciseDurationTime",
-                durationSeconds: loadAmount.amountDurationSeconds,
+                durationSeconds: loadAmount.amountDurationMilliSeconds / 1000,
               }
             : {
                 __typename: "ExerciseDurationTime",

@@ -62,10 +62,11 @@ const schema = z.intersection(
       })
       .transform((v) => ({
         amountType: "time" as const,
-        durationSeconds:
-          (v.durationSeconds ?? 0) +
-          (v.durationMinutes ?? 0) * 60 +
-          (v.durationHours ?? 0) * 60 * 60,
+        durationMilliSeconds:
+          ((v.durationSeconds ?? 0) +
+            (v.durationMinutes ?? 0) * 60 +
+            (v.durationHours ?? 0) * 60 * 60) *
+          1000,
       })),
     z.object({
       amountType: z.literal("repetitions"),
@@ -106,7 +107,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
     include: { exerciseItems: true },
   });
 
-  await db.exerciseItem.create({
+  const res = await db.exerciseItem.create({
     data: {
       order: Math.max(0, ...activity.exerciseItems.map((i) => i.order)) + 1,
       activityId: activity.id,
@@ -117,8 +118,8 @@ export async function action({ request, params }: ActionFunctionArgs) {
             data.amountType === "repetitions"
               ? ExerciseAmountType.Repetitions
               : ExerciseAmountType.Time,
-          amountDurationSeconds:
-            data.amountType === "time" ? data.durationSeconds : undefined,
+          amountDurationMilliSeconds:
+            data.amountType === "time" ? data.durationMilliSeconds : undefined,
           amountRepetitions:
             data.amountType === "repetitions" ? data.repetitions : undefined,
           loads: {

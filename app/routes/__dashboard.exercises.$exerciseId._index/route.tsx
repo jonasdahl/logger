@@ -108,7 +108,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
         loadAmounts: {
           create: exerciseItem.loadAmounts.map((loadAmount) => ({
             amountType: loadAmount.amountType,
-            amountDurationSeconds: loadAmount.amountDurationSeconds,
+            amountDurationMilliSeconds: loadAmount.amountDurationMilliSeconds,
             amountRepetitions: loadAmount.amountRepetitions,
             loads: {
               create: loadAmount.loads.map((load) => ({
@@ -156,7 +156,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
           loadAmounts: {
             create: exerciseItem.loadAmounts.map((loadAmount) => ({
               amountType: loadAmount.amountType,
-              amountDurationSeconds: loadAmount.amountDurationSeconds,
+              amountDurationMilliSeconds: loadAmount.amountDurationMilliSeconds,
               amountRepetitions: loadAmount.amountRepetitions,
               loads: {
                 create: loadAmount.loads.map((load) => ({
@@ -270,6 +270,8 @@ export default function Activity() {
                       const timeString =
                         duration.toMillis() > 60 * 1000
                           ? duration.toFormat("m'm' s's'")
+                          : duration.toMillis() < 10_000
+                          ? duration.toFormat("s.S's'")
                           : duration.toFormat("s's'");
                       return <Box>{`${timeString}${loads}`}</Box>;
                     }
