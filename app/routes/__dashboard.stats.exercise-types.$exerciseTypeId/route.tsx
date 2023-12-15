@@ -44,6 +44,9 @@ export default function ExerciseTypeStats() {
         <Box>
           <ClientOnly>{() => <RepsChart />}</ClientOnly>
         </Box>
+        <Box>
+          <ClientOnly>{() => <LoadChart />}</ClientOnly>
+        </Box>
       </Stack>
     </Container>
   );
@@ -187,6 +190,91 @@ function RepsChart() {
         data={chartData}
         xAccessor={(p) => p.x.toJSDate()}
         yAccessor={(p) => p.total}
+        strokeWidth={1}
+      />
+    </XYChart>
+  );
+}
+
+function LoadChart() {
+  const { data } = useLoaderData<typeof loader>();
+
+  const chartData =
+    data?.exerciseType?.history.dayAmounts
+      .map((dayAmount) => {
+        const loads = dayAmount.dayAmounts
+          .flatMap((a) => a.loads.map((load) => load.value))
+          .filter((x) => x !== null) as number[];
+        return {
+          x: DateTime.fromISO(dayAmount.dayStart),
+          maxLoad: loads.length === 0 ? null : Math.max(...loads),
+          averageLoad: loads.length === 0 ? null : sum(loads) / loads.length,
+          minLoad: loads.length === 0 ? null : Math.min(...loads),
+        };
+      })
+      .filter((x) => x.maxLoad !== null) ?? [];
+
+  const customTheme = buildChartTheme({
+    gridColor: "var(--chakra-colors-gray-200)",
+    colors: ["var(--chakra-colors-blue-500)"],
+    backgroundColor: "",
+    tickLength: 0,
+    gridColorDark: "",
+  });
+
+  if (!chartData.length) {
+    return null;
+  }
+
+  return (
+    <XYChart
+      theme={customTheme}
+      margin={{ top: 0, right: 0, bottom: 20, left: 30 }}
+      height={300}
+      xScale={{ type: "time" }}
+      yScale={{ type: "linear" }}
+    >
+      <AnimatedAxis orientation="bottom" />
+      <AnimatedAxis orientation="left" />
+      <AnimatedGrid />
+
+      <AnimatedGlyphSeries
+        dataKey="Max Load Glyphs"
+        data={chartData}
+        xAccessor={(p) => p.x.toJSDate()}
+        yAccessor={(p) => p.maxLoad}
+      />
+      <AnimatedLineSeries
+        dataKey="Max Load"
+        data={chartData}
+        xAccessor={(p) => p.x.toJSDate()}
+        yAccessor={(p) => p.maxLoad}
+        strokeWidth={1}
+      />
+      <AnimatedGlyphSeries
+        dataKey="Min Load Glyphs"
+        data={chartData}
+        xAccessor={(p) => p.x.toJSDate()}
+        yAccessor={(p) => p.minLoad}
+      />
+      <AnimatedLineSeries
+        dataKey="Min Load"
+        data={chartData}
+        xAccessor={(p) => p.x.toJSDate()}
+        yAccessor={(p) => p.minLoad}
+        strokeWidth={1}
+      />
+      <AnimatedGlyphSeries
+        dataKey="Average Load Glyphs"
+        data={chartData}
+        xAccessor={(p) => p.x.toJSDate()}
+        yAccessor={(p) => p.averageLoad}
+      />
+      <AnimatedLineSeries
+        dataKey="Average Load"
+        data={chartData}
+        xAccessor={(p) => p.x.toJSDate()}
+        yAccessor={(p) => p.averageLoad}
         strokeWidth={1}
       />
     </XYChart>
