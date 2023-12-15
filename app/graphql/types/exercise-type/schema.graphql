@@ -3,6 +3,7 @@ type ExerciseType {
   name: String!
   defaultAmountType: AmountType!
   loadTypes: [ExerciseLoadType!]!
+  history: ExerciseTypeHistory!
 }
 
 enum AmountType {

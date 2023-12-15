@@ -114,6 +114,7 @@ type ExercisePurpose {
 
 type ExerciseType {
   defaultAmountType: AmountType!
+  history: ExerciseTypeHistory!
   id: ID!
   loadTypes: [ExerciseLoadType!]!
   name: String!
@@ -127,6 +128,10 @@ type ExerciseTypeConnection {
 type ExerciseTypeEdge {
   cursor: String!
   node: ExerciseType
+}
+
+type ExerciseTypeHistory {
+  name: String!
 }
 
 type FogisGame implements ActivityBase {
@@ -178,6 +183,7 @@ type Query {
   day(date: String!): Day
   days(after: String, before: String, first: Int, last: Int): DayConnection!
   exercise(id: ID!): Exercise
+  exerciseType(id: ID!): ExerciseType
   exerciseTypes: ExerciseTypeConnection!
   me: User
   today: Day!

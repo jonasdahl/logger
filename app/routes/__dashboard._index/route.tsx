@@ -27,6 +27,8 @@ export default function Index() {
           Månadsvy
         </Item>
 
+        <Item to={`/stats/exercise-types`}>Stats</Item>
+
         <Item to={`/exercises/live`} colorScheme="green">
           Träna nu
         </Item>

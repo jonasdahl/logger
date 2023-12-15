@@ -1,0 +1,6 @@
+query StatsExerciseType($exerciseTypeId: ID!) {
+  exerciseType(id: $exerciseTypeId) {
+    id
+    name
+  }
+}

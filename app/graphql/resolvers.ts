@@ -20,6 +20,7 @@ import { exerciseLoadResolvers } from "./types/exercise-load/resolvers";
 import { exercisePurposeResolvers } from "./types/exercise-purpose/resolvers";
 import { exerciseTypeConnectionResolvers } from "./types/exercise-type-connection/resolvers";
 import { exerciseTypeEdgeResolvers } from "./types/exercise-type-edge/resolvers";
+import { exerciseTypeHistoryResolvers } from "./types/exercise-type-history/resolvers";
 import { exerciseTypeResolvers } from "./types/exercise-type/resolvers";
 import { exerciseResolvers } from "./types/exercise/resolvers";
 import { fogisGameResolvers } from "./types/fogis-game/resolvers";
@@ -61,4 +62,5 @@ export const resolvers: Resolvers = {
   ExerciseLoad: exerciseLoadResolvers,
   ExerciseLoadType: exerciseLoadTypeResolvers,
   CustomGame: customGameResolvers,
+  ExerciseTypeHistory: exerciseTypeHistoryResolvers,
 };

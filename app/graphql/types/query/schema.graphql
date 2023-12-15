@@ -3,6 +3,7 @@ type Query {
   activity(id: ID!): Activity
   exercise(id: ID!): Exercise
   exerciseTypes: ExerciseTypeConnection!
+  exerciseType(id: ID!): ExerciseType
 
   activities(
     first: Int

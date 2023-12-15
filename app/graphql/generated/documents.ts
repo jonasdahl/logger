@@ -156,6 +156,7 @@ export type ExercisePurpose = {
 export type ExerciseType = {
   readonly __typename?: 'ExerciseType';
   readonly defaultAmountType: AmountType;
+  readonly history: ExerciseTypeHistory;
   readonly id: Scalars['ID']['output'];
   readonly loadTypes: ReadonlyArray<ExerciseLoadType>;
   readonly name: Scalars['String']['output'];
@@ -171,6 +172,11 @@ export type ExerciseTypeEdge = {
   readonly __typename?: 'ExerciseTypeEdge';
   readonly cursor: Scalars['String']['output'];
   readonly node: Maybe<ExerciseType>;
+};
+
+export type ExerciseTypeHistory = {
+  readonly __typename?: 'ExerciseTypeHistory';
+  readonly name: Scalars['String']['output'];
 };
 
 export type FogisGame = ActivityBase & {
@@ -233,6 +239,7 @@ export type Query = {
   readonly day: Maybe<Day>;
   readonly days: DayConnection;
   readonly exercise: Maybe<Exercise>;
+  readonly exerciseType: Maybe<ExerciseType>;
   readonly exerciseTypes: ExerciseTypeConnection;
   readonly me: Maybe<User>;
   readonly today: Day;
@@ -267,6 +274,11 @@ export type QueryDaysArgs = {
 
 
 export type QueryExerciseArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryExerciseTypeArgs = {
   id: Scalars['ID']['input'];
 };
 
@@ -322,6 +334,18 @@ export type CreateExerciseItemQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type CreateExerciseItemQuery = { readonly __typename?: 'Query', readonly exerciseTypes: { readonly __typename?: 'ExerciseTypeConnection', readonly edges: ReadonlyArray<{ readonly __typename?: 'ExerciseTypeEdge', readonly node: { readonly __typename?: 'ExerciseType', readonly id: string, readonly name: string, readonly defaultAmountType: AmountType, readonly loadTypes: ReadonlyArray<{ readonly __typename?: 'ExerciseLoadType', readonly id: string, readonly name: string, readonly unit: string | null }> } | null }> } };
 
+export type StatsExerciseTypeQueryVariables = Exact<{
+  exerciseTypeId: Scalars['ID']['input'];
+}>;
+
+
+export type StatsExerciseTypeQuery = { readonly __typename?: 'Query', readonly exerciseType: { readonly __typename?: 'ExerciseType', readonly id: string, readonly name: string } | null };
+
+export type StatsExercisesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type StatsExercisesQuery = { readonly __typename?: 'Query', readonly exerciseTypes: { readonly __typename?: 'ExerciseTypeConnection', readonly edges: ReadonlyArray<{ readonly __typename?: 'ExerciseTypeEdge', readonly cursor: string, readonly node: { readonly __typename?: 'ExerciseType', readonly id: string, readonly name: string } | null }> } };
+
 export type DashboardQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -334,4 +358,6 @@ export const ShowDayDocument = {"kind":"Document","definitions":[{"kind":"Operat
 export const ExerciseTypesListDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ExerciseTypesList"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"exerciseTypes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cursor"}},{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"defaultAmountType"}},{"kind":"Field","name":{"kind":"Name","value":"loadTypes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"unit"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<ExerciseTypesListQuery, ExerciseTypesListQueryVariables>;
 export const ExerciseDetailsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ExerciseDetails"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"exerciseId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"exercise"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"exerciseId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"items"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cursor"}},{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"exerciseType"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"amount"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"Field","name":{"kind":"Name","value":"loads"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"unit"}},{"kind":"Field","name":{"kind":"Name","value":"value"}},{"kind":"Field","name":{"kind":"Name","value":"type"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"duration"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"__typename"}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ExerciseDurationRepetitions"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"repetitions"}}]}},{"kind":"InlineFragment","typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"ExerciseDurationTime"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"durationSeconds"}}]}}]}}]}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<ExerciseDetailsQuery, ExerciseDetailsQueryVariables>;
 export const CreateExerciseItemDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"CreateExerciseItem"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"exerciseTypes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"defaultAmountType"}},{"kind":"Field","name":{"kind":"Name","value":"loadTypes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"unit"}}]}}]}}]}}]}}]}}]} as unknown as DocumentNode<CreateExerciseItemQuery, CreateExerciseItemQueryVariables>;
+export const StatsExerciseTypeDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"StatsExerciseType"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"exerciseTypeId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"exerciseType"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"exerciseTypeId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<StatsExerciseTypeQuery, StatsExerciseTypeQueryVariables>;
+export const StatsExercisesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"StatsExercises"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"exerciseTypes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"cursor"}},{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]}}]} as unknown as DocumentNode<StatsExercisesQuery, StatsExercisesQueryVariables>;
 export const DashboardDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Dashboard"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"me"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"email"}}]}}]}}]} as unknown as DocumentNode<DashboardQuery, DashboardQueryVariables>;

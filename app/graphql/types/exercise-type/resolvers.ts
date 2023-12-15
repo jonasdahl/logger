@@ -14,4 +14,5 @@ export const exerciseTypeResolvers: ExerciseTypeResolvers = {
       : AmountType.Repetitions,
   loadTypes: (parent) =>
     db.exerciseLoadType.findMany({ where: { exerciseTypeId: parent.id } }),
+  history: (parent) => parent,
 };

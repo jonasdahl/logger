@@ -62,6 +62,18 @@ export const queryResolvers: QueryResolvers = {
       },
     };
   },
+  exerciseType: async (_, { id }, { userId }) => {
+    if (!userId) {
+      return null;
+    }
+    return db.exerciseType.findFirstOrThrow({
+      where: {
+        OR: [{ userId }, { userId: null }],
+        deletedAt: null,
+        id: id as string,
+      },
+    });
+  },
 
   day: async (_, { date }) => {
     const parsed = DateTime.fromFormat(date, "yyyy-MM-dd", {

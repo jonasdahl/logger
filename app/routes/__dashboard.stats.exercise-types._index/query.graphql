@@ -1,0 +1,11 @@
+query StatsExercises {
+  exerciseTypes {
+    edges {
+      cursor
+      node {
+        id
+        name
+      }
+    }
+  }
+}

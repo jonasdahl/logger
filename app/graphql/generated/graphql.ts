@@ -8,6 +8,7 @@ import { ExerciseItemModel } from '../types/exercise-item/model';
 import { ExerciseLoadTypeModel } from '../types/exercise-load-type/model';
 import { ExercisePurposeModel } from '../types/exercise-purpose/model';
 import { ExerciseTypeModel } from '../types/exercise-type/model';
+import { ExerciseTypeHistoryModel } from '../types/exercise-type-history/model';
 import { FogisGameModel } from '../types/fogis-game/model';
 import { HeartRateSummaryModel } from '../types/heart-rate-summary/model';
 import { PhysicalTestModel } from '../types/physical-test/model';
@@ -173,6 +174,7 @@ export type ExercisePurpose = {
 export type ExerciseType = {
   __typename?: 'ExerciseType';
   defaultAmountType: AmountType;
+  history: ExerciseTypeHistory;
   id: Scalars['ID']['output'];
   loadTypes: Array<ExerciseLoadType>;
   name: Scalars['String']['output'];
@@ -188,6 +190,11 @@ export type ExerciseTypeEdge = {
   __typename?: 'ExerciseTypeEdge';
   cursor: Scalars['String']['output'];
   node: Maybe<ExerciseType>;
+};
+
+export type ExerciseTypeHistory = {
+  __typename?: 'ExerciseTypeHistory';
+  name: Scalars['String']['output'];
 };
 
 export type FogisGame = ActivityBase & {
@@ -250,6 +257,7 @@ export type Query = {
   day: Maybe<Day>;
   days: DayConnection;
   exercise: Maybe<Exercise>;
+  exerciseType: Maybe<ExerciseType>;
   exerciseTypes: ExerciseTypeConnection;
   me: Maybe<User>;
   today: Day;
@@ -284,6 +292,11 @@ export type QueryDaysArgs = {
 
 
 export type QueryExerciseArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryExerciseTypeArgs = {
   id: Scalars['ID']['input'];
 };
 
@@ -399,6 +412,7 @@ export type ResolversTypes = {
   ExerciseType: ResolverTypeWrapper<ExerciseTypeModel>;
   ExerciseTypeConnection: ResolverTypeWrapper<Omit<ExerciseTypeConnection, 'edges'> & { edges: Array<ResolversTypes['ExerciseTypeEdge']> }>;
   ExerciseTypeEdge: ResolverTypeWrapper<Omit<ExerciseTypeEdge, 'node'> & { node: Maybe<ResolversTypes['ExerciseType']> }>;
+  ExerciseTypeHistory: ResolverTypeWrapper<ExerciseTypeHistoryModel>;
   Float: ResolverTypeWrapper<Scalars['Float']['output']>;
   FogisGame: ResolverTypeWrapper<FogisGameModel>;
   HeartRateSummary: ResolverTypeWrapper<HeartRateSummaryModel>;
@@ -440,6 +454,7 @@ export type ResolversParentTypes = {
   ExerciseType: ExerciseTypeModel;
   ExerciseTypeConnection: Omit<ExerciseTypeConnection, 'edges'> & { edges: Array<ResolversParentTypes['ExerciseTypeEdge']> };
   ExerciseTypeEdge: Omit<ExerciseTypeEdge, 'node'> & { node: Maybe<ResolversParentTypes['ExerciseType']> };
+  ExerciseTypeHistory: ExerciseTypeHistoryModel;
   Float: Scalars['Float']['output'];
   FogisGame: FogisGameModel;
   HeartRateSummary: HeartRateSummaryModel;
@@ -582,6 +597,7 @@ export type ExercisePurposeResolvers<ContextType = Context, ParentType extends R
 
 export type ExerciseTypeResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ExerciseType'] = ResolversParentTypes['ExerciseType']> = {
   defaultAmountType: Resolver<ResolversTypes['AmountType'], ParentType, ContextType>;
+  history: Resolver<ResolversTypes['ExerciseTypeHistory'], ParentType, ContextType>;
   id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   loadTypes: Resolver<Array<ResolversTypes['ExerciseLoadType']>, ParentType, ContextType>;
   name: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -597,6 +613,11 @@ export type ExerciseTypeConnectionResolvers<ContextType = Context, ParentType ex
 export type ExerciseTypeEdgeResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ExerciseTypeEdge'] = ResolversParentTypes['ExerciseTypeEdge']> = {
   cursor: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   node: Resolver<Maybe<ResolversTypes['ExerciseType']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ExerciseTypeHistoryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ExerciseTypeHistory'] = ResolversParentTypes['ExerciseTypeHistory']> = {
+  name: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -646,6 +667,7 @@ export type QueryResolvers<ContextType = Context, ParentType extends ResolversPa
   day: Resolver<Maybe<ResolversTypes['Day']>, ParentType, ContextType, RequireFields<QueryDayArgs, 'date'>>;
   days: Resolver<ResolversTypes['DayConnection'], ParentType, ContextType, Partial<QueryDaysArgs>>;
   exercise: Resolver<Maybe<ResolversTypes['Exercise']>, ParentType, ContextType, RequireFields<QueryExerciseArgs, 'id'>>;
+  exerciseType: Resolver<Maybe<ResolversTypes['ExerciseType']>, ParentType, ContextType, RequireFields<QueryExerciseTypeArgs, 'id'>>;
   exerciseTypes: Resolver<ResolversTypes['ExerciseTypeConnection'], ParentType, ContextType>;
   me: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   today: Resolver<ResolversTypes['Day'], ParentType, ContextType>;
@@ -681,6 +703,7 @@ export type Resolvers<ContextType = Context> = {
   ExerciseType: ExerciseTypeResolvers<ContextType>;
   ExerciseTypeConnection: ExerciseTypeConnectionResolvers<ContextType>;
   ExerciseTypeEdge: ExerciseTypeEdgeResolvers<ContextType>;
+  ExerciseTypeHistory: ExerciseTypeHistoryResolvers<ContextType>;
   FogisGame: FogisGameResolvers<ContextType>;
   HeartRateSummary: HeartRateSummaryResolvers<ContextType>;
   PageInfo: PageInfoResolvers<ContextType>;
