@@ -2,10 +2,12 @@ import { Box, Container, Heading, Stack } from "@chakra-ui/react";
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
+import { sum } from "lodash";
 import { DateTime } from "luxon";
 import { authenticator } from "~/auth.server";
 import {
   AnimatedAxis,
+  AnimatedGlyphSeries,
   AnimatedGrid,
   AnimatedLineSeries,
   XYChart,
@@ -37,14 +39,17 @@ export default function ExerciseTypeStats() {
       <Stack spacing={5}>
         <Heading>{data?.exerciseType?.name}</Heading>
         <Box>
-          <ClientOnly>{() => <Chart />}</ClientOnly>
+          <ClientOnly>{() => <TimeChart />}</ClientOnly>
+        </Box>
+        <Box>
+          <ClientOnly>{() => <RepsChart />}</ClientOnly>
         </Box>
       </Stack>
     </Container>
   );
 }
 
-function Chart() {
+function TimeChart() {
   const { data } = useLoaderData<typeof loader>();
 
   const chartData =
@@ -79,6 +84,10 @@ function Chart() {
     gridColorDark: "",
   });
 
+  if (!chartData.length) {
+    return null;
+  }
+
   return (
     <XYChart
       theme={customTheme}
@@ -91,18 +100,93 @@ function Chart() {
       <AnimatedAxis orientation="left" />
       <AnimatedGrid />
 
+      <AnimatedGlyphSeries
+        dataKey="MinGlyphs"
+        data={chartData}
+        xAccessor={(p) => p.x.toJSDate()}
+        yAccessor={(p) => p.minTime}
+      />
+      <AnimatedGlyphSeries
+        dataKey="MaxGlyphs"
+        data={chartData}
+        xAccessor={(p) => p.x.toJSDate()}
+        yAccessor={(p) => p.maxTime}
+      />
       <AnimatedLineSeries
-        dataKey="Values"
+        dataKey="Min"
         data={chartData}
         xAccessor={(p) => p.x.toJSDate()}
         yAccessor={(p) => p.minTime}
         strokeWidth={1}
       />
       <AnimatedLineSeries
-        dataKey="Values"
+        dataKey="Max"
         data={chartData}
         xAccessor={(p) => p.x.toJSDate()}
         yAccessor={(p) => p.maxTime}
+        strokeWidth={1}
+      />
+    </XYChart>
+  );
+}
+
+function RepsChart() {
+  const { data } = useLoaderData<typeof loader>();
+
+  const chartData =
+    data?.exerciseType?.history.dayAmounts
+      .map((dayAmount) => {
+        const reps = dayAmount.dayAmounts
+          .map((a) =>
+            a.duration.__typename === "ExerciseDurationRepetitions"
+              ? a.duration.repetitions
+              : null
+          )
+          .filter((x) => x !== null) as number[];
+        return {
+          x: DateTime.fromISO(dayAmount.dayStart),
+          total: reps.length === 0 ? null : sum(reps),
+          average: reps.length === 0 ? null : sum(reps) / reps.length,
+        };
+      })
+      .filter((x) => x.total !== null) ?? [];
+
+  const customTheme = buildChartTheme({
+    gridColor: "var(--chakra-colors-gray-200)",
+    colors: ["var(--chakra-colors-blue-500)"],
+    backgroundColor: "",
+    tickLength: 0,
+    gridColorDark: "",
+  });
+
+  if (!chartData.length) {
+    return null;
+  }
+
+  return (
+    <XYChart
+      theme={customTheme}
+      margin={{ top: 0, right: 0, bottom: 20, left: 30 }}
+      height={300}
+      xScale={{ type: "time" }}
+      yScale={{ type: "linear" }}
+    >
+      <AnimatedAxis orientation="bottom" />
+      <AnimatedAxis orientation="left" />
+      <AnimatedGrid />
+
+      <AnimatedGlyphSeries
+        dataKey="Glyphs"
+        data={chartData}
+        xAccessor={(p) => p.x.toJSDate()}
+        yAccessor={(p) => p.total}
+      />
+
+      <AnimatedLineSeries
+        dataKey="Values"
+        data={chartData}
+        xAccessor={(p) => p.x.toJSDate()}
+        yAccessor={(p) => p.total}
         strokeWidth={1}
       />
     </XYChart>
