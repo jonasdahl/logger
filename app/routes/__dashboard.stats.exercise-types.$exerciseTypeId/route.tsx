@@ -38,15 +38,11 @@ export default function ExerciseTypeStats() {
     <Container py={5} maxW="container.md">
       <Stack spacing={5}>
         <Heading>{data?.exerciseType?.name}</Heading>
-        <Box>
-          <ClientOnly>{() => <TimeChart />}</ClientOnly>
-        </Box>
-        <Box>
-          <ClientOnly>{() => <RepsChart />}</ClientOnly>
-        </Box>
-        <Box>
-          <ClientOnly>{() => <LoadChart />}</ClientOnly>
-        </Box>
+
+        <ClientOnly>{() => <TimeChart />}</ClientOnly>
+        <ClientOnly>{() => <RepsChart />}</ClientOnly>
+        <ClientOnly>{() => <LoadChart />}</ClientOnly>
+        <ClientOnly>{() => <TotalLoadChart />}</ClientOnly>
       </Stack>
     </Container>
   );
@@ -92,44 +88,49 @@ function TimeChart() {
   }
 
   return (
-    <XYChart
-      theme={customTheme}
-      margin={{ top: 0, right: 0, bottom: 20, left: 30 }}
-      height={300}
-      xScale={{ type: "time" }}
-      yScale={{ type: "linear" }}
-    >
-      <AnimatedAxis orientation="bottom" />
-      <AnimatedAxis orientation="left" />
-      <AnimatedGrid />
+    <Stack>
+      <Heading size="md">Tid</Heading>
+      <Box>
+        <XYChart
+          theme={customTheme}
+          margin={{ top: 0, right: 0, bottom: 20, left: 30 }}
+          height={300}
+          xScale={{ type: "time" }}
+          yScale={{ type: "linear" }}
+        >
+          <AnimatedAxis orientation="bottom" />
+          <AnimatedAxis orientation="left" />
+          <AnimatedGrid />
 
-      <AnimatedGlyphSeries
-        dataKey="MinGlyphs"
-        data={chartData}
-        xAccessor={(p) => p.x.toJSDate()}
-        yAccessor={(p) => p.minTime}
-      />
-      <AnimatedGlyphSeries
-        dataKey="MaxGlyphs"
-        data={chartData}
-        xAccessor={(p) => p.x.toJSDate()}
-        yAccessor={(p) => p.maxTime}
-      />
-      <AnimatedLineSeries
-        dataKey="Min"
-        data={chartData}
-        xAccessor={(p) => p.x.toJSDate()}
-        yAccessor={(p) => p.minTime}
-        strokeWidth={1}
-      />
-      <AnimatedLineSeries
-        dataKey="Max"
-        data={chartData}
-        xAccessor={(p) => p.x.toJSDate()}
-        yAccessor={(p) => p.maxTime}
-        strokeWidth={1}
-      />
-    </XYChart>
+          <AnimatedGlyphSeries
+            dataKey="MinGlyphs"
+            data={chartData}
+            xAccessor={(p) => p.x.toJSDate()}
+            yAccessor={(p) => p.minTime}
+          />
+          <AnimatedGlyphSeries
+            dataKey="MaxGlyphs"
+            data={chartData}
+            xAccessor={(p) => p.x.toJSDate()}
+            yAccessor={(p) => p.maxTime}
+          />
+          <AnimatedLineSeries
+            dataKey="Min"
+            data={chartData}
+            xAccessor={(p) => p.x.toJSDate()}
+            yAccessor={(p) => p.minTime}
+            strokeWidth={1}
+          />
+          <AnimatedLineSeries
+            dataKey="Max"
+            data={chartData}
+            xAccessor={(p) => p.x.toJSDate()}
+            yAccessor={(p) => p.maxTime}
+            strokeWidth={1}
+          />
+        </XYChart>
+      </Box>
+    </Stack>
   );
 }
 
@@ -167,32 +168,37 @@ function RepsChart() {
   }
 
   return (
-    <XYChart
-      theme={customTheme}
-      margin={{ top: 0, right: 0, bottom: 20, left: 30 }}
-      height={300}
-      xScale={{ type: "time" }}
-      yScale={{ type: "linear" }}
-    >
-      <AnimatedAxis orientation="bottom" />
-      <AnimatedAxis orientation="left" />
-      <AnimatedGrid />
+    <Stack>
+      <Heading size="md">Repetitioner</Heading>
+      <Box>
+        <XYChart
+          theme={customTheme}
+          margin={{ top: 0, right: 0, bottom: 20, left: 30 }}
+          height={300}
+          xScale={{ type: "time" }}
+          yScale={{ type: "linear" }}
+        >
+          <AnimatedAxis orientation="bottom" />
+          <AnimatedAxis orientation="left" />
+          <AnimatedGrid />
 
-      <AnimatedGlyphSeries
-        dataKey="Glyphs"
-        data={chartData}
-        xAccessor={(p) => p.x.toJSDate()}
-        yAccessor={(p) => p.total}
-      />
+          <AnimatedGlyphSeries
+            dataKey="Glyphs"
+            data={chartData}
+            xAccessor={(p) => p.x.toJSDate()}
+            yAccessor={(p) => p.total}
+          />
 
-      <AnimatedLineSeries
-        dataKey="Values"
-        data={chartData}
-        xAccessor={(p) => p.x.toJSDate()}
-        yAccessor={(p) => p.total}
-        strokeWidth={1}
-      />
-    </XYChart>
+          <AnimatedLineSeries
+            dataKey="Values"
+            data={chartData}
+            xAccessor={(p) => p.x.toJSDate()}
+            yAccessor={(p) => p.total}
+            strokeWidth={1}
+          />
+        </XYChart>
+      </Box>
+    </Stack>
   );
 }
 
@@ -208,7 +214,6 @@ function LoadChart() {
         return {
           x: DateTime.fromISO(dayAmount.dayStart),
           maxLoad: loads.length === 0 ? null : Math.max(...loads),
-          averageLoad: loads.length === 0 ? null : sum(loads) / loads.length,
           minLoad: loads.length === 0 ? null : Math.min(...loads),
         };
       })
@@ -227,56 +232,118 @@ function LoadChart() {
   }
 
   return (
-    <XYChart
-      theme={customTheme}
-      margin={{ top: 0, right: 0, bottom: 20, left: 30 }}
-      height={300}
-      xScale={{ type: "time" }}
-      yScale={{ type: "linear" }}
-    >
-      <AnimatedAxis orientation="bottom" />
-      <AnimatedAxis orientation="left" />
-      <AnimatedGrid />
+    <Stack>
+      <Heading size="md">Belastning</Heading>
+      <Box>
+        <XYChart
+          theme={customTheme}
+          margin={{ top: 0, right: 0, bottom: 20, left: 30 }}
+          height={300}
+          xScale={{ type: "time" }}
+          yScale={{ type: "linear" }}
+        >
+          <AnimatedAxis orientation="bottom" />
+          <AnimatedAxis orientation="left" />
+          <AnimatedGrid />
 
-      <AnimatedGlyphSeries
-        dataKey="Max Load Glyphs"
-        data={chartData}
-        xAccessor={(p) => p.x.toJSDate()}
-        yAccessor={(p) => p.maxLoad}
-      />
-      <AnimatedLineSeries
-        dataKey="Max Load"
-        data={chartData}
-        xAccessor={(p) => p.x.toJSDate()}
-        yAccessor={(p) => p.maxLoad}
-        strokeWidth={1}
-      />
-      <AnimatedGlyphSeries
-        dataKey="Min Load Glyphs"
-        data={chartData}
-        xAccessor={(p) => p.x.toJSDate()}
-        yAccessor={(p) => p.minLoad}
-      />
-      <AnimatedLineSeries
-        dataKey="Min Load"
-        data={chartData}
-        xAccessor={(p) => p.x.toJSDate()}
-        yAccessor={(p) => p.minLoad}
-        strokeWidth={1}
-      />
-      <AnimatedGlyphSeries
-        dataKey="Average Load Glyphs"
-        data={chartData}
-        xAccessor={(p) => p.x.toJSDate()}
-        yAccessor={(p) => p.averageLoad}
-      />
-      <AnimatedLineSeries
-        dataKey="Average Load"
-        data={chartData}
-        xAccessor={(p) => p.x.toJSDate()}
-        yAccessor={(p) => p.averageLoad}
-        strokeWidth={1}
-      />
-    </XYChart>
+          <AnimatedGlyphSeries
+            dataKey="Max Load Glyphs"
+            data={chartData}
+            xAccessor={(p) => p.x.toJSDate()}
+            yAccessor={(p) => p.maxLoad}
+          />
+          <AnimatedLineSeries
+            dataKey="Max Load"
+            data={chartData}
+            xAccessor={(p) => p.x.toJSDate()}
+            yAccessor={(p) => p.maxLoad}
+            strokeWidth={1}
+          />
+          <AnimatedGlyphSeries
+            dataKey="Min Load Glyphs"
+            data={chartData}
+            xAccessor={(p) => p.x.toJSDate()}
+            yAccessor={(p) => p.minLoad}
+          />
+          <AnimatedLineSeries
+            dataKey="Min Load"
+            data={chartData}
+            xAccessor={(p) => p.x.toJSDate()}
+            yAccessor={(p) => p.minLoad}
+            strokeWidth={1}
+          />
+        </XYChart>
+      </Box>
+    </Stack>
+  );
+}
+
+function TotalLoadChart() {
+  const { data } = useLoaderData<typeof loader>();
+
+  const chartData =
+    data?.exerciseType?.history.dayAmounts
+      .map((dayAmount) => {
+        const loadVolumes = dayAmount.dayAmounts
+          .flatMap((a) =>
+            a.loads.map(
+              (load) =>
+                load.value *
+                (a.duration.__typename === "ExerciseDurationRepetitions"
+                  ? a.duration.repetitions
+                  : a.duration.durationSeconds)
+            )
+          )
+          .filter((x) => x !== null) as number[];
+        return {
+          x: DateTime.fromISO(dayAmount.dayStart),
+          totalLoad: loadVolumes.length === 0 ? null : sum(loadVolumes),
+        };
+      })
+      .filter((x) => x.totalLoad !== null) ?? [];
+
+  const customTheme = buildChartTheme({
+    gridColor: "var(--chakra-colors-gray-200)",
+    colors: ["var(--chakra-colors-blue-500)"],
+    backgroundColor: "",
+    tickLength: 0,
+    gridColorDark: "",
+  });
+
+  if (!chartData.length) {
+    return null;
+  }
+
+  return (
+    <Stack>
+      <Heading size="md">Total belastning</Heading>
+      <Box>
+        <XYChart
+          theme={customTheme}
+          margin={{ top: 0, right: 0, bottom: 20, left: 30 }}
+          height={300}
+          xScale={{ type: "time" }}
+          yScale={{ type: "linear" }}
+        >
+          <AnimatedAxis orientation="bottom" />
+          <AnimatedAxis orientation="left" />
+          <AnimatedGrid />
+
+          <AnimatedGlyphSeries
+            dataKey="Total Load Glyphs"
+            data={chartData}
+            xAccessor={(p) => p.x.toJSDate()}
+            yAccessor={(p) => p.totalLoad}
+          />
+          <AnimatedLineSeries
+            dataKey="Total Load"
+            data={chartData}
+            xAccessor={(p) => p.x.toJSDate()}
+            yAccessor={(p) => p.totalLoad}
+            strokeWidth={1}
+          />
+        </XYChart>
+      </Box>
+    </Stack>
   );
 }
