@@ -6,6 +6,10 @@ import {
   HStack,
   Heading,
   IconButton,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
   Spacer,
   Stack,
   Wrap,
@@ -15,10 +19,14 @@ import { ActionFunctionArgs, redirect } from "@remix-run/node";
 import { authenticator } from "~/auth.server";
 import { HiddenReturnToInput } from "~/services/return-to";
 
-import { faCopy, faTrash } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCopy,
+  faEllipsisVertical,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { LoaderFunctionArgs, json } from "@remix-run/node";
-import { Form, useLoaderData, useParams } from "@remix-run/react";
+import { Form, Link, useLoaderData, useParams } from "@remix-run/react";
 import { DateTime, Duration } from "luxon";
 import { useState } from "react";
 import { z } from "zod";
@@ -334,6 +342,23 @@ export default function Activity() {
                       variant="outline"
                     />
                   </Form>
+                </Box>
+                <Box>
+                  <Menu>
+                    <MenuButton
+                      as={IconButton}
+                      icon={<FontAwesomeIcon icon={faEllipsisVertical} />}
+                      size="xs"
+                    />
+                    <MenuList>
+                      <MenuItem
+                        as={Link}
+                        to={`/stats/exercise-types/${edge.node.exerciseType.id}`}
+                      >
+                        Statistik
+                      </MenuItem>
+                    </MenuList>
+                  </Menu>
                 </Box>
               </HStack>
             );
