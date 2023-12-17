@@ -1,6 +1,7 @@
 query ExerciseDetails($exerciseId: ID!) {
   exercise(id: $exerciseId) {
     id
+    start
     items {
       edges {
         cursor

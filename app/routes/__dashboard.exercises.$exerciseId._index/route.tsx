@@ -8,6 +8,8 @@ import {
   IconButton,
   Spacer,
   Stack,
+  Wrap,
+  WrapItem,
 } from "@chakra-ui/react";
 import { ActionFunctionArgs, redirect } from "@remix-run/node";
 import { authenticator } from "~/auth.server";
@@ -183,12 +185,29 @@ export default function Activity() {
   const selectedExerciseItemIds = checkedExerciseItemIds.filter((x) =>
     data?.exercise?.items.edges.some((edge) => edge.cursor === x)
   );
+  const start = data?.exercise?.start;
 
   return (
-    <Container py={5}>
+    <Container py={5} maxW="container.md">
       <HiddenReturnToInput />
       <Stack spacing={5}>
-        <Heading as="h1">Träning</Heading>
+        <Wrap align="center">
+          <WrapItem>
+            <Heading as="h1">Träning</Heading>
+          </WrapItem>
+          <Spacer />
+          {start ? (
+            <WrapItem>
+              <ButtonLink
+                variant="link"
+                to={`/days/${DateTime.fromISO(start).toFormat("yyyy-MM-dd")}`}
+              >
+                Visa dag
+              </ButtonLink>
+            </WrapItem>
+          ) : null}
+        </Wrap>
+
         <HStack height={10}>
           <Heading size="md" as="h2">
             Övningar
@@ -320,9 +339,14 @@ export default function Activity() {
             );
           })}
         </Stack>
-        <ButtonLink to={`/exercises/${exerciseId}/items/create`}>
-          Lägg till
-        </ButtonLink>
+        <Box>
+          <ButtonLink
+            to={`/exercises/${exerciseId}/items/create`}
+            colorScheme="green"
+          >
+            Lägg till övning
+          </ButtonLink>
+        </Box>
       </Stack>
     </Container>
   );

@@ -4,6 +4,8 @@ import {
   Container,
   HStack,
   Heading,
+  LinkBox,
+  LinkOverlay,
   Spacer,
   Stack,
   VStack,
@@ -286,23 +288,27 @@ export default function DashboardIndex() {
                     padding={3}
                   >
                     <HStack>
-                      <Wrap spacing={3}>
-                        <Box as="time">
-                          {DateTime.fromISO(e.node.start)
-                            .setZone(timeZone)
-                            .toFormat("HH:mm")}
-                        </Box>
-                        {e.node.primaryPurpose ? (
-                          <Box>Primärt: {e.node.primaryPurpose.label}</Box>
-                        ) : null}
-                        {e.node.secondaryPurpose ? (
-                          <Box>Sekundärt: {e.node.secondaryPurpose.label}</Box>
-                        ) : null}
-                        {e.node.description ? (
-                          <Box>{e.node.description}</Box>
-                        ) : null}
-                        {e.node.comment ? <Box>{e.node.comment}</Box> : null}
-                      </Wrap>
+                      <LinkBox>
+                        <Wrap spacing={3}>
+                          <LinkOverlay as={Link} to={`/exercises/${e.node.id}`}>
+                            {DateTime.fromISO(e.node.start)
+                              .setZone(timeZone)
+                              .toFormat("HH:mm")}
+                          </LinkOverlay>
+                          {e.node.primaryPurpose ? (
+                            <Box>Primärt: {e.node.primaryPurpose.label}</Box>
+                          ) : null}
+                          {e.node.secondaryPurpose ? (
+                            <Box>
+                              Sekundärt: {e.node.secondaryPurpose.label}
+                            </Box>
+                          ) : null}
+                          {e.node.description ? (
+                            <Box>{e.node.description}</Box>
+                          ) : null}
+                          {e.node.comment ? <Box>{e.node.comment}</Box> : null}
+                        </Wrap>
+                      </LinkBox>
                       <Spacer />
                       <Box>
                         <ButtonLink

@@ -27,6 +27,7 @@ import { withZod } from "@remix-validated-form/with-zod";
 import { useRef, useState } from "react";
 import { ValidatedForm } from "remix-validated-form";
 import { z } from "zod";
+import { ButtonLink } from "~/components/button-link";
 import { Select } from "~/components/form/select";
 import { SubmitButton } from "~/components/form/submit-button";
 import { Link } from "~/components/link";
@@ -158,7 +159,7 @@ export default function Activity() {
   const templateLoadAmount = templateLoadAmounts[0];
 
   return (
-    <Container py={5}>
+    <Container py={5} maxW="container.md">
       <HiddenReturnToInput />
       <ValidatedForm method="post" validator={validator}>
         <Stack spacing={5}>
@@ -292,9 +293,17 @@ export default function Activity() {
             </Box>
           ) : null}
 
-          <Box>
-            <SubmitButton>Spara</SubmitButton>
-          </Box>
+          <HStack>
+            <Box>
+              <ButtonLink variant="ghost" to={`/exercises/${exerciseId}`}>
+                Avbryt
+              </ButtonLink>
+            </Box>
+            <Spacer />
+            <Box>
+              <SubmitButton>Spara</SubmitButton>
+            </Box>
+          </HStack>
         </Stack>
       </ValidatedForm>
     </Container>

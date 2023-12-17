@@ -1,34 +1,33 @@
 import {
   Box,
   Input as ChakraInput,
-  Select as ChakraSelect,
   Container,
   FormControl,
   FormLabel,
   HStack,
   Heading,
-  Spacer,
+  IconButton,
   Stack,
   Table,
   Tbody,
   Td,
   Tr,
 } from "@chakra-ui/react";
-import { HiddenReturnToInput } from "~/services/return-to";
-
-import { withZod } from "@remix-validated-form/with-zod";
-import { ValidatedForm } from "remix-validated-form";
-import { z } from "zod";
-import { SubmitButton } from "~/components/form/submit-button";
-
+import { faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ExerciseAmountType } from "@prisma/client";
 import { ActionFunctionArgs, redirect } from "@remix-run/node";
-import { range } from "lodash";
+import { withZod } from "@remix-validated-form/with-zod";
 import { useState } from "react";
+import { ValidatedForm } from "remix-validated-form";
+import { v4 } from "uuid";
+import { z } from "zod";
 import { authenticator } from "~/auth.server";
 import { Input } from "~/components/form/input";
 import { Select } from "~/components/form/select";
+import { SubmitButton } from "~/components/form/submit-button";
 import { db } from "~/db.server";
+import { HiddenReturnToInput } from "~/services/return-to";
 import { addSearchParamToPath } from "~/utils/add-search-param-to-path";
 import { formDataToObject } from "~/utils/form-data-to-object";
 
@@ -91,10 +90,10 @@ export async function action({ request, params }: ActionFunctionArgs) {
 }
 
 export default function Activity() {
-  const [loads, setLoads] = useState(1);
+  const [loads, setLoads] = useState<string[]>([]);
 
   return (
-    <Container py={5}>
+    <Container py={5} maxW="container.md">
       <ValidatedForm method="post" validator={validator}>
         <HiddenReturnToInput />
         <Stack spacing={5}>
@@ -109,24 +108,11 @@ export default function Activity() {
             <FormControl>
               <HStack>
                 <FormLabel>Variabel belastning</FormLabel>
-                <Spacer />
-                <Box>
-                  <ChakraSelect
-                    size="xs"
-                    value={loads}
-                    onChange={(e) => setLoads(Number(e.target.value))}
-                  >
-                    <option value={0}>0</option>
-                    <option value={1}>1</option>
-                    <option value={2}>2</option>
-                    <option value={3}>3</option>
-                  </ChakraSelect>
-                </Box>
               </HStack>
               <Table>
                 <Tbody>
-                  {range(0, loads).map((i) => (
-                    <Tr key={i}>
+                  {loads.map((id, i) => (
+                    <Tr key={id}>
                       <Td p={0}>
                         <ChakraInput
                           type="text"
@@ -141,10 +127,31 @@ export default function Activity() {
                           placeholder={`Enhet, tex "kg"`}
                         />
                       </Td>
+                      <Td p={0} w={1}>
+                        <IconButton
+                          onClick={() =>
+                            setLoads((ids) => ids.filter((v) => v !== id))
+                          }
+                          icon={<FontAwesomeIcon icon={faTrash} />}
+                          aria-label="Ta bort"
+                          colorScheme="red"
+                          variant="outline"
+                        />
+                      </Td>
                     </Tr>
                   ))}
                 </Tbody>
               </Table>
+
+              <Box>
+                <IconButton
+                  onClick={() => setLoads((ids) => [...ids, v4()])}
+                  icon={<FontAwesomeIcon icon={faPlus} />}
+                  aria-label="Lägg till"
+                  colorScheme="green"
+                  variant="outline"
+                />
+              </Box>
             </FormControl>
           </Stack>
           <Box>
