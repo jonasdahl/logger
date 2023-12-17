@@ -131,6 +131,10 @@ type ExerciseTypeEdge {
   node: ExerciseType
 }
 
+input ExerciseTypeFilter {
+  search: String
+}
+
 type ExerciseTypeHistory {
   dayAmounts: [ExerciseTypeHistoryDayAmount!]!
   name: String!
@@ -191,7 +195,7 @@ type Query {
   days(after: String, before: String, first: Int, last: Int): DayConnection!
   exercise(id: ID!): Exercise
   exerciseType(id: ID!): ExerciseType
-  exerciseTypes: ExerciseTypeConnection!
+  exerciseTypes(filter: ExerciseTypeFilter): ExerciseTypeConnection!
   me: User
   today: Day!
 }

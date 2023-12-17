@@ -12,9 +12,6 @@ import {
   Spacer,
   Stack,
 } from "@chakra-ui/react";
-import { authenticator } from "~/auth.server";
-import { HiddenReturnToInput } from "~/services/return-to";
-
 import { ExerciseAmountType } from "@prisma/client";
 import {
   ActionFunctionArgs,
@@ -27,8 +24,8 @@ import { withZod } from "@remix-validated-form/with-zod";
 import { useRef, useState } from "react";
 import { ValidatedForm } from "remix-validated-form";
 import { z } from "zod";
+import { authenticator } from "~/auth.server";
 import { ButtonLink } from "~/components/button-link";
-import { Select } from "~/components/form/select";
 import { SubmitButton } from "~/components/form/submit-button";
 import { Link } from "~/components/link";
 import { db } from "~/db.server";
@@ -37,7 +34,9 @@ import {
   CreateExerciseItemDocument,
 } from "~/graphql/generated/documents";
 import { gql } from "~/graphql/graphql.server";
+import { HiddenReturnToInput } from "~/services/return-to";
 import { formDataToObject } from "~/utils/form-data-to-object";
+import { ExerciseCombobox } from "../components.exercise-type-selector/route";
 
 const schema = z.intersection(
   z.object({
@@ -165,18 +164,18 @@ export default function Activity() {
         <Stack spacing={5}>
           <Heading as="h1">Ny övning</Heading>
           <Stack spacing={1}>
-            <Select
-              label="Övning"
-              name="exerciseTypeId"
-              defaultValue={defaultExerciseTypeId}
-              onChange={(e) => {
-                setExerciseTypeId(e.target.value);
-              }}
-            >
-              {data?.exerciseTypes.edges.map((item) => (
-                <option value={item.node?.id}>{item.node?.name}</option>
-              ))}
-            </Select>
+            <FormControl>
+              <FormLabel>Övningstyp</FormLabel>
+              <ExerciseCombobox
+                value={exerciseType ?? undefined}
+                onChange={(value) => setExerciseTypeId(value?.id)}
+              />
+              <input
+                type="hidden"
+                name="exerciseTypeId"
+                value={exerciseTypeId}
+              />
+            </FormControl>
             <HStack>
               <Link
                 fontSize="sm"
@@ -208,8 +207,9 @@ export default function Activity() {
                       <Input
                         name={`loadAmount[${i}].amountValue`}
                         type="number"
+                        step={0.01}
                         defaultValue={
-                          templateLoadAmount.loads.find(
+                          templateLoadAmount?.loads.find(
                             (l) => l.type.id === loadType.id
                           )?.value
                         }
@@ -251,9 +251,9 @@ export default function Activity() {
 
                 <TimeInput
                   defaultDurationSeconds={
-                    templateLoadAmount.duration.__typename ===
+                    templateLoadAmount?.duration.__typename ===
                     "ExerciseDurationTime"
-                      ? templateLoadAmount.duration.durationSeconds
+                      ? templateLoadAmount?.duration.durationSeconds
                       : undefined
                   }
                 />
@@ -282,9 +282,9 @@ export default function Activity() {
                     type="number"
                     name="repetitions"
                     defaultValue={
-                      templateLoadAmount.duration.__typename ===
+                      templateLoadAmount?.duration.__typename ===
                       "ExerciseDurationRepetitions"
-                        ? templateLoadAmount.duration.repetitions
+                        ? templateLoadAmount?.duration.repetitions
                         : undefined
                     }
                   />
@@ -301,7 +301,7 @@ export default function Activity() {
             </Box>
             <Spacer />
             <Box>
-              <SubmitButton>Spara</SubmitButton>
+              <SubmitButton isDisabled={!exerciseTypeId}>Spara</SubmitButton>
             </Box>
           </HStack>
         </Stack>

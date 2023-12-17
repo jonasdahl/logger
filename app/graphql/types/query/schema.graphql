@@ -2,7 +2,7 @@ type Query {
   me: User
   activity(id: ID!): Activity
   exercise(id: ID!): Exercise
-  exerciseTypes: ExerciseTypeConnection!
+  exerciseTypes(filter: ExerciseTypeFilter): ExerciseTypeConnection!
   exerciseType(id: ID!): ExerciseType
 
   activities(
@@ -22,4 +22,8 @@ type Query {
 input ActivityFilter {
   startFrom: DateTime
   startTo: DateTime
+}
+
+input ExerciseTypeFilter {
+  search: String
 }

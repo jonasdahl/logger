@@ -1,5 +1,6 @@
 import { orderBy } from "lodash";
 import { DateTime, Interval } from "luxon";
+import { matchSorter } from "match-sorter";
 import { db } from "~/db.server";
 import type { QueryResolvers } from "~/graphql/generated/graphql";
 
@@ -36,7 +37,7 @@ export const queryResolvers: QueryResolvers = {
     }
     return { type: "Exercise", value: exercise };
   },
-  exerciseTypes: async (_, __, { userId }) => {
+  exerciseTypes: async (_, { filter }, { userId }) => {
     if (!userId) {
       return {
         edges: [],
@@ -52,11 +53,14 @@ export const queryResolvers: QueryResolvers = {
       where: { OR: [{ userId }, { userId: null }], deletedAt: null },
       orderBy: { name: "asc" },
     });
+    const filtered: typeof nodes = filter?.search
+      ? matchSorter(nodes, filter.search, { keys: [(x) => x.name] })
+      : nodes;
     return {
-      edges: nodes.map((node) => ({ cursor: node.id, node })),
+      edges: filtered.map((node) => ({ cursor: node.id, node })),
       pageInfo: {
-        startCursor: nodes[0]?.id,
-        endCursor: nodes[nodes.length - 1]?.id,
+        startCursor: nodes[0]?.id!,
+        endCursor: nodes[nodes.length - 1]?.id!,
         hasNextPage: false,
         hasPreviousPage: false,
       },
@@ -193,8 +197,8 @@ export const queryResolvers: QueryResolvers = {
       pageInfo: {
         hasNextPage: true,
         hasPreviousPage: true,
-        endCursor: days[days.length - 1].start!.toFormat("yyyy-MM-dd"),
-        startCursor: days[0].start!.toFormat("yyyy-MM-dd"),
+        endCursor: days[days.length - 1]?.start!.toFormat("yyyy-MM-dd")!,
+        startCursor: days[0]?.start!.toFormat("yyyy-MM-dd")!,
       },
       edges: days.map((day) => ({
         cursor: day.start!.toFormat("yyyy-MM-dd"),

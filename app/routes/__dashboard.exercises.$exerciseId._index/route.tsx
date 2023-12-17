@@ -139,7 +139,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
     ) {
       throw new Error("Unauthorized");
     }
-    const activityId = exerciseItems[0].activityId;
+    const activityId = exerciseItems[0]?.activityId;
     if (!activityId) {
       throw new Error("No activityId");
     }

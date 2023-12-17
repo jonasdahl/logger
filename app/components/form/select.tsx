@@ -16,6 +16,7 @@ export function Select({
   size,
   hideLabel,
   onChange,
+  value,
 }: {
   name: string;
   defaultValue?: string;
@@ -24,6 +25,7 @@ export function Select({
   size?: SelectProps["size"];
   hideLabel?: boolean;
   onChange?: SelectProps["onChange"];
+  value?: string;
 }) {
   const { error, getInputProps } = useField(name);
   return (
@@ -32,7 +34,7 @@ export function Select({
         {label}
       </FormLabel>
       <ChakraSelect
-        {...getInputProps({ id: name, onChange } as any)}
+        {...getInputProps({ id: name, onChange, value } as any)}
         defaultValue={defaultValue}
         size={size}
       >

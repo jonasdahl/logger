@@ -1,0 +1,10 @@
+query ComponentExerciseTypeSelector($search: String!) {
+  exerciseTypes(filter: { search: $search }) {
+    edges {
+      node {
+        id
+        name
+      }
+    }
+  }
+}

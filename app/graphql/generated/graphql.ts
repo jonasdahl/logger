@@ -195,6 +195,10 @@ export type ExerciseTypeEdge = {
   node: Maybe<ExerciseType>;
 };
 
+export type ExerciseTypeFilter = {
+  search: InputMaybe<Scalars['String']['input']>;
+};
+
 export type ExerciseTypeHistory = {
   __typename?: 'ExerciseTypeHistory';
   dayAmounts: Array<ExerciseTypeHistoryDayAmount>;
@@ -310,6 +314,11 @@ export type QueryExerciseTypeArgs = {
   id: Scalars['ID']['input'];
 };
 
+
+export type QueryExerciseTypesArgs = {
+  filter: InputMaybe<ExerciseTypeFilter>;
+};
+
 export type User = {
   __typename?: 'User';
   email: Scalars['String']['output'];
@@ -422,6 +431,7 @@ export type ResolversTypes = {
   ExerciseType: ResolverTypeWrapper<ExerciseTypeModel>;
   ExerciseTypeConnection: ResolverTypeWrapper<Omit<ExerciseTypeConnection, 'edges'> & { edges: Array<ResolversTypes['ExerciseTypeEdge']> }>;
   ExerciseTypeEdge: ResolverTypeWrapper<Omit<ExerciseTypeEdge, 'node'> & { node: Maybe<ResolversTypes['ExerciseType']> }>;
+  ExerciseTypeFilter: ExerciseTypeFilter;
   ExerciseTypeHistory: ResolverTypeWrapper<ExerciseTypeHistoryModel>;
   ExerciseTypeHistoryDayAmount: ResolverTypeWrapper<ExerciseTypeHistoryDayAmountModel>;
   Float: ResolverTypeWrapper<Scalars['Float']['output']>;
@@ -465,6 +475,7 @@ export type ResolversParentTypes = {
   ExerciseType: ExerciseTypeModel;
   ExerciseTypeConnection: Omit<ExerciseTypeConnection, 'edges'> & { edges: Array<ResolversParentTypes['ExerciseTypeEdge']> };
   ExerciseTypeEdge: Omit<ExerciseTypeEdge, 'node'> & { node: Maybe<ResolversParentTypes['ExerciseType']> };
+  ExerciseTypeFilter: ExerciseTypeFilter;
   ExerciseTypeHistory: ExerciseTypeHistoryModel;
   ExerciseTypeHistoryDayAmount: ExerciseTypeHistoryDayAmountModel;
   Float: Scalars['Float']['output'];
@@ -688,7 +699,7 @@ export type QueryResolvers<ContextType = Context, ParentType extends ResolversPa
   days: Resolver<ResolversTypes['DayConnection'], ParentType, ContextType, Partial<QueryDaysArgs>>;
   exercise: Resolver<Maybe<ResolversTypes['Exercise']>, ParentType, ContextType, RequireFields<QueryExerciseArgs, 'id'>>;
   exerciseType: Resolver<Maybe<ResolversTypes['ExerciseType']>, ParentType, ContextType, RequireFields<QueryExerciseTypeArgs, 'id'>>;
-  exerciseTypes: Resolver<ResolversTypes['ExerciseTypeConnection'], ParentType, ContextType>;
+  exerciseTypes: Resolver<ResolversTypes['ExerciseTypeConnection'], ParentType, ContextType, Partial<QueryExerciseTypesArgs>>;
   me: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   today: Resolver<ResolversTypes['Day'], ParentType, ContextType>;
 };
