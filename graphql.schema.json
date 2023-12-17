@@ -2062,6 +2062,18 @@
             "deprecationReason": null
           },
           {
+            "name": "currentActivity",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "UNION",
+              "name": "Activity",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "day",
             "description": null,
             "args": [

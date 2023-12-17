@@ -1,4 +1,5 @@
 import {
+  Badge,
   Box,
   HStack,
   IconButton,
@@ -38,11 +39,15 @@ export async function loader({ request }: LoaderFunctionArgs) {
     variables: {},
   });
 
-  return json({ isAdmin: !!(await isAdmin(userId)), email: data?.me?.email });
+  return json({
+    isAdmin: !!(await isAdmin(userId)),
+    email: data?.me?.email,
+    currentActivity: data?.currentActivity,
+  });
 }
 
 export default function Dashboard() {
-  const { isAdmin, email } = useLoaderData<typeof loader>();
+  const { isAdmin, email, currentActivity } = useLoaderData<typeof loader>();
   const { state } = useNavigation();
   return (
     <Box>
@@ -51,6 +56,25 @@ export default function Dashboard() {
           <Link to="/" color="white">
             Start
           </Link>
+
+          {currentActivity?.__typename === "Exercise" ? (
+            <Link
+              to={`/exercises/${currentActivity.id}`}
+              color="white"
+              position="relative"
+            >
+              Dagens pass
+              <Badge
+                colorScheme="red"
+                position="absolute"
+                size="sm"
+                variant="solid"
+                fontSize="xs"
+              >
+                1
+              </Badge>
+            </Link>
+          ) : null}
 
           <Spacer />
           <Menu>

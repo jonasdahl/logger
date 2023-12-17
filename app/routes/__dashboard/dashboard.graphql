@@ -2,4 +2,11 @@ query Dashboard {
   me {
     email
   }
+
+  currentActivity {
+    __typename
+    ... on Exercise {
+      id
+    }
+  }
 }

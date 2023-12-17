@@ -191,6 +191,7 @@ type PlannedExercise implements ActivityBase {
 type Query {
   activities(after: String, before: String, filter: ActivityFilter, first: Int, last: Int): ActivityConnection!
   activity(id: ID!): Activity
+  currentActivity: Activity
   day(date: String!): Day
   days(after: String, before: String, first: Int, last: Int): DayConnection!
   exercise(id: ID!): Exercise

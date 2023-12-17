@@ -5,6 +5,8 @@ type Query {
   exerciseTypes(filter: ExerciseTypeFilter): ExerciseTypeConnection!
   exerciseType(id: ID!): ExerciseType
 
+  currentActivity: Activity
+
   activities(
     first: Int
     after: String

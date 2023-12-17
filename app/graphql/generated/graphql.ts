@@ -268,6 +268,7 @@ export type Query = {
   __typename?: 'Query';
   activities: ActivityConnection;
   activity: Maybe<Activity>;
+  currentActivity: Maybe<Activity>;
   day: Maybe<Day>;
   days: DayConnection;
   exercise: Maybe<Exercise>;
@@ -695,6 +696,7 @@ export type PlannedExerciseResolvers<ContextType = Context, ParentType extends R
 export type QueryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   activities: Resolver<ResolversTypes['ActivityConnection'], ParentType, ContextType, Partial<QueryActivitiesArgs>>;
   activity: Resolver<Maybe<ResolversTypes['Activity']>, ParentType, ContextType, RequireFields<QueryActivityArgs, 'id'>>;
+  currentActivity: Resolver<Maybe<ResolversTypes['Activity']>, ParentType, ContextType>;
   day: Resolver<Maybe<ResolversTypes['Day']>, ParentType, ContextType, RequireFields<QueryDayArgs, 'date'>>;
   days: Resolver<ResolversTypes['DayConnection'], ParentType, ContextType, Partial<QueryDaysArgs>>;
   exercise: Resolver<Maybe<ResolversTypes['Exercise']>, ParentType, ContextType, RequireFields<QueryExerciseArgs, 'id'>>;

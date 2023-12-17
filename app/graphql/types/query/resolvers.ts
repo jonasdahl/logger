@@ -12,6 +12,29 @@ export const queryResolvers: QueryResolvers = {
     const user = await db.user.findUniqueOrThrow({ where: { id: userId } });
     return user;
   },
+  currentActivity: async (_, __, { userId, timeZone }) => {
+    if (!userId) {
+      return null;
+    }
+    const dayStart = DateTime.now().setZone(timeZone).startOf("day");
+    const dayEnd = dayStart.endOf("day");
+    // TODO More activities
+    const activity = await db.activity.findFirst({
+      where: {
+        userId,
+        deletedAt: null,
+        time: {
+          lte: dayEnd.toJSDate(),
+          gte: dayStart.toJSDate(),
+        },
+      },
+      orderBy: { time: "desc" },
+    });
+    if (!activity) {
+      return null;
+    }
+    return { type: "Exercise", value: activity };
+  },
   activity: async (_, { id }, { userId }) => {
     if (!userId) {
       return null;
