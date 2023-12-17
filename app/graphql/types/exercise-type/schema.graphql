@@ -4,6 +4,7 @@ type ExerciseType {
   defaultAmountType: AmountType!
   loadTypes: [ExerciseLoadType!]!
   history: ExerciseTypeHistory!
+  lastExerciseItem: ExerciseItem
 }
 
 enum AmountType {

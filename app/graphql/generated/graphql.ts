@@ -178,6 +178,7 @@ export type ExerciseType = {
   defaultAmountType: AmountType;
   history: ExerciseTypeHistory;
   id: Scalars['ID']['output'];
+  lastExerciseItem: Maybe<ExerciseItem>;
   loadTypes: Array<ExerciseLoadType>;
   name: Scalars['String']['output'];
 };
@@ -610,6 +611,7 @@ export type ExerciseTypeResolvers<ContextType = Context, ParentType extends Reso
   defaultAmountType: Resolver<ResolversTypes['AmountType'], ParentType, ContextType>;
   history: Resolver<ResolversTypes['ExerciseTypeHistory'], ParentType, ContextType>;
   id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  lastExerciseItem: Resolver<Maybe<ResolversTypes['ExerciseItem']>, ParentType, ContextType>;
   loadTypes: Resolver<Array<ResolversTypes['ExerciseLoadType']>, ParentType, ContextType>;
   name: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;

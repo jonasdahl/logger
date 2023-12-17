@@ -116,6 +116,7 @@ type ExerciseType {
   defaultAmountType: AmountType!
   history: ExerciseTypeHistory!
   id: ID!
+  lastExerciseItem: ExerciseItem
   loadTypes: [ExerciseLoadType!]!
   name: String!
 }

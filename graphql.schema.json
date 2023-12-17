@@ -1229,6 +1229,18 @@
             "deprecationReason": null
           },
           {
+            "name": "lastExerciseItem",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "OBJECT",
+              "name": "ExerciseItem",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "loadTypes",
             "description": null,
             "args": [],

@@ -1,4 +1,18 @@
-query CreateExerciseItem {
+query CreateExerciseItem($exerciseId: ID!) {
+  exercise(id: $exerciseId) {
+    id
+    items {
+      edges {
+        node {
+          id
+          exerciseType {
+            id
+          }
+        }
+      }
+    }
+  }
+
   exerciseTypes {
     edges {
       node {
@@ -9,6 +23,27 @@ query CreateExerciseItem {
           id
           name
           unit
+        }
+        lastExerciseItem {
+          amount {
+            loads {
+              __typename
+              value
+              unit
+              type {
+                id
+              }
+            }
+            duration {
+              __typename
+              ... on ExerciseDurationRepetitions {
+                repetitions
+              }
+              ... on ExerciseDurationTime {
+                durationSeconds
+              }
+            }
+          }
         }
       }
     }

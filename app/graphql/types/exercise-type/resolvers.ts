@@ -15,4 +15,13 @@ export const exerciseTypeResolvers: ExerciseTypeResolvers = {
   loadTypes: (parent) =>
     db.exerciseLoadType.findMany({ where: { exerciseTypeId: parent.id } }),
   history: (parent) => parent,
+  lastExerciseItem: (parent) =>
+    db.exerciseItem.findFirst({
+      where: { exerciseTypeId: parent.id, deletedAt: null },
+      orderBy: [
+        { activity: { time: "desc" } },
+        { order: "desc" },
+        { createdAt: "desc" },
+      ],
+    }),
 };

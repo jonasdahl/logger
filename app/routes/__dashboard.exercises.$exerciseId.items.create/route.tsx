@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Container,
   FormControl,
   FormLabel,
@@ -23,7 +24,7 @@ import {
 } from "@remix-run/node";
 import { useLoaderData, useParams, useSearchParams } from "@remix-run/react";
 import { withZod } from "@remix-validated-form/with-zod";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { ValidatedForm } from "remix-validated-form";
 import { z } from "zod";
 import { Select } from "~/components/form/select";
@@ -84,10 +85,12 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const { data } = await gql({
     document: CreateExerciseItemDocument,
     request,
-    variables: {},
+    variables: { exerciseId: params.exerciseId! },
   });
 
-  return json(data);
+  const lastExerciseItem = data?.exercise?.items.edges.at(-1)?.node;
+
+  return json({ data, lastExerciseItem });
 }
 
 export async function action({ request, params }: ActionFunctionArgs) {
@@ -140,15 +143,19 @@ export async function action({ request, params }: ActionFunctionArgs) {
 
 export default function Activity() {
   const { exerciseId } = useParams();
-  const data = useLoaderData<typeof loader>();
+  const { data, lastExerciseItem } = useLoaderData<typeof loader>();
   const [searchParams] = useSearchParams();
   const defaultExerciseTypeId =
     searchParams.get("createdExerciseTypeId") ??
+    lastExerciseItem?.exerciseType.id ??
     data?.exerciseTypes?.edges[0]?.node?.id;
   const [exerciseTypeId, setExerciseTypeId] = useState(defaultExerciseTypeId);
   const exerciseType = data?.exerciseTypes.edges.find(
     (e) => e.node?.id === exerciseTypeId
   )?.node;
+
+  const templateLoadAmounts = exerciseType?.lastExerciseItem?.amount ?? [];
+  const templateLoadAmount = templateLoadAmounts[0];
 
   return (
     <Container py={5}>
@@ -200,6 +207,11 @@ export default function Activity() {
                       <Input
                         name={`loadAmount[${i}].amountValue`}
                         type="number"
+                        defaultValue={
+                          templateLoadAmount.loads.find(
+                            (l) => l.type.id === loadType.id
+                          )?.value
+                        }
                       />
                       <InputRightAddon>{loadType.unit}</InputRightAddon>
                     </InputGroup>
@@ -236,27 +248,14 @@ export default function Activity() {
             </Box>
           </HStack> */}
 
-                <FormControl>
-                  <FormLabel>Längd</FormLabel>
-                  <HStack>
-                    <Input
-                      type="number"
-                      name="durationHours"
-                      placeholder="Timmar"
-                    />
-                    <Input
-                      type="number"
-                      name="durationMinutes"
-                      placeholder="Minuter"
-                    />
-                    <Input
-                      type="number"
-                      name="durationSeconds"
-                      placeholder="Sekunder"
-                      step={0.01}
-                    />
-                  </HStack>
-                </FormControl>
+                <TimeInput
+                  defaultDurationSeconds={
+                    templateLoadAmount.duration.__typename ===
+                    "ExerciseDurationTime"
+                      ? templateLoadAmount.duration.durationSeconds
+                      : undefined
+                  }
+                />
               </Stack>
             </Box>
           ) : exerciseType?.defaultAmountType === AmountType.Repetitions ? (
@@ -278,7 +277,16 @@ export default function Activity() {
 
                 <FormControl>
                   <FormLabel>Antal</FormLabel>
-                  <Input type="number" name="repetitions" />
+                  <Input
+                    type="number"
+                    name="repetitions"
+                    defaultValue={
+                      templateLoadAmount.duration.__typename ===
+                      "ExerciseDurationRepetitions"
+                        ? templateLoadAmount.duration.repetitions
+                        : undefined
+                    }
+                  />
                 </FormControl>
               </Stack>
             </Box>
@@ -291,4 +299,72 @@ export default function Activity() {
       </ValidatedForm>
     </Container>
   );
+}
+
+function TimeInput({
+  defaultDurationSeconds,
+}: {
+  defaultDurationSeconds: number | undefined;
+}) {
+  const defaultDuration = getDurationParts(defaultDurationSeconds);
+
+  const durationHoursRef = useRef<HTMLInputElement>(null);
+  const durationMinutesRef = useRef<HTMLInputElement>(null);
+  const durationSecondsRef = useRef<HTMLInputElement>(null);
+
+  return (
+    <FormControl>
+      <HStack>
+        <FormLabel>Längd</FormLabel>
+        <Spacer />
+        <Button
+          size="xs"
+          onClick={() => {
+            durationHoursRef.current!.value = "";
+            durationMinutesRef.current!.value = "";
+            durationSecondsRef.current!.value = "";
+          }}
+        >
+          Återställ
+        </Button>
+      </HStack>
+      <HStack>
+        <Input
+          ref={durationHoursRef}
+          type="number"
+          name="durationHours"
+          placeholder="Timmar"
+          defaultValue={defaultDuration?.hours}
+        />
+        <Input
+          ref={durationMinutesRef}
+          type="number"
+          name="durationMinutes"
+          placeholder="Minuter"
+          defaultValue={defaultDuration?.minutes}
+        />
+        <Input
+          ref={durationSecondsRef}
+          type="number"
+          name="durationSeconds"
+          placeholder="Sekunder"
+          step={0.01}
+          defaultValue={defaultDuration?.seconds?.toLocaleString("en-US", {
+            maximumFractionDigits: 4,
+          })}
+        />
+      </HStack>
+    </FormControl>
+  );
+}
+
+function getDurationParts(durationSeconds: number | undefined) {
+  if (!durationSeconds) {
+    return undefined;
+  }
+
+  const hours = Math.floor(durationSeconds / 60 / 60);
+  const minutes = Math.floor(durationSeconds / 60 - hours * 60);
+  const seconds = durationSeconds - hours * 60 * 60 - minutes * 60;
+  return { hours, minutes, seconds };
 }

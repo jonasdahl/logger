@@ -29,6 +29,8 @@ export default function Index() {
 
         <Item to={`/stats/exercise-types`}>Stats</Item>
 
+        <Item to={`/exercise-types`}>Övningstyper</Item>
+
         <Item to={`/exercises/live`} colorScheme="green">
           Träna nu
         </Item>
