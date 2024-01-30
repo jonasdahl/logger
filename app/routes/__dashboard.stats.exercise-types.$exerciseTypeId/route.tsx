@@ -1,4 +1,4 @@
-import { Box, Container, Heading, Stack } from "@chakra-ui/react";
+import { Box, Card, Container, Heading, Stack, Text } from "@chakra-ui/react";
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
@@ -10,6 +10,7 @@ import {
   AnimatedGlyphSeries,
   AnimatedGrid,
   AnimatedLineSeries,
+  Tooltip,
   XYChart,
   buildChartTheme,
 } from "~/components/charts/xy-chart.client";
@@ -129,9 +130,37 @@ function TimeChart() {
             yAccessor={(p) => p.maxTime}
             strokeWidth={1}
           />
+          <BasicTooltip />
         </XYChart>
       </Box>
     </Stack>
+  );
+}
+
+function BasicTooltip() {
+  return (
+    <Tooltip
+      snapTooltipToDatumX
+      snapTooltipToDatumY
+      showVerticalCrosshair
+      showSeriesGlyphs
+      unstyled
+      applyPositionStyle
+      renderTooltip={({ tooltipData, colorScale }) => (
+        <Card p={3} fontSize="sm">
+          {Object.entries(tooltipData?.nearestDatum?.datum ?? {}).map(
+            ([key, value]) => (
+              <Box key={key}>
+                <Text fontWeight="bold" as="span">
+                  {key}
+                </Text>
+                : {String(value)}
+              </Box>
+            )
+          )}
+        </Card>
+      )}
+    />
   );
 }
 
@@ -197,6 +226,7 @@ function RepsChart() {
             yAccessor={(p) => p.total}
             strokeWidth={1}
           />
+          <BasicTooltip />
         </XYChart>
       </Box>
     </Stack>
@@ -273,6 +303,7 @@ function LoadChart() {
             yAccessor={(p) => p.minLoad}
             strokeWidth={1}
           />
+          <BasicTooltip />
         </XYChart>
       </Box>
     </Stack>
@@ -357,6 +388,7 @@ function LevelsChart() {
             yAccessor={(p) => p.maxLevel}
             strokeWidth={1}
           />
+          <BasicTooltip />
         </XYChart>
       </Box>
     </Stack>
@@ -429,6 +461,7 @@ function TotalLoadChart() {
             yAccessor={(p) => p.totalLoad}
             strokeWidth={1}
           />
+          <BasicTooltip />
         </XYChart>
       </Box>
     </Stack>
