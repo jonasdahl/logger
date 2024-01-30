@@ -1,0 +1,5 @@
+type ExerciseTypeLevel {
+  id: ID!
+  name: String!
+  ordinal: Float!
+}

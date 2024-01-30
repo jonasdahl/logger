@@ -1,1 +1,4 @@
-union ExerciseDuration = ExerciseDurationRepetitions | ExerciseDurationTime
+union ExerciseDuration =
+    ExerciseDurationRepetitions
+  | ExerciseDurationTime
+  | ExerciseDurationLevel

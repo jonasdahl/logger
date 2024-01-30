@@ -28,6 +28,11 @@ query ExerciseDetails($exerciseId: ID!) {
               ... on ExerciseDurationTime {
                 durationSeconds
               }
+              ... on ExerciseDurationLevel {
+                levelType {
+                  name
+                }
+              }
             }
           }
         }

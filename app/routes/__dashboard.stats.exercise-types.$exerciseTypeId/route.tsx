@@ -43,6 +43,7 @@ export default function ExerciseTypeStats() {
         <ClientOnly>{() => <RepsChart />}</ClientOnly>
         <ClientOnly>{() => <LoadChart />}</ClientOnly>
         <ClientOnly>{() => <TotalLoadChart />}</ClientOnly>
+        <ClientOnly>{() => <LevelsChart />}</ClientOnly>
       </Stack>
     </Container>
   );
@@ -278,6 +279,90 @@ function LoadChart() {
   );
 }
 
+function LevelsChart() {
+  const { data } = useLoaderData<typeof loader>();
+
+  const chartData =
+    data?.exerciseType?.history.dayAmounts
+      .map((dayAmount) => {
+        const levelTypes = dayAmount.dayAmounts.flatMap((a) =>
+          a.duration.__typename === "ExerciseDurationLevel"
+            ? [a.duration.levelType]
+            : []
+        );
+        return {
+          x: DateTime.fromISO(dayAmount.dayStart),
+          maxLevel:
+            levelTypes.length === 0
+              ? null
+              : Math.max(...levelTypes.map((x) => x.ordinal)),
+          minLevel:
+            levelTypes.length === 0
+              ? null
+              : Math.min(...levelTypes.map((x) => x.ordinal)),
+        };
+      })
+      .filter((x) => x.minLevel !== null) ?? [];
+
+  const customTheme = buildChartTheme({
+    gridColor: "var(--chakra-colors-gray-200)",
+    colors: ["var(--chakra-colors-blue-500)"],
+    backgroundColor: "",
+    tickLength: 0,
+    gridColorDark: "",
+  });
+
+  if (!chartData.length) {
+    return null;
+  }
+
+  return (
+    <Stack>
+      <Heading size="md">Nivåer</Heading>
+      <Box>
+        <XYChart
+          theme={customTheme}
+          margin={{ top: 0, right: 0, bottom: 20, left: 30 }}
+          height={300}
+          xScale={{ type: "time" }}
+          yScale={{ type: "linear" }}
+        >
+          <AnimatedAxis orientation="bottom" />
+          <AnimatedAxis orientation="left" />
+          <AnimatedGrid />
+
+          <AnimatedGlyphSeries
+            dataKey="MinGlyphs"
+            data={chartData}
+            xAccessor={(p) => p.x.toJSDate()}
+            yAccessor={(p) => p.minLevel}
+          />
+          <AnimatedGlyphSeries
+            dataKey="MaxGlyphs"
+            data={chartData}
+            xAccessor={(p) => p.x.toJSDate()}
+            yAccessor={(p) => p.maxLevel}
+          />
+          <AnimatedLineSeries
+            dataKey="Min"
+            data={chartData}
+            xAccessor={(p) => p.x.toJSDate()}
+            yAccessor={(p) => p.minLevel}
+            strokeWidth={1}
+          />
+          <AnimatedLineSeries
+            dataKey="Max"
+            data={chartData}
+            xAccessor={(p) => p.x.toJSDate()}
+            yAccessor={(p) => p.maxLevel}
+            strokeWidth={1}
+          />
+        </XYChart>
+      </Box>
+    </Stack>
+  );
+}
+
 function TotalLoadChart() {
   const { data } = useLoaderData<typeof loader>();
 
@@ -291,6 +376,8 @@ function TotalLoadChart() {
                 load.value *
                 (a.duration.__typename === "ExerciseDurationRepetitions"
                   ? a.duration.repetitions
+                  : a.duration.__typename === "ExerciseDurationLevel"
+                  ? 0
                   : a.duration.durationSeconds)
             )
           )

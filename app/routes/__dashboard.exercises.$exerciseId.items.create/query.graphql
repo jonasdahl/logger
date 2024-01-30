@@ -24,6 +24,10 @@ query CreateExerciseItem($exerciseId: ID!) {
           name
           unit
         }
+        levels {
+          id
+          name
+        }
         lastExerciseItem {
           amount {
             loads {

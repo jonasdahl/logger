@@ -4,10 +4,12 @@ type ExerciseType {
   defaultAmountType: AmountType!
   loadTypes: [ExerciseLoadType!]!
   history: ExerciseTypeHistory!
+  levels: [ExerciseTypeLevel!]!
   lastExerciseItem: ExerciseItem
 }
 
 enum AmountType {
   Repetitions
   Time
+  Levels
 }

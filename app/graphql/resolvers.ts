@@ -9,6 +9,7 @@ import { dayConnectionResolvers } from "./types/day-connection/resolvers";
 import { dayEdgeResolvers } from "./types/day-edge/resolvers";
 import { dayResolvers } from "./types/day/resolvers";
 import { exerciseAmountResolvers } from "./types/exercise-amount/resolvers";
+import { exerciseDurationLevelResolvers } from "./types/exercise-duration-level/resolvers";
 import { exerciseDurationRepetitionsResolvers } from "./types/exercise-duration-repetitions/resolvers";
 import { exerciseDurationTimeResolvers } from "./types/exercise-duration-time/resolvers";
 import { exerciseDurationResolvers } from "./types/exercise-duration/resolvers";
@@ -22,6 +23,7 @@ import { exerciseTypeConnectionResolvers } from "./types/exercise-type-connectio
 import { exerciseTypeEdgeResolvers } from "./types/exercise-type-edge/resolvers";
 import { exerciseTypeHistoryDayAmountResolvers } from "./types/exercise-type-history-day-amount/resolvers";
 import { exerciseTypeHistoryResolvers } from "./types/exercise-type-history/resolvers";
+import { exerciseTypeLevelResolvers } from "./types/exercise-type-level/resolvers";
 import { exerciseTypeResolvers } from "./types/exercise-type/resolvers";
 import { exerciseResolvers } from "./types/exercise/resolvers";
 import { fogisGameResolvers } from "./types/fogis-game/resolvers";
@@ -65,4 +67,6 @@ export const resolvers: Resolvers = {
   CustomGame: customGameResolvers,
   ExerciseTypeHistory: exerciseTypeHistoryResolvers,
   ExerciseTypeHistoryDayAmount: exerciseTypeHistoryDayAmountResolvers,
+  ExerciseTypeLevel: exerciseTypeLevelResolvers,
+  ExerciseDurationLevel: exerciseDurationLevelResolvers,
 };

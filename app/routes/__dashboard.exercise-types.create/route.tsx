@@ -38,6 +38,7 @@ const validatorSchema = z.object({
     z.literal("null"),
     z.literal("time"),
     z.literal("repetitions"),
+    z.literal("levels"),
   ]),
 });
 
@@ -47,6 +48,7 @@ const schema = z.intersection(
     loads: z
       .array(z.object({ name: z.string(), unit: z.string().optional() }))
       .optional(),
+    levels: z.array(z.object({ name: z.string() })).optional(),
   })
 );
 
@@ -68,6 +70,8 @@ export async function action({ request, params }: ActionFunctionArgs) {
       defaultExerciseAmountType:
         data.defaultAmountType === "time"
           ? ExerciseAmountType.Time
+          : data.defaultAmountType === "levels"
+          ? ExerciseAmountType.Levels
           : data.defaultAmountType === "repetitions"
           ? ExerciseAmountType.Repetitions
           : undefined,
@@ -75,6 +79,12 @@ export async function action({ request, params }: ActionFunctionArgs) {
         create: data.loads?.map((load) => ({
           name: load.name,
           unit: load.unit || undefined,
+        })),
+      },
+      levels: {
+        create: data.levels?.map((load, i) => ({
+          name: load.name,
+          order: i,
         })),
       },
     },
@@ -91,6 +101,8 @@ export async function action({ request, params }: ActionFunctionArgs) {
 
 export default function Activity() {
   const [loads, setLoads] = useState<string[]>([]);
+  const [levels, setLevels] = useState<string[]>([""]);
+  const [defaultAmountType, setDefaultAmountType] = useState("null");
 
   return (
     <Container py={5} maxW="container.md">
@@ -100,59 +112,103 @@ export default function Activity() {
           <Heading as="h1">Ny övningstyp</Heading>
           <Stack>
             <Input name="name" label="Namn" />
-            <Select name="defaultAmountType" label="Mängdtyp">
+            <Select
+              name="defaultAmountType"
+              label="Mängdtyp"
+              value={defaultAmountType}
+              onChange={(e) => {
+                setDefaultAmountType(e.target.value);
+              }}
+            >
               <option value="null">- Välj -</option>
               <option value="time">Tid</option>
               <option value="repetitions">Repetitioner</option>
+              <option value="levels">Nivåer</option>
             </Select>
-            <FormControl>
-              <HStack>
-                <FormLabel>Variabel belastning</FormLabel>
-              </HStack>
-              <Table>
-                <Tbody>
-                  {loads.map((id, i) => (
-                    <Tr key={id}>
-                      <Td p={0}>
+            {defaultAmountType === "levels" ? (
+              <FormControl>
+                <FormLabel>Nivåer</FormLabel>
+                <Stack w="100%">
+                  {levels.map((id, i) => {
+                    return (
+                      <HStack w="100%" key={id}>
                         <ChakraInput
                           type="text"
-                          name={`loads[${i}].name`}
-                          placeholder={`Namn, tex "Vikt"`}
+                          name={`levels[${i}].name`}
+                          placeholder={`Beskrivning`}
                         />
-                      </Td>
-                      <Td p={0}>
-                        <ChakraInput
-                          type="text"
-                          name={`loads[${i}].unit`}
-                          placeholder={`Enhet, tex "kg"`}
-                        />
-                      </Td>
-                      <Td p={0} w={1}>
                         <IconButton
                           onClick={() =>
-                            setLoads((ids) => ids.filter((v) => v !== id))
+                            setLevels((ids) => ids.filter((v) => v !== id))
                           }
                           icon={<FontAwesomeIcon icon={faTrash} />}
                           aria-label="Ta bort"
                           colorScheme="red"
                           variant="outline"
                         />
-                      </Td>
-                    </Tr>
-                  ))}
-                </Tbody>
-              </Table>
-
-              <Box>
+                      </HStack>
+                    );
+                  })}
+                </Stack>
                 <IconButton
-                  onClick={() => setLoads((ids) => [...ids, v4()])}
+                  type="button"
+                  onClick={() => setLevels((old) => [...old, v4()])}
                   icon={<FontAwesomeIcon icon={faPlus} />}
-                  aria-label="Lägg till"
+                  aria-label="Lägg till nivå"
                   colorScheme="green"
                   variant="outline"
                 />
-              </Box>
-            </FormControl>
+              </FormControl>
+            ) : (
+              <FormControl>
+                <HStack>
+                  <FormLabel>Variabel belastning</FormLabel>
+                </HStack>
+                <Table>
+                  <Tbody>
+                    {loads.map((id, i) => (
+                      <Tr key={id}>
+                        <Td p={0}>
+                          <ChakraInput
+                            type="text"
+                            name={`loads[${i}].name`}
+                            placeholder={`Namn, tex "Vikt"`}
+                          />
+                        </Td>
+                        <Td p={0}>
+                          <ChakraInput
+                            type="text"
+                            name={`loads[${i}].unit`}
+                            placeholder={`Enhet, tex "kg"`}
+                          />
+                        </Td>
+                        <Td p={0} w={1}>
+                          <IconButton
+                            onClick={() =>
+                              setLoads((ids) => ids.filter((v) => v !== id))
+                            }
+                            icon={<FontAwesomeIcon icon={faTrash} />}
+                            aria-label="Ta bort"
+                            colorScheme="red"
+                            variant="outline"
+                          />
+                        </Td>
+                      </Tr>
+                    ))}
+                  </Tbody>
+                </Table>
+
+                <Box>
+                  <IconButton
+                    onClick={() => setLoads((ids) => [...ids, v4()])}
+                    icon={<FontAwesomeIcon icon={faPlus} />}
+                    aria-label="Lägg till"
+                    colorScheme="green"
+                    variant="outline"
+                  />
+                </Box>
+              </FormControl>
+            )}
           </Stack>
           <Box>
             <SubmitButton>Spara</SubmitButton>

@@ -26,6 +26,7 @@ import { ValidatedForm } from "remix-validated-form";
 import { z } from "zod";
 import { authenticator } from "~/auth.server";
 import { ButtonLink } from "~/components/button-link";
+import { Select } from "~/components/form/select";
 import { SubmitButton } from "~/components/form/submit-button";
 import { Link } from "~/components/link";
 import { db } from "~/db.server";
@@ -38,20 +39,22 @@ import { HiddenReturnToInput } from "~/services/return-to";
 import { formDataToObject } from "~/utils/form-data-to-object";
 import { ExerciseCombobox } from "../components.exercise-type-selector/route";
 
+const validatedSchema = z.object({
+  exerciseTypeId: z.string(),
+  returnTo: z.string().optional(),
+  loadAmount: z
+    .array(
+      z.object({
+        amountValue: z.coerce.number(),
+        loadUnit: z.string(),
+        loadTypeId: z.string(),
+      })
+    )
+    .optional(),
+});
+
 const schema = z.intersection(
-  z.object({
-    exerciseTypeId: z.string(),
-    returnTo: z.string().optional(),
-    loadAmount: z
-      .array(
-        z.object({
-          amountValue: z.coerce.number(),
-          loadUnit: z.string(),
-          loadTypeId: z.string(),
-        })
-      )
-      .optional(),
-  }),
+  validatedSchema,
 
   z.union([
     z
@@ -73,9 +76,13 @@ const schema = z.intersection(
       amountType: z.literal("repetitions"),
       repetitions: z.coerce.number(),
     }),
+    z.object({
+      amountType: z.literal("levels"),
+      level: z.string(),
+    }),
   ])
 );
-const validator = withZod(schema);
+const validator = withZod(validatedSchema);
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const { id: userId } = await authenticator.isAuthenticated(request, {
@@ -120,11 +127,14 @@ export async function action({ request, params }: ActionFunctionArgs) {
           amountType:
             data.amountType === "repetitions"
               ? ExerciseAmountType.Repetitions
+              : data.amountType === "levels"
+              ? ExerciseAmountType.Levels
               : ExerciseAmountType.Time,
           amountDurationMilliSeconds:
             data.amountType === "time" ? data.durationMilliSeconds : undefined,
           amountRepetitions:
             data.amountType === "repetitions" ? data.repetitions : undefined,
+          amountLevelId: data.amountType === "levels" ? data.level : undefined,
           loads: {
             create: data.loadAmount?.map(
               ({ amountValue, loadTypeId, loadUnit }) => ({
@@ -290,6 +300,17 @@ export default function Activity() {
                   />
                 </FormControl>
               </Stack>
+            </Box>
+          ) : exerciseType?.defaultAmountType === AmountType.Levels ? (
+            <Box>
+              <input type="hidden" name="amountType" value="levels" />
+              <Select name="level" label="Nivå">
+                {exerciseType.levels.map((level) => (
+                  <option key={level.id} value={level.id}>
+                    {level.name}
+                  </option>
+                ))}
+              </Select>
             </Box>
           ) : null}
 

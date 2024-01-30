@@ -96,13 +96,15 @@ enum ExerciseAmountType {
   Time
   Distance
   Repetitions
+  Levels
 }
 
 model ExerciseType {
-  id                        String             @id @default(uuid())
+  id                        String              @id @default(uuid())
   name                      String
-  defaultExerciseAmountType ExerciseAmountType @default(Time)
+  defaultExerciseAmountType ExerciseAmountType  @default(Time)
   loads                     ExerciseLoadType[]
+  levels                    ExerciseTypeLevel[]
 
   userId String?
   user   User?   @relation(fields: [userId], references: [id])
@@ -111,6 +113,20 @@ model ExerciseType {
   updatedAt     DateTime       @updatedAt
   deletedAt     DateTime?
   exerciseItems ExerciseItem[]
+}
+
+model ExerciseTypeLevel {
+  id    String @id @default(uuid())
+  name  String
+  order Float?
+
+  exerciseTypeId String
+  exerciseType   ExerciseType @relation(fields: [exerciseTypeId], references: [id])
+
+  createdAt               DateTime                 @default(now())
+  updatedAt               DateTime                 @updatedAt
+  deletedAt               DateTime?
+  exerciseItemLoadAmounts ExerciseItemLoadAmount[]
 }
 
 model ExerciseLoadType {
@@ -180,6 +196,8 @@ model ExerciseItemLoadAmount {
   amountType                 ExerciseAmountType
   amountDurationMilliSeconds BigInt?
   amountRepetitions          Int?
+  amountLevelId              String?
+  amountLevel                ExerciseTypeLevel? @relation(fields: [amountLevelId], references: [id])
   loads                      ExerciseItemLoad[]
 
   createdAt DateTime  @default(now())

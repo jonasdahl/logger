@@ -1,8 +1,9 @@
 import { ExerciseAmountType } from "@prisma/client";
+import { db } from "~/db.server";
 import type { ExerciseAmountResolvers } from "~/graphql/generated/graphql";
 
 export const exerciseAmountResolvers: ExerciseAmountResolvers = {
-  duration: (loadAmount) =>
+  duration: async (loadAmount) =>
     loadAmount.amountType === ExerciseAmountType.Repetitions &&
     loadAmount.amountRepetitions
       ? {
@@ -14,6 +15,14 @@ export const exerciseAmountResolvers: ExerciseAmountResolvers = {
       ? {
           __typename: "ExerciseDurationTime",
           durationSeconds: Number(loadAmount.amountDurationMilliSeconds) / 1000,
+        }
+      : loadAmount.amountType === ExerciseAmountType.Levels &&
+        loadAmount.amountLevelId
+      ? {
+          __typename: "ExerciseDurationLevel",
+          levelType: await db.exerciseTypeLevel.findFirstOrThrow({
+            where: { id: loadAmount.amountLevelId },
+          }),
         }
       : {
           __typename: "ExerciseDurationTime",

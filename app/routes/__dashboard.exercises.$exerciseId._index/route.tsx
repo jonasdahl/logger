@@ -120,6 +120,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
             amountType: loadAmount.amountType,
             amountDurationMilliSeconds: loadAmount.amountDurationMilliSeconds,
             amountRepetitions: loadAmount.amountRepetitions,
+            amountLevelId: loadAmount.amountLevelId,
             loads: {
               create: loadAmount.loads.map((load) => ({
                 amountValue: load.amountValue,
@@ -168,6 +169,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
               amountType: loadAmount.amountType,
               amountDurationMilliSeconds: loadAmount.amountDurationMilliSeconds,
               amountRepetitions: loadAmount.amountRepetitions,
+              amountLevelId: loadAmount.amountLevelId,
               loads: {
                 create: loadAmount.loads.map((load) => ({
                   amountValue: load.amountValue,
@@ -288,6 +290,10 @@ export default function Activity() {
                       return (
                         <Box>{`${set.duration.repetitions}st${loads}`}</Box>
                       );
+                    } else if (
+                      set.duration.__typename === "ExerciseDurationLevel"
+                    ) {
+                      return <Box>{set.duration.levelType.name}</Box>;
                     } else {
                       const duration = Duration.fromObject({
                         hours: 0,

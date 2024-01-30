@@ -11,6 +11,8 @@ export const exerciseTypeResolvers: ExerciseTypeResolvers = {
   defaultAmountType: (parent) =>
     parent.defaultExerciseAmountType === ExerciseAmountType.Time
       ? AmountType.Time
+      : parent.defaultExerciseAmountType === ExerciseAmountType.Levels
+      ? AmountType.Levels
       : AmountType.Repetitions,
   loadTypes: (parent) =>
     db.exerciseLoadType.findMany({ where: { exerciseTypeId: parent.id } }),
@@ -24,4 +26,10 @@ export const exerciseTypeResolvers: ExerciseTypeResolvers = {
         { createdAt: "desc" },
       ],
     }),
+  levels: async (parent) => {
+    return await db.exerciseTypeLevel.findMany({
+      where: { deletedAt: null, exerciseTypeId: parent.id },
+      orderBy: { order: "asc" },
+    });
+  },
 };

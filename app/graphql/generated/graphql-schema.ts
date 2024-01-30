@@ -22,6 +22,7 @@ input ActivityFilter {
 }
 
 enum AmountType {
+  Levels
   Repetitions
   Time
 }
@@ -68,7 +69,11 @@ type ExerciseAmount {
   loads: [ExerciseLoad!]!
 }
 
-union ExerciseDuration = ExerciseDurationRepetitions | ExerciseDurationTime
+union ExerciseDuration = ExerciseDurationLevel | ExerciseDurationRepetitions | ExerciseDurationTime
+
+type ExerciseDurationLevel {
+  levelType: ExerciseTypeLevel!
+}
 
 type ExerciseDurationRepetitions {
   repetitions: Int!
@@ -117,6 +122,7 @@ type ExerciseType {
   history: ExerciseTypeHistory!
   id: ID!
   lastExerciseItem: ExerciseItem
+  levels: [ExerciseTypeLevel!]!
   loadTypes: [ExerciseLoadType!]!
   name: String!
 }
@@ -143,6 +149,12 @@ type ExerciseTypeHistory {
 type ExerciseTypeHistoryDayAmount {
   dayAmounts: [ExerciseAmount!]!
   dayStart: DateTime!
+}
+
+type ExerciseTypeLevel {
+  id: ID!
+  name: String!
+  ordinal: Float!
 }
 
 type FogisGame implements ActivityBase {

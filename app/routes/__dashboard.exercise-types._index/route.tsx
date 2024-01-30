@@ -98,6 +98,8 @@ export default function Activity() {
                     <Td>
                       {edge.node?.defaultAmountType === AmountType.Repetitions
                         ? "Antal"
+                        : edge.node?.defaultAmountType === AmountType.Levels
+                        ? "Nivåer"
                         : edge.node.defaultAmountType === AmountType.Time
                         ? "Tid"
                         : "-"}
