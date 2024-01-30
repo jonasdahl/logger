@@ -327,10 +327,24 @@ function LevelsChart() {
             levelTypes.length === 0
               ? null
               : Math.max(...levelTypes.map((x) => x.ordinal)),
+          maxLevelName:
+            levelTypes.length === 0
+              ? null
+              : levelTypes.find(
+                  (x) =>
+                    x.ordinal === Math.max(...levelTypes.map((x) => x.ordinal))
+                )?.name,
           minLevel:
             levelTypes.length === 0
               ? null
               : Math.min(...levelTypes.map((x) => x.ordinal)),
+          minLevelName:
+            levelTypes.length === 0
+              ? null
+              : levelTypes.find(
+                  (x) =>
+                    x.ordinal === Math.min(...levelTypes.map((x) => x.ordinal))
+                )?.name,
         };
       })
       .filter((x) => x.minLevel !== null) ?? [];
