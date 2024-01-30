@@ -20,6 +20,7 @@ import { authenticator } from "~/auth.server";
 import { HiddenReturnToInput } from "~/services/return-to";
 
 import {
+  faChartArea,
   faCopy,
   faEllipsisVertical,
   faTrash,
@@ -312,44 +313,6 @@ export default function Activity() {
                 </Stack>
                 <Spacer />
                 <Box>
-                  <Form method="post">
-                    <input
-                      type="hidden"
-                      name="exerciseItemId"
-                      value={edge.node?.id}
-                    />
-                    <input type="hidden" name="_action" value="duplicateItem" />
-                    <HiddenReturnToInput />
-                    <IconButton
-                      size="xs"
-                      aria-label="Duplicate"
-                      type="submit"
-                      icon={<FontAwesomeIcon icon={faCopy} />}
-                      colorScheme="blue"
-                      variant="outline"
-                    />
-                  </Form>
-                </Box>
-                <Box>
-                  <Form method="post">
-                    <input
-                      type="hidden"
-                      name="exerciseItemId"
-                      value={edge.node?.id}
-                    />
-                    <input type="hidden" name="_action" value="deleteItem" />
-                    <HiddenReturnToInput />
-                    <IconButton
-                      size="xs"
-                      aria-label="Delete"
-                      type="submit"
-                      icon={<FontAwesomeIcon icon={faTrash} />}
-                      colorScheme="red"
-                      variant="outline"
-                    />
-                  </Form>
-                </Box>
-                <Box>
                   <Menu>
                     <MenuButton
                       as={IconButton}
@@ -360,9 +323,49 @@ export default function Activity() {
                       <MenuItem
                         as={Link}
                         to={`/stats/exercise-types/${edge.node.exerciseType.id}`}
+                        icon={<FontAwesomeIcon icon={faChartArea} />}
                       >
                         Statistik
                       </MenuItem>
+                      <Form method="post">
+                        <input
+                          type="hidden"
+                          name="exerciseItemId"
+                          value={edge.node?.id}
+                        />
+                        <input
+                          type="hidden"
+                          name="_action"
+                          value="duplicateItem"
+                        />
+                        <HiddenReturnToInput />
+                        <MenuItem
+                          type="submit"
+                          icon={<FontAwesomeIcon icon={faCopy} />}
+                        >
+                          Duplicera
+                        </MenuItem>
+                      </Form>
+                      <Form method="post">
+                        <input
+                          type="hidden"
+                          name="exerciseItemId"
+                          value={edge.node?.id}
+                        />
+                        <input
+                          type="hidden"
+                          name="_action"
+                          value="deleteItem"
+                        />
+                        <HiddenReturnToInput />
+                        <MenuItem
+                          type="submit"
+                          icon={<FontAwesomeIcon icon={faTrash} />}
+                          color="red.500"
+                        >
+                          Radera
+                        </MenuItem>
+                      </Form>
                     </MenuList>
                   </Menu>
                 </Box>
