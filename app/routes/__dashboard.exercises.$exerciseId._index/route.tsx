@@ -20,6 +20,8 @@ import { authenticator } from "~/auth.server";
 import { HiddenReturnToInput } from "~/services/return-to";
 
 import {
+  faArrowDown,
+  faArrowUp,
   faChartArea,
   faCopy,
   faEllipsisVertical,
@@ -50,6 +52,12 @@ const postSchema = z.intersection(
     z.object({
       _action: z.literal("deleteItem"),
       exerciseItemId: z.string(),
+    }),
+    z.object({
+      _action: z.literal("setOrder"),
+      order: z
+        .string()
+        .transform((s) => z.array(z.string()).parse(JSON.parse(s))),
     }),
   ])
 );
@@ -182,6 +190,28 @@ export async function action({ request, params }: ActionFunctionArgs) {
         },
       });
     }
+  } else if (data._action === "setOrder") {
+    const exerciseItems = await db.exerciseItem.findMany({
+      where: {
+        id: { in: data.order },
+      },
+      include: { activity: true },
+      orderBy: { order: "asc" },
+    });
+    if (
+      exerciseItems.some(
+        (exerciseItem) => exerciseItem.activity.userId !== userId
+      )
+    ) {
+      throw new Error("Unauthorized");
+    }
+
+    for (const [i, id] of data.order.entries()) {
+      await db.exerciseItem.update({
+        where: { id },
+        data: { order: i },
+      });
+    }
   }
 
   return redirect(data.returnTo ?? "/exercises/" + params.exerciseId);
@@ -197,6 +227,21 @@ export default function Activity() {
     data?.exercise?.items.edges.some((edge) => edge.cursor === x)
   );
   const start = data?.exercise?.start;
+
+  const move = (id: string, diff: number) => {
+    const currentList = data?.exercise?.items.edges.map((e) => e.cursor) ?? [];
+    const currentIndex = currentList.indexOf(id);
+    if (currentIndex < 0) {
+      return currentList;
+    }
+    const futureIndex = currentIndex + diff;
+    if (futureIndex < 0 || futureIndex >= currentList.length) {
+      return currentList;
+    }
+    const newList = [...currentList.filter((_, i) => i !== currentIndex)];
+    newList.splice(futureIndex, 0, id);
+    return newList;
+  };
 
   return (
     <Container py={5} maxW="container.md">
@@ -312,6 +357,38 @@ export default function Activity() {
                   })}
                 </Stack>
                 <Spacer />
+                <Box>
+                  <Form method="post">
+                    <input
+                      type="hidden"
+                      name="order"
+                      value={JSON.stringify(move(edge.cursor, 1))}
+                    />
+                    <input type="hidden" name="_action" value="setOrder" />
+                    <IconButton
+                      type="submit"
+                      aria-label="Flytta ner"
+                      icon={<FontAwesomeIcon icon={faArrowDown} />}
+                      size="xs"
+                    />
+                  </Form>
+                </Box>
+                <Box>
+                  <Form method="post">
+                    <input
+                      type="hidden"
+                      name="order"
+                      value={JSON.stringify(move(edge.cursor, -1))}
+                    />
+                    <input type="hidden" name="_action" value="setOrder" />
+                    <IconButton
+                      type="submit"
+                      aria-label="Flytta upp"
+                      icon={<FontAwesomeIcon icon={faArrowUp} />}
+                      size="xs"
+                    />
+                  </Form>
+                </Box>
                 <Box>
                   <Menu>
                     <MenuButton
