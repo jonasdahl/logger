@@ -26,6 +26,7 @@ import { authenticator } from "~/auth.server";
 import { Input } from "~/components/form/input";
 import { Select } from "~/components/form/select";
 import { SubmitButton } from "~/components/form/submit-button";
+import { Textarea } from "~/components/form/textarea";
 import { db } from "~/db.server";
 import { HiddenReturnToInput } from "~/services/return-to";
 import { addSearchParamToPath } from "~/utils/add-search-param-to-path";
@@ -48,7 +49,15 @@ const schema = z.intersection(
     loads: z
       .array(z.object({ name: z.string(), unit: z.string().optional() }))
       .optional(),
-    levels: z.array(z.object({ name: z.string() })).optional(),
+    levels: z
+      .string()
+      .transform((s) =>
+        s
+          .split("\n")
+          .map((x) => x.trim())
+          .filter((x) => !!x)
+      )
+      .optional(),
   })
 );
 
@@ -83,7 +92,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
       },
       levels: {
         create: data.levels?.map((load, i) => ({
-          name: load.name,
+          name: load,
           order: i,
         })),
       },
@@ -101,7 +110,6 @@ export async function action({ request, params }: ActionFunctionArgs) {
 
 export default function Activity() {
   const [loads, setLoads] = useState<string[]>([]);
-  const [levels, setLevels] = useState<string[]>([""]);
   const [defaultAmountType, setDefaultAmountType] = useState("null");
 
   return (
@@ -126,39 +134,7 @@ export default function Activity() {
               <option value="levels">Nivåer</option>
             </Select>
             {defaultAmountType === "levels" ? (
-              <FormControl>
-                <FormLabel>Nivåer</FormLabel>
-                <Stack w="100%">
-                  {levels.map((id, i) => {
-                    return (
-                      <HStack w="100%" key={id}>
-                        <ChakraInput
-                          type="text"
-                          name={`levels[${i}].name`}
-                          placeholder={`Beskrivning`}
-                        />
-                        <IconButton
-                          onClick={() =>
-                            setLevels((ids) => ids.filter((v) => v !== id))
-                          }
-                          icon={<FontAwesomeIcon icon={faTrash} />}
-                          aria-label="Ta bort"
-                          colorScheme="red"
-                          variant="outline"
-                        />
-                      </HStack>
-                    );
-                  })}
-                </Stack>
-                <IconButton
-                  type="button"
-                  onClick={() => setLevels((old) => [...old, v4()])}
-                  icon={<FontAwesomeIcon icon={faPlus} />}
-                  aria-label="Lägg till nivå"
-                  colorScheme="green"
-                  variant="outline"
-                />
-              </FormControl>
+              <Textarea name="levels" label="Nivåer (en per rad)" />
             ) : (
               <FormControl>
                 <HStack>
