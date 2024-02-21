@@ -283,3 +283,26 @@ model PhysicalTest {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model LawsQuestion {
+  id String @id @default(uuid())
+
+  question           String
+  answerAlternatives LawsQuestionAnswerAlternative[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model LawsQuestionAnswerAlternative {
+  id String @id @default(uuid())
+
+  text      String
+  isCorrect Boolean
+
+  questionId String
+  question   LawsQuestion @relation(fields: [questionId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

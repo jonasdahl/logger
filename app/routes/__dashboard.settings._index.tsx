@@ -8,6 +8,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import {
+  faBook,
   faCode,
   faExclamationTriangle,
   faLink,
@@ -53,6 +54,12 @@ export default function SettingsIndex() {
           icon={<FontAwesomeIcon icon={faExclamationTriangle} />}
         >
           Aviseringar
+        </Item>
+        <Item
+          to="/settings/laws"
+          icon={<FontAwesomeIcon icon={faBook} />}
+        >
+          Regelfrågor
         </Item>
       </SimpleGrid>
     </Container>
