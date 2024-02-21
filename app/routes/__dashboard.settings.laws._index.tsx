@@ -6,8 +6,10 @@ import {
   Spacer,
   Stack,
   Table,
+  TableContainer,
   Tbody,
   Td,
+  Text,
   Th,
   Thead,
   Tr,
@@ -25,7 +27,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
   });
   await assertIsAdmin(sessionUser.id);
 
-  const questions = await db.lawsQuestion.findMany();
+  const questions = await db.lawsQuestion.findMany({
+    include: { answerAlternatives: true },
+  });
 
   return json({
     questions,
@@ -36,7 +40,7 @@ export default function SettingsLawsIndex() {
   const { questions } = useLoaderData<typeof loader>();
   return (
     <Container maxW="container.lg" py={5}>
-      <Stack spacing={5}>
+      <Stack spacing={5} maxW="100%">
         <HStack>
           <Heading>Regelfrågor</Heading>
           <Spacer />
@@ -47,20 +51,34 @@ export default function SettingsLawsIndex() {
           </Box>
         </HStack>
 
-        <Table size="sm">
-          <Thead>
-            <Tr>
-              <Th>Fråga</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {questions.map(({ id, question }) => (
-              <Tr key={id}>
-                <Td isTruncated>{question}</Td>
+        <TableContainer>
+          <Table size="sm">
+            <Thead>
+              <Tr>
+                <Th>Fråga</Th>
+                <Th>Alternativ (rätt)</Th>
+                <Th />
               </Tr>
-            ))}
-          </Tbody>
-        </Table>
+            </Thead>
+            <Tbody maxW="100%">
+              {questions.map(({ id, question, answerAlternatives }) => (
+                <Tr key={id}>
+                  <Td>
+                    <Text isTruncated>
+                      {question.slice(0, 70) +
+                        (question.length > 70 ? "..." : "")}
+                    </Text>
+                  </Td>
+                  <Td w={1}>
+                    {answerAlternatives.length} (
+                    {answerAlternatives.filter((a) => a.isCorrect).length})
+                  </Td>
+                  <Th />
+                </Tr>
+              ))}
+            </Tbody>
+          </Table>
+        </TableContainer>
       </Stack>
     </Container>
   );
