@@ -1,4 +1,5 @@
-import { ButtonProps, Container, SimpleGrid } from "@chakra-ui/react";
+import type { ButtonProps } from "@chakra-ui/react";
+import { Container, SimpleGrid } from "@chakra-ui/react";
 
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
@@ -34,6 +35,8 @@ export default function Index() {
         <Item to={`/exercises/live`} colorScheme="green">
           Träna nu
         </Item>
+
+        <Item to={`/laws/quiz`}>Regelträning</Item>
       </SimpleGrid>
     </Container>
   );
