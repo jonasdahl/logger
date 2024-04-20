@@ -65,12 +65,21 @@ export default function Dashboard() {
                 : "bg-blue-500"
             )}
           >
-            <span className="text-white">
-              <FontAwesomeIcon icon={faRunning} />
-            </span>
-            <span className="text-white truncate max-w-full">
-              {currentActivity?.__typename === "Exercise" ? "Tränar" : "Träna"}
-            </span>
+            <div
+              className={cx(
+                "flex flex-col items-center justify-center",
+                currentActivity?.__typename === "Exercise" && "animate-pulse"
+              )}
+            >
+              <span className="text-white">
+                <FontAwesomeIcon icon={faRunning} />
+              </span>
+              <span className="text-white truncate max-w-full">
+                {currentActivity?.__typename === "Exercise"
+                  ? "Tränar"
+                  : "Träna"}
+              </span>
+            </div>
           </Link>
           <BottomMenuItem
             icon={faLineChart}
