@@ -19,7 +19,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import type { ReactNode } from "react";
-import { assertIsAdmin, authenticator } from "~/auth.server";
+import { assertIsAdmin, authenticator } from "~/.server/auth.server";
 import { Link } from "~/components/link";
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -55,10 +55,7 @@ export default function SettingsIndex() {
         >
           Aviseringar
         </Item>
-        <Item
-          to="/settings/laws"
-          icon={<FontAwesomeIcon icon={faBook} />}
-        >
+        <Item to="/settings/laws" icon={<FontAwesomeIcon icon={faBook} />}>
           Regelfrågor
         </Item>
       </SimpleGrid>

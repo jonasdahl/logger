@@ -10,13 +10,14 @@ import {
 import { faTimesCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Combobox } from "@headlessui/react";
-import { LoaderFunctionArgs, json } from "@remix-run/node";
+import type { LoaderFunctionArgs } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import { useFetcher } from "@remix-run/react";
 import { z } from "zod";
 import { ComponentExerciseTypeSelectorDocument } from "~/graphql/generated/documents";
 import { gql } from "~/graphql/graphql.server";
 
-export async function action({ request, params }: LoaderFunctionArgs) {
+export async function action({ request }: LoaderFunctionArgs) {
   const search = z
     .string()
     .parse(await request.formData().then((formData) => formData.get("search")));

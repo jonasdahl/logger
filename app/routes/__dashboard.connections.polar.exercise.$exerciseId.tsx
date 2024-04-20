@@ -21,17 +21,18 @@ import {
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData, useLocation } from "@remix-run/react";
-import { sum } from "lodash";
+
 import { Duration } from "luxon";
+import { sum } from "remeda";
 import { z } from "zod";
-import { authenticator } from "~/auth.server";
+import { authenticator } from "~/.server/auth.server";
 import {
   AnimatedAreaSeries,
   AnimatedAxis,
   AnimatedGrid,
   AnimatedLineSeries,
   XYChart,
-} from "~/components/charts/xy-chart.client";
+} from "~/components/charts/xy-chart";
 import { ClientOnly } from "~/components/client-only";
 import { Link } from "~/components/link";
 import { db } from "~/db.server";

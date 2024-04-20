@@ -1,5 +1,5 @@
-import { orderBy } from "lodash";
 import { DateTime } from "luxon";
+import { sortBy } from "remeda";
 import { z } from "zod";
 import { db } from "~/db.server";
 import type { DayResolvers } from "~/graphql/generated/graphql";
@@ -56,7 +56,7 @@ export const dayResolvers: DayResolvers = {
         hasPreviousPage: false,
         startCursor: null,
       },
-      edges: orderBy(
+      edges: sortBy(
         [
           ...customGames.map((customGame) => ({
             cursor: customGame.id,
@@ -79,8 +79,7 @@ export const dayResolvers: DayResolvers = {
             node: { type: "PhysicalTest" as const, value: physicalTest },
           })),
         ],
-        (x) => x.node.value.time,
-        "asc"
+        [(x) => x.node.value.time, "asc"]
       ),
     };
   },

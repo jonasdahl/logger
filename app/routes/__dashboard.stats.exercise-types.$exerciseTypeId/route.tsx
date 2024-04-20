@@ -2,9 +2,9 @@ import { Box, Card, Container, Heading, Stack, Text } from "@chakra-ui/react";
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { sum } from "lodash";
 import { DateTime } from "luxon";
-import { authenticator } from "~/auth.server";
+import { sum } from "remeda";
+import { authenticator } from "~/.server/auth.server";
 import {
   AnimatedAxis,
   AnimatedGlyphSeries,
@@ -13,7 +13,7 @@ import {
   Tooltip,
   XYChart,
   buildChartTheme,
-} from "~/components/charts/xy-chart.client";
+} from "~/components/charts/xy-chart";
 import { ClientOnly } from "~/components/client-only";
 import { StatsExerciseTypeDocument } from "~/graphql/generated/documents";
 import { gql } from "~/graphql/graphql.server";

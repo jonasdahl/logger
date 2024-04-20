@@ -20,7 +20,7 @@ import { useState } from "react";
 import { ValidatedForm } from "remix-validated-form";
 import { v4 } from "uuid";
 import { z } from "zod";
-import { assertIsAdmin, authenticator } from "~/auth.server";
+import { assertIsAdmin, authenticator } from "~/.server/auth.server";
 import { SubmitButton } from "~/components/form/submit-button";
 
 import { Textarea } from "~/components/form/textarea";

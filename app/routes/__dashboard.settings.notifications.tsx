@@ -2,7 +2,7 @@ import { Box, Button, Container, Heading, Stack } from "@chakra-ui/react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
-import { assertIsAdmin, authenticator } from "~/auth.server";
+import { assertIsAdmin, authenticator } from "~/.server/auth.server";
 import { db } from "~/db.server";
 import { notify } from "~/push/notifications.server";
 

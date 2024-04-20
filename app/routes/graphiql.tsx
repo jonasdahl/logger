@@ -1,6 +1,6 @@
 import type { LinksFunction } from "@remix-run/node";
 import GraphiQL from "graphiql";
-import css from "graphiql/graphiql.min.css";
+import css from "graphiql/graphiql.min.css?url";
 import { ClientOnly } from "~/components/client-only";
 
 export const links: LinksFunction = () => [

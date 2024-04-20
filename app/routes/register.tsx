@@ -1,12 +1,13 @@
-import { Card, Container, Stack } from "@chakra-ui/react";
+import { Box, Card, Container, Stack } from "@chakra-ui/react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { withZod } from "@remix-validated-form/with-zod";
-import { ValidatedForm, validationError } from "remix-validated-form";
+import { ValidatedForm } from "remix-validated-form";
 import { z } from "zod";
-import { authenticator, signUp } from "~/auth.server";
+import { authenticator, signUp } from "~/.server/auth.server";
 import { Input } from "~/components/form/input";
 import { SubmitButton } from "~/components/form/submit-button";
+import { validate } from "~/components/form/validate.server";
 import { commitSession, getSessionFromRequest } from "~/session.server";
 
 const validator = withZod(
@@ -25,10 +26,7 @@ const validator = withZod(
 );
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  await authenticator.isAuthenticated(request, {
-    successRedirect: "/",
-  });
-
+  await authenticator.isAuthenticated(request, { successRedirect: "/" });
   const session = await getSessionFromRequest(request);
   const error = session.get(authenticator.sessionErrorKey as "user");
   return json(
@@ -38,10 +36,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export async function action({ request }: ActionFunctionArgs) {
-  const data = await validator.validate(await request.formData());
-  if (data.error) return validationError(data.error);
+  const data = await validate({ request, validator });
   const session = await getSessionFromRequest(request);
-  const user = await signUp(data.data);
+  const user = await signUp(data);
   session.set(authenticator.sessionKey as "user", user);
   return redirect("/", {
     headers: { "Set-Cookie": await commitSession(session) },
@@ -50,29 +47,37 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export default function Register() {
   return (
-    <Container maxW="30rem" py={5}>
-      <Card p={4}>
-        <ValidatedForm validator={validator} method="post">
-          <Stack spacing={5}>
-            <Input label="E-postadress" name="email" type="email" />
-            <Input
-              label="Lösenord"
-              name="password"
-              type="password"
-              autoComplete="new-password"
-            />
-            <Input
-              label="Upprepa lösenord"
-              name="confirmPassword"
-              type="password"
-              autoComplete="new-password"
-            />
-            <SubmitButton type="submit" colorScheme="blue" bg="blue.700">
-              Skapa konto
-            </SubmitButton>
-          </Stack>
-        </ValidatedForm>
-      </Card>
-    </Container>
+    <Box
+      bg="blue.100"
+      h="100%"
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
+    >
+      <Container maxW="30rem" py={5}>
+        <Card p={4}>
+          <ValidatedForm validator={validator} method="post">
+            <Stack spacing={5}>
+              <Input label="E-postadress" name="email" type="email" />
+              <Input
+                label="Lösenord"
+                name="password"
+                type="password"
+                autoComplete="new-password"
+              />
+              <Input
+                label="Upprepa lösenord"
+                name="confirmPassword"
+                type="password"
+                autoComplete="new-password"
+              />
+              <SubmitButton type="submit" colorScheme="blue" bg="blue.700">
+                Skapa konto
+              </SubmitButton>
+            </Stack>
+          </ValidatedForm>
+        </Card>
+      </Container>
+    </Box>
   );
 }

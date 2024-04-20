@@ -17,21 +17,21 @@ import {
 
 import { z } from "zod";
 
-import { LoaderFunctionArgs, json } from "@remix-run/node";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
-import { authenticator } from "~/auth.server";
+import { authenticator } from "~/.server/auth.server";
 import {
   AmountType,
   ExerciseTypesListDocument,
 } from "~/graphql/generated/documents";
 import { gql } from "~/graphql/graphql.server";
 
-const schema = z.object({ id: z.string() });
-
-import { ActionFunctionArgs, redirect } from "@remix-run/node";
 import { DateTime } from "luxon";
 import { ButtonLink } from "~/components/button-link";
 import { db } from "~/db.server";
+
+const schema = z.object({ id: z.string() });
 
 export async function action({ request, params }: ActionFunctionArgs) {
   const { id: userId } = await authenticator.isAuthenticated(request, {

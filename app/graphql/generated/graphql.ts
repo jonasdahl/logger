@@ -29,7 +29,7 @@ export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: { input: string | number; output: string; }
+  ID: { input: string; output: string; }
   String: { input: string; output: string; }
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
@@ -546,7 +546,7 @@ export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversT
 }
 
 export type DayResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Day'] = ResolversParentTypes['Day']> = {
-  activities: Resolver<ResolversTypes['ActivityConnection'], ParentType, ContextType, Partial<DayActivitiesArgs>>;
+  activities: Resolver<ResolversTypes['ActivityConnection'], ParentType, ContextType, DayActivitiesArgs>;
   date: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   heartRateSummary: Resolver<Maybe<ResolversTypes['HeartRateSummary']>, ParentType, ContextType>;
   start: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
@@ -695,7 +695,7 @@ export type FogisGameResolvers<ContextType = Context, ParentType extends Resolve
 };
 
 export type HeartRateSummaryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['HeartRateSummary'] = ResolversParentTypes['HeartRateSummary']> = {
-  secondsInZone: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, Partial<HeartRateSummarySecondsInZoneArgs>>;
+  secondsInZone: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, HeartRateSummarySecondsInZoneArgs>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -726,14 +726,14 @@ export type PlannedExerciseResolvers<ContextType = Context, ParentType extends R
 };
 
 export type QueryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-  activities: Resolver<ResolversTypes['ActivityConnection'], ParentType, ContextType, Partial<QueryActivitiesArgs>>;
+  activities: Resolver<ResolversTypes['ActivityConnection'], ParentType, ContextType, QueryActivitiesArgs>;
   activity: Resolver<Maybe<ResolversTypes['Activity']>, ParentType, ContextType, RequireFields<QueryActivityArgs, 'id'>>;
   currentActivity: Resolver<Maybe<ResolversTypes['Activity']>, ParentType, ContextType>;
   day: Resolver<Maybe<ResolversTypes['Day']>, ParentType, ContextType, RequireFields<QueryDayArgs, 'date'>>;
-  days: Resolver<ResolversTypes['DayConnection'], ParentType, ContextType, Partial<QueryDaysArgs>>;
+  days: Resolver<ResolversTypes['DayConnection'], ParentType, ContextType, QueryDaysArgs>;
   exercise: Resolver<Maybe<ResolversTypes['Exercise']>, ParentType, ContextType, RequireFields<QueryExerciseArgs, 'id'>>;
   exerciseType: Resolver<Maybe<ResolversTypes['ExerciseType']>, ParentType, ContextType, RequireFields<QueryExerciseTypeArgs, 'id'>>;
-  exerciseTypes: Resolver<ResolversTypes['ExerciseTypeConnection'], ParentType, ContextType, Partial<QueryExerciseTypesArgs>>;
+  exerciseTypes: Resolver<ResolversTypes['ExerciseTypeConnection'], ParentType, ContextType, QueryExerciseTypesArgs>;
   me: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   today: Resolver<ResolversTypes['Day'], ParentType, ContextType>;
 };

@@ -1,6 +1,6 @@
-import { orderBy } from "lodash";
 import { DateTime, Interval } from "luxon";
 import { matchSorter } from "match-sorter";
+import { sortBy } from "remeda";
 import { db } from "~/db.server";
 import type { QueryResolvers } from "~/graphql/generated/graphql";
 
@@ -171,7 +171,7 @@ export const queryResolvers: QueryResolvers = {
         hasPreviousPage: false,
         startCursor: null,
       },
-      edges: orderBy(
+      edges: sortBy(
         [
           ...customGames.map((customGame) => ({
             cursor: customGame.id,
@@ -194,8 +194,7 @@ export const queryResolvers: QueryResolvers = {
             node: { type: "PhysicalTest" as const, value: activity },
           })),
         ],
-        (x) => x.node.value.time,
-        "asc"
+        [(x) => x.node.value.time, "asc"]
       ),
     };
   },

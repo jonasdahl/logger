@@ -1,15 +1,15 @@
 import { ChakraProvider, ColorModeScript, extendTheme } from "@chakra-ui/react";
 import { config } from "@fortawesome/fontawesome-svg-core";
-import faStyles from "@fortawesome/fontawesome-svg-core/styles.css";
+import faStyles from "@fortawesome/fontawesome-svg-core/styles.css?url";
 import type { LinksFunction, MetaFunction } from "@remix-run/node";
 import {
   Links,
-  LiveReload,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
+import styles from "./tailwind.css?url";
 
 config.autoAddCss = false;
 
@@ -20,7 +20,10 @@ export const meta: MetaFunction = () => [
 ];
 
 export const links: LinksFunction = () => {
-  return [{ rel: "stylesheet", href: faStyles, type: "text/css" }];
+  return [
+    { rel: "stylesheet", href: faStyles, type: "text/css" },
+    { rel: "stylesheet", href: styles },
+  ];
 };
 
 export default function App() {
@@ -37,7 +40,6 @@ export default function App() {
         </ChakraProvider>
         <ScrollRestoration />
         <Scripts />
-        <LiveReload />
       </body>
     </html>
   );

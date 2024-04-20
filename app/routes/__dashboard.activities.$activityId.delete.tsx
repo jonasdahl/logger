@@ -3,7 +3,7 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Form } from "@remix-run/react";
 import { DateTime } from "luxon";
-import { authenticator } from "~/auth.server";
+import { authenticator } from "~/.server/auth.server";
 import { db } from "~/db.server";
 import { getTimeZoneFromRequest } from "~/time";
 

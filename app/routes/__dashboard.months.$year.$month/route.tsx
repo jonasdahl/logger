@@ -16,10 +16,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { upperFirst } from "lodash";
 import { DateTime, Interval } from "luxon";
 import { z } from "zod";
-import { authenticator } from "~/auth.server";
+import { authenticator } from "~/.server/auth.server";
 import { ButtonLink } from "~/components/button-link";
 import { IconButtonLink } from "~/components/icon-button-link";
 import { db } from "~/db.server";
@@ -107,10 +106,8 @@ export default function DashboardIndex() {
               />
             </Box>
             <Spacer />
-            <Heading as="h1" size="sm">
-              {upperFirst(
-                month.start!.toFormat("LLLL yyyy", { locale: "sv-SE" })
-              )}
+            <Heading as="h1" size="sm" textTransform="capitalize">
+              {month.start!.toFormat("LLLL yyyy", { locale: "sv-SE" })}
             </Heading>
             <Spacer />
             <Box>

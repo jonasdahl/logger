@@ -16,13 +16,14 @@ import {
 import { faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ExerciseAmountType } from "@prisma/client";
-import { ActionFunctionArgs, redirect } from "@remix-run/node";
+import type { ActionFunctionArgs } from "@remix-run/node";
+import { redirect } from "@remix-run/node";
 import { withZod } from "@remix-validated-form/with-zod";
 import { useState } from "react";
 import { ValidatedForm } from "remix-validated-form";
 import { v4 } from "uuid";
 import { z } from "zod";
-import { authenticator } from "~/auth.server";
+import { authenticator } from "~/.server/auth.server";
 import { Input } from "~/components/form/input";
 import { Select } from "~/components/form/select";
 import { SubmitButton } from "~/components/form/submit-button";

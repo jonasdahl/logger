@@ -13,7 +13,7 @@ import {
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { assertIsAdmin, authenticator } from "~/auth.server";
+import { assertIsAdmin, authenticator } from "~/.server/auth.server";
 import { ButtonLink } from "~/components/button-link";
 import { Link } from "~/components/link";
 import { db } from "~/db.server";

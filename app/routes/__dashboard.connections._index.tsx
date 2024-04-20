@@ -10,9 +10,9 @@ import {
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
-import { pick } from "lodash";
+
 import type { ReactNode } from "react";
-import { authenticator } from "~/auth.server";
+import { authenticator } from "~/.server/auth.server";
 import { ButtonLink } from "~/components/button-link";
 import { db } from "~/db.server";
 
@@ -29,7 +29,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       data: { onboardedAt: new Date() },
     });
   }
-  return json({ user: pick(user, "polarUserId") });
+  return json({ user: { polarUserId: user.polarUserId } });
 }
 
 export default function Connections() {

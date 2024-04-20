@@ -2,7 +2,7 @@ import { Code, Container, Heading, Stack } from "@chakra-ui/react";
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { authenticator } from "~/auth.server";
+import { authenticator } from "~/.server/auth.server";
 import { db } from "~/db.server";
 import { getPolarNotifications } from "~/polar/get-notifications";
 

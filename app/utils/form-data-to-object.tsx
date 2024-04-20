@@ -1,4 +1,4 @@
-import { set } from "lodash";
+import { set } from "remeda";
 
 export function formDataToObject(formData: FormData) {
   const result: Record<string, any> = {};

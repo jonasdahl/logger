@@ -13,18 +13,14 @@ import {
   Stack,
 } from "@chakra-ui/react";
 import { ExerciseAmountType } from "@prisma/client";
-import {
-  ActionFunctionArgs,
-  LoaderFunctionArgs,
-  json,
-  redirect,
-} from "@remix-run/node";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { useLoaderData, useParams, useSearchParams } from "@remix-run/react";
 import { withZod } from "@remix-validated-form/with-zod";
 import { useRef, useState } from "react";
 import { ValidatedForm } from "remix-validated-form";
 import { z } from "zod";
-import { authenticator } from "~/auth.server";
+import { authenticator } from "~/.server/auth.server";
 import { ButtonLink } from "~/components/button-link";
 import { Select } from "~/components/form/select";
 import { SubmitButton } from "~/components/form/submit-button";
@@ -148,7 +144,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
     },
   });
 
-  return redirect(data.returnTo ?? "/exercises/" + activity.id);
+  return redirect(data.returnTo ?? `/exercises/${activity.id}`);
 }
 
 export default function Activity() {

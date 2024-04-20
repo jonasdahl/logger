@@ -1,7 +1,7 @@
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { z } from "zod";
-import { authenticator } from "~/auth.server";
+import { authenticator } from "~/.server/auth.server";
 import { db } from "~/db.server";
 import { notify } from "~/push/notifications.server";
 

@@ -8,7 +8,7 @@ import {
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
-import { authenticator } from "~/auth.server";
+import { authenticator } from "~/.server/auth.server";
 import { StatsExercisesDocument } from "~/graphql/generated/documents";
 import { gql } from "~/graphql/graphql.server";
 import { getTimeZoneFromRequest } from "~/time";

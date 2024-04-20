@@ -6,7 +6,7 @@ import { withZod } from "@remix-validated-form/with-zod";
 import { DateTime } from "luxon";
 import { ValidatedForm } from "remix-validated-form";
 import { z } from "zod";
-import { authenticator } from "~/auth.server";
+import { authenticator } from "~/.server/auth.server";
 import { Input } from "~/components/form/input";
 import { Select } from "~/components/form/select";
 import { SubmitButton } from "~/components/form/submit-button";

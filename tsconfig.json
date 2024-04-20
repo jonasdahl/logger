@@ -1,13 +1,13 @@
 {
-  "include": ["remix.env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["env.d.ts", "**/*.ts", "**/*.tsx", "app/.server/auth.server.ts"],
   "compilerOptions": {
     "lib": ["DOM", "DOM.Iterable", "ES2021", "WebWorker"],
     "isolatedModules": true,
     "noUncheckedIndexedAccess": true,
     "esModuleInterop": true,
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
     "jsx": "react-jsx",
-    "moduleResolution": "node",
-    "module": "CommonJS",
     "resolveJsonModule": true,
     "target": "ES2019",
     "skipLibCheck": true,

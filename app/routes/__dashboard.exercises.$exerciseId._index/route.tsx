@@ -15,8 +15,9 @@ import {
   Wrap,
   WrapItem,
 } from "@chakra-ui/react";
-import { ActionFunctionArgs, redirect } from "@remix-run/node";
-import { authenticator } from "~/auth.server";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
+import { authenticator } from "~/.server/auth.server";
 import { HiddenReturnToInput } from "~/services/return-to";
 
 import {
@@ -28,7 +29,6 @@ import {
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { LoaderFunctionArgs, json } from "@remix-run/node";
 import { Form, Link, useLoaderData, useParams } from "@remix-run/react";
 import { DateTime, Duration } from "luxon";
 import { useState } from "react";
@@ -214,7 +214,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
     }
   }
 
-  return redirect(data.returnTo ?? "/exercises/" + params.exerciseId);
+  return redirect(data.returnTo ?? `/exercises/${params.exerciseId}`);
 }
 
 export default function Activity() {

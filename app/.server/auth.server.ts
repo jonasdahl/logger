@@ -1,10 +1,10 @@
 import type { User as PrismaUser } from "@prisma/client";
-import { compare, hash } from "bcrypt";
+import { compare, genSalt, hash } from "bcrypt-ts";
 import { Authenticator } from "remix-auth";
 import { FormStrategy } from "remix-auth-form";
 import { z } from "zod";
-import { db } from "./db.server";
-import { session } from "./session.server";
+import { db } from "../db.server";
+import { session } from "../session.server";
 
 // Create an instance of the authenticator, pass a generic with what
 // strategies will return and will store in the session
@@ -62,7 +62,10 @@ export async function signUp({
   password: string;
 }) {
   const user = await db.user.create({
-    data: { email: email, password: await hash(password, 10) },
+    data: {
+      email: email,
+      password: await genSalt(10).then((salt) => hash(password, salt)),
+    },
   });
 
   return user;

@@ -2,7 +2,7 @@ import type { TypedDocumentNode } from "@graphql-typed-document-node/core";
 import type { ExecutionResult } from "graphql";
 import { graphql as graphqlQuery, print } from "graphql";
 import type { ObjMap } from "graphql/jsutils/ObjMap";
-import { authenticator } from "~/auth.server";
+import { authenticator } from "~/.server/auth.server";
 import { getTimeZoneFromRequest } from "~/time";
 import type { Context } from "./context";
 import { schema } from "./schema";

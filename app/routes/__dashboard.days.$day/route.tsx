@@ -21,7 +21,7 @@ import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Form, useLoaderData, useLocation } from "@remix-run/react";
 import { DateTime } from "luxon";
-import { authenticator } from "~/auth.server";
+import { authenticator } from "~/.server/auth.server";
 import { ButtonLink } from "~/components/button-link";
 import { IconButtonLink } from "~/components/icon-button-link";
 import { Link } from "~/components/link";

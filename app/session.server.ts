@@ -1,5 +1,5 @@
 import { createCookieSessionStorage } from "@remix-run/node";
-import type { User } from "./auth.server";
+import type { User } from "./.server/auth.server";
 import type { FogisClient } from "./fogis/client.server";
 import { appSecret } from "./secrets.server";
 

@@ -1,4 +1,4 @@
-import { sum } from "lodash";
+import { sum } from "remeda";
 import { db } from "~/db.server";
 import {
   HeartRateZone,

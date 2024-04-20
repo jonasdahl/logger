@@ -24,7 +24,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Form, Outlet, useLoaderData, useNavigation } from "@remix-run/react";
-import { authenticator, isAdmin } from "~/auth.server";
+import { authenticator, isAdmin } from "~/.server/auth.server";
 import { Link } from "~/components/link";
 import { DashboardDocument } from "~/graphql/generated/documents";
 import { gql } from "~/graphql/graphql.server";

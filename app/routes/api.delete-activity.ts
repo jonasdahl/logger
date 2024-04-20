@@ -1,6 +1,6 @@
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
-import { authenticator } from "~/auth.server";
+import { authenticator } from "~/.server/auth.server";
 import { db } from "~/db.server";
 
 export async function action({ request }: ActionFunctionArgs) {

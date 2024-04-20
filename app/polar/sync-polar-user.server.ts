@@ -1,4 +1,4 @@
-import { isAdmin } from "~/auth.server";
+import { isAdmin } from "~/.server/auth.server";
 import { db } from "~/db.server";
 import { notify } from "~/push/notifications.server";
 import { createExerciseTransaction } from "./exercise-transaction";
