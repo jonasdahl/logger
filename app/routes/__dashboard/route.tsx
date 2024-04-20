@@ -34,6 +34,7 @@ import { authenticator, isAdmin } from "~/.server/auth.server";
 import { Link } from "~/components/link";
 import { DashboardDocument } from "~/graphql/generated/documents";
 import { gql } from "~/graphql/graphql.server";
+import { cx } from "~/utils/cx";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const { id: userId } = await authenticator.isAuthenticated(request, {
@@ -161,30 +162,41 @@ export default function Dashboard() {
       <Outlet />
       <div className="fixed inset-x-0 bottom-0 bg-white drop-shadow-lg border-t">
         <div className="flex flex-row gap-3 items-center justify-center">
-          <MenuItem icon={faHome} label="Start" to="/" />
-          <MenuItem icon={faCalendar} label="Kalender" to="/calendar" />
+          <BottomMenuItem icon={faHome} label="Start" to="/" />
+          <BottomMenuItem icon={faCalendar} label="Kalender" to="/calendar" />
           <Link
-            to="/exercises/live"
-            className="py-3 flex flex-col items-center justify-center w-20 h-20 truncate rounded-full bg-blue-500 text-white -mt-6 -mb-6"
+            to={
+              currentActivity?.__typename === "Exercise"
+                ? `/exercises/${currentActivity.id}`
+                : "/exercises/live"
+            }
+            className={cx(
+              "py-3 flex flex-col items-center justify-center w-20 h-20 truncate rounded-full text-white -mt-6 -mb-6 transition-colors",
+              currentActivity?.__typename === "Exercise"
+                ? "bg-green-600"
+                : "bg-blue-500"
+            )}
           >
             <span className="text-white">
               <FontAwesomeIcon icon={faRunning} />
             </span>
-            <span className="text-white truncate max-w-full">Träna</span>
+            <span className="text-white truncate max-w-full">
+              {currentActivity?.__typename === "Exercise" ? "Tränar" : "Träna"}
+            </span>
           </Link>
-          <MenuItem
+          <BottomMenuItem
             icon={faLineChart}
             label="Statistik"
             to={`/stats/exercise-types`}
           />
-          <MenuItem icon={faEllipsis} label="Mer" to="/more" />
+          <BottomMenuItem icon={faEllipsis} label="Mer" to="/more" />
         </div>
       </div>
     </Box>
   );
 }
 
-function MenuItem({
+function BottomMenuItem({
   icon,
   label,
   to,
