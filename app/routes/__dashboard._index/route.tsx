@@ -4,7 +4,7 @@ export default function Index() {
   return (
     <Container py={6}>
       <div className="flex flex-col gap-3">
-        <Heading>God dag</Heading>
+        <Heading>Välkommen</Heading>
       </div>
     </Container>
   );
