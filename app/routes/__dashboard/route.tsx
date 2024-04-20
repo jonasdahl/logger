@@ -12,10 +12,16 @@ import {
   Spacer,
   Tooltip,
 } from "@chakra-ui/react";
+import type { IconDefinition } from "@fortawesome/free-solid-svg-icons";
 import {
+  faCalendar,
   faCode,
+  faEllipsis,
+  faHome,
+  faLineChart,
   faLink,
   faRightFromBracket,
+  faRunning,
   faUser,
   faUserCog,
   faUserLock,
@@ -50,7 +56,7 @@ export default function Dashboard() {
   const { isAdmin, email, currentActivity } = useLoaderData<typeof loader>();
   const { state } = useNavigation();
   return (
-    <Box>
+    <Box className="pb-20">
       <Box bg="blue.700" boxShadow="lg" fontWeight="bold">
         <HStack h="100%" py={3} pr={3} pl={5} spacing={5}>
           <Link to="/" color="white">
@@ -153,6 +159,49 @@ export default function Dashboard() {
         ) : null}
       </Box>
       <Outlet />
+      <div className="fixed inset-x-0 bottom-0 bg-white drop-shadow-lg border-t">
+        <div className="flex flex-row gap-3 items-center justify-center">
+          <MenuItem icon={faHome} label="Start" to="/" />
+          <MenuItem icon={faCalendar} label="Kalender" to="/calendar" />
+          <Link
+            to="/exercises/live"
+            className="py-3 flex flex-col items-center justify-center w-20 h-20 truncate rounded-full bg-blue-500 text-white -mt-6 -mb-6"
+          >
+            <span className="text-white">
+              <FontAwesomeIcon icon={faRunning} />
+            </span>
+            <span className="text-white truncate max-w-full">Träna</span>
+          </Link>
+          <MenuItem
+            icon={faLineChart}
+            label="Statistik"
+            to={`/stats/exercise-types`}
+          />
+          <MenuItem icon={faEllipsis} label="Mer" to="/more" />
+        </div>
+      </div>
     </Box>
+  );
+}
+
+function MenuItem({
+  icon,
+  label,
+  to,
+}: {
+  icon: IconDefinition;
+  label: string;
+  to: string;
+}) {
+  return (
+    <Link
+      to={to}
+      className="py-3 flex flex-col items-center justify-center flex-1 truncate rounded-lg drop-shadow-lg"
+    >
+      <span>
+        <FontAwesomeIcon icon={icon} />
+      </span>
+      <span className="truncate max-w-full text-sm">{label}</span>
+    </Link>
   );
 }

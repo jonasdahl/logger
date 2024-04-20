@@ -13,7 +13,7 @@ import {
   Tooltip,
   XYChart,
   buildChartTheme,
-} from "~/components/charts/xy-chart";
+} from "~/components/charts/xy-chart.client";
 import { ClientOnly } from "~/components/client-only";
 import { StatsExerciseTypeDocument } from "~/graphql/generated/documents";
 import { gql } from "~/graphql/graphql.server";

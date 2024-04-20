@@ -32,7 +32,7 @@ import {
   AnimatedGrid,
   AnimatedLineSeries,
   XYChart,
-} from "~/components/charts/xy-chart";
+} from "~/components/charts/xy-chart.client";
 import { ClientOnly } from "~/components/client-only";
 import { Link } from "~/components/link";
 import { db } from "~/db.server";
