@@ -1,24 +1,59 @@
 import { Button } from "@chakra-ui/react";
 import type { IconDefinition } from "@fortawesome/free-solid-svg-icons";
-import { faCheck, faRunning } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCheck,
+  faCode,
+  faLink,
+  faRightFromBracket,
+  faRunning,
+  faUserCog,
+  faUserLock,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Link } from "@remix-run/react";
-import { authenticator } from "~/.server/auth.server";
+import { Form, Link, useLoaderData } from "@remix-run/react";
+import { authenticator, isAdmin } from "~/.server/auth.server";
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  await authenticator.isAuthenticated(request, {
+  const user = await authenticator.isAuthenticated(request, {
     failureRedirect: "/login",
   });
-  return json({});
+  return json({ isAdmin: await isAdmin(user.id) });
 }
 
 export default function Dashboard() {
+  const { isAdmin } = useLoaderData<typeof loader>();
   return (
     <div className="flex flex-col gap-3 items-start p-5">
       <Item label="Övningstyper" to="/exercise-types" icon={faRunning} />
       <Item label="Regelträning" to="/laws/quiz" icon={faCheck} />
+      <Item label="Personliga inställningar" to="/user" icon={faUserCog} />
+      <Item label="Anslutningar" to="/connections" icon={faLink} />
+      {isAdmin ? (
+        <>
+          <hr />
+          <Item label="Administration" to="/settings" icon={faUserLock} />
+          <Item label="GraphiQL" to="/graphiql" icon={faCode} />
+        </>
+      ) : null}
+      <Form method="post" action="/logout" className="w-full">
+        <Button
+          type="submit"
+          colorScheme="red"
+          variant="ghost"
+          size="lg"
+          w="100%"
+          justifyContent="flex-start"
+          leftIcon={
+            <div className="w-8">
+              <FontAwesomeIcon icon={faRightFromBracket} />
+            </div>
+          }
+        >
+          Logga ut
+        </Button>
+      </Form>
     </div>
   );
 }
@@ -38,6 +73,8 @@ function Item({
       to={to}
       variant="ghost"
       size="lg"
+      w="100%"
+      justifyContent="flex-start"
       leftIcon={
         <div className="w-8">
           <FontAwesomeIcon icon={icon} />

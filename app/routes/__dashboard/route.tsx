@@ -161,7 +161,7 @@ export default function Dashboard() {
       </Box>
       <Outlet />
       <div className="fixed inset-x-0 bottom-0 bg-white drop-shadow-lg border-t">
-        <div className="flex flex-row gap-3 items-center justify-center">
+        <div className="flex flex-row gap-3 items-center justify-center max-w-[30rem] mx-auto">
           <BottomMenuItem icon={faHome} label="Start" to="/" />
           <BottomMenuItem icon={faCalendar} label="Kalender" to="/calendar" />
           <Link
