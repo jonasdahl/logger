@@ -2,4 +2,5 @@ type ExerciseLoadType {
   id: ID!
   name: String!
   unit: String
+  commonLoads: [ExerciseLoad!]!
 }

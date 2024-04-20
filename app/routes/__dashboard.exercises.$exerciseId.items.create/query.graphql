@@ -23,6 +23,9 @@ query CreateExerciseItem($exerciseId: ID!) {
           id
           name
           unit
+          commonLoads {
+            value
+          }
         }
         levels {
           id

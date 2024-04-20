@@ -24,6 +24,7 @@ import { authenticator } from "~/.server/auth.server";
 import { ButtonLink } from "~/components/button-link";
 import { Select } from "~/components/form/select";
 import { SubmitButton } from "~/components/form/submit-button";
+import { validate } from "~/components/form/validate.server";
 import { Link } from "~/components/link";
 import { db } from "~/db.server";
 import {
@@ -32,25 +33,22 @@ import {
 } from "~/graphql/generated/documents";
 import { gql } from "~/graphql/graphql.server";
 import { HiddenReturnToInput } from "~/services/return-to";
-import { formDataToObject } from "~/utils/form-data-to-object";
 import { ExerciseCombobox } from "../components.exercise-type-selector/route";
 
-const validatedSchema = z.object({
-  exerciseTypeId: z.string(),
-  returnTo: z.string().optional(),
-  loadAmount: z
-    .array(
-      z.object({
-        amountValue: z.coerce.number(),
-        loadUnit: z.string(),
-        loadTypeId: z.string(),
-      })
-    )
-    .optional(),
-});
-
-const schema = z.intersection(
-  validatedSchema,
+const validatedSchema = z.intersection(
+  z.object({
+    exerciseTypeId: z.string(),
+    returnTo: z.string().optional(),
+    loadAmount: z
+      .array(
+        z.object({
+          amountValue: z.coerce.number(),
+          loadUnit: z.string(),
+          loadTypeId: z.string(),
+        })
+      )
+      .optional(),
+  }),
 
   z.union([
     z
@@ -81,9 +79,7 @@ const schema = z.intersection(
 const validator = withZod(validatedSchema);
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-  const { id: userId } = await authenticator.isAuthenticated(request, {
-    failureRedirect: "/",
-  });
+  await authenticator.isAuthenticated(request, { failureRedirect: "/" });
 
   const { data } = await gql({
     document: CreateExerciseItemDocument,
@@ -104,16 +100,14 @@ export async function action({ request, params }: ActionFunctionArgs) {
     .object({ exerciseId: z.string() })
     .parse(params);
 
-  const formData = await request.formData();
-  const rawData = formDataToObject(formData);
-  const data = schema.parse(rawData);
+  const data = await validate({ request, validator });
 
   const activity = await db.activity.findFirstOrThrow({
     where: { id: exerciseId, userId },
     include: { exerciseItems: true },
   });
 
-  const res = await db.exerciseItem.create({
+  await db.exerciseItem.create({
     data: {
       order: Math.max(0, ...activity.exerciseItems.map((i) => i.order)) + 1,
       activityId: activity.id,
@@ -163,10 +157,12 @@ export default function Activity() {
   const templateLoadAmounts = exerciseType?.lastExerciseItem?.amount ?? [];
   const templateLoadAmount = templateLoadAmounts[0];
 
+  const formRef = useRef<HTMLFormElement>(null);
+
   return (
     <Container py={5} maxW="container.md">
       <HiddenReturnToInput />
-      <ValidatedForm method="post" validator={validator}>
+      <ValidatedForm formRef={formRef} method="post" validator={validator}>
         <Stack spacing={5}>
           <Heading as="h1">Ny övning</Heading>
           <Stack spacing={1}>
@@ -234,6 +230,23 @@ export default function Activity() {
                     />
                   </FormControl>
                 </Stack>
+                {loadType.commonLoads?.length ? (
+                  <div className="flex flex-row gap-2 py-2 overflow-x-auto">
+                    {loadType.commonLoads.map((load) => (
+                      <Button
+                        size="xs"
+                        key={load.value}
+                        onClick={() =>
+                          (formRef.current![
+                            `loadAmount[${i}].amountValue`
+                          ]!.value = load.value?.toString())
+                        }
+                      >
+                        {load.value}
+                      </Button>
+                    ))}
+                  </div>
+                ) : null}
               </Box>
             );
           })}

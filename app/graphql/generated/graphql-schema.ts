@@ -107,6 +107,7 @@ type ExerciseLoad {
 }
 
 type ExerciseLoadType {
+  commonLoads: [ExerciseLoad!]!
   id: ID!
   name: String!
   unit: String

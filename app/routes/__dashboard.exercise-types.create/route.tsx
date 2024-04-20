@@ -28,10 +28,10 @@ import { Input } from "~/components/form/input";
 import { Select } from "~/components/form/select";
 import { SubmitButton } from "~/components/form/submit-button";
 import { Textarea } from "~/components/form/textarea";
+import { validate } from "~/components/form/validate.server";
 import { db } from "~/db.server";
 import { HiddenReturnToInput } from "~/services/return-to";
 import { addSearchParamToPath } from "~/utils/add-search-param-to-path";
-import { formDataToObject } from "~/utils/form-data-to-object";
 
 const validatorSchema = z.object({
   name: z.string(),
@@ -42,25 +42,19 @@ const validatorSchema = z.object({
     z.literal("repetitions"),
     z.literal("levels"),
   ]),
+  loads: z
+    .array(z.object({ name: z.string(), unit: z.string().optional() }))
+    .optional(),
+  levels: z
+    .string()
+    .transform((s) =>
+      s
+        .split("\n")
+        .map((x) => x.trim())
+        .filter((x) => !!x)
+    )
+    .optional(),
 });
-
-const schema = z.intersection(
-  validatorSchema,
-  z.object({
-    loads: z
-      .array(z.object({ name: z.string(), unit: z.string().optional() }))
-      .optional(),
-    levels: z
-      .string()
-      .transform((s) =>
-        s
-          .split("\n")
-          .map((x) => x.trim())
-          .filter((x) => !!x)
-      )
-      .optional(),
-  })
-);
 
 const validator = withZod(validatorSchema);
 
@@ -69,9 +63,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
     failureRedirect: "/",
   });
 
-  const formData = await request.formData();
-  const rawData = formDataToObject(formData);
-  const data = schema.parse(rawData);
+  const data = await validate({ request, validator });
 
   const exerciseType = await db.exerciseType.create({
     data: {

@@ -169,6 +169,7 @@ export type ExerciseLoad = {
 
 export type ExerciseLoadType = {
   __typename?: 'ExerciseLoadType';
+  commonLoads: Array<ExerciseLoad>;
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
   unit: Maybe<Scalars['String']['output']>;
@@ -631,6 +632,7 @@ export type ExerciseLoadResolvers<ContextType = Context, ParentType extends Reso
 };
 
 export type ExerciseLoadTypeResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ExerciseLoadType'] = ResolversParentTypes['ExerciseLoadType']> = {
+  commonLoads: Resolver<Array<ResolversTypes['ExerciseLoad']>, ParentType, ContextType>;
   id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   unit: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;

@@ -24,10 +24,7 @@ export const exerciseAmountResolvers: ExerciseAmountResolvers = {
             where: { id: loadAmount.amountLevelId },
           }),
         }
-      : {
-          __typename: "ExerciseDurationTime",
-          durationSeconds: 0,
-        },
+      : { __typename: "ExerciseDurationTime", durationSeconds: 0 },
   loads: (loadAmount) =>
     loadAmount.loads.map((load) => ({
       unit: load.exerciseLoadType.unit,
