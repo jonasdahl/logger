@@ -188,7 +188,7 @@ export function Day({
                       to={`/tests/create?date=${start.toFormat(
                         "yyyy-MM-dd"
                       )}&redirectTo=${location.pathname}`}
-                      colorScheme="yellow"
+                      colorScheme="orange"
                       size="sm"
                       flex={1}
                     >
@@ -389,9 +389,8 @@ const DayPreview = forwardRef<HTMLButtonElement, { day: CalendarDayFragment }>(
 
 const TestDayPreview = forwardRef<HTMLButtonElement, {}>((props, ref) => (
   <BasePreview
-    bg="yellow.500"
-    _hover={{ bg: "yellow.600" }}
-    color="black"
+    bg="orange.500"
+    _hover={{ bg: "orange.600" }}
     {...props}
     ref={ref}
   >
@@ -413,8 +412,9 @@ const RestDayPreview = forwardRef<HTMLButtonElement, {}>((props, ref) => (
 
 const TravelDayPreview = forwardRef<HTMLButtonElement, {}>((props, ref) => (
   <BasePreview
-    bg="orange.500"
-    _hover={{ bg: "orange.600" }}
+    bg="yellow.500"
+    color="black"
+    _hover={{ bg: "yellow.600" }}
     {...props}
     ref={ref}
   >
