@@ -49,6 +49,13 @@ export const dayResolvers: DayResolvers = {
         time: { gte: start.toJSDate(), lte: end.toJSDate() },
       },
     });
+    const travels = await db.travel.findMany({
+      where: {
+        userId,
+        start: { lte: end.toJSDate() },
+        end: { gte: start.toJSDate() },
+      },
+    });
     return {
       pageInfo: {
         endCursor: null,
@@ -78,8 +85,16 @@ export const dayResolvers: DayResolvers = {
             cursor: physicalTest.id,
             node: { type: "PhysicalTest" as const, value: physicalTest },
           })),
+          ...travels.map((travel) => ({
+            cursor: travel.id,
+            node: { type: "Travel" as const, value: travel },
+          })),
         ],
-        [(x) => x.node.value.time, "asc"]
+        [
+          (x) =>
+            x.node.type === "Travel" ? x.node.value.start : x.node.value.time,
+          "asc",
+        ]
       ),
     };
   },

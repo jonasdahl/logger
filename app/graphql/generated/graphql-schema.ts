@@ -1,4 +1,4 @@
-export const typeDefinitions = `union Activity = CustomGame | Exercise | FogisGame | PhysicalTest | PlannedExercise
+export const typeDefinitions = `union Activity = CustomGame | Exercise | FogisGame | PhysicalTest | PlannedExercise | Travel
 
 interface ActivityBase {
   id: ID!
@@ -212,6 +212,13 @@ type Query {
   exerciseTypes(filter: ExerciseTypeFilter): ExerciseTypeConnection!
   me: User
   today: Day!
+}
+
+type Travel implements ActivityBase {
+  end: DateTime!
+  id: ID!
+  start: DateTime!
+  title: String!
 }
 
 type User {

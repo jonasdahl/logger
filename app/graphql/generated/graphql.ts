@@ -16,6 +16,7 @@ import { FogisGameModel } from '../types/fogis-game/model';
 import { HeartRateSummaryModel } from '../types/heart-rate-summary/model';
 import { PhysicalTestModel } from '../types/physical-test/model';
 import { PlannedExerciseModel } from '../types/planned-exercise/model';
+import { TravelModel } from '../types/travel/model';
 import { UserModel } from '../types/user/model';
 import { Context } from '../context';
 export type Maybe<T> = T | null;
@@ -37,7 +38,7 @@ export type Scalars = {
   DateTime: { input: DateTime; output: DateTime; }
 };
 
-export type Activity = CustomGame | Exercise | FogisGame | PhysicalTest | PlannedExercise;
+export type Activity = CustomGame | Exercise | FogisGame | PhysicalTest | PlannedExercise | Travel;
 
 export type ActivityBase = {
   id: Scalars['ID']['output'];
@@ -336,6 +337,14 @@ export type QueryExerciseTypesArgs = {
   filter: InputMaybe<ExerciseTypeFilter>;
 };
 
+export type Travel = ActivityBase & {
+  __typename?: 'Travel';
+  end: Scalars['DateTime']['output'];
+  id: Scalars['ID']['output'];
+  start: Scalars['DateTime']['output'];
+  title: Scalars['String']['output'];
+};
+
 export type User = {
   __typename?: 'User';
   email: Scalars['String']['output'];
@@ -411,13 +420,13 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping of union types */
 export type ResolversUnionTypes<RefType extends Record<string, unknown>> = {
-  Activity: ( CustomGameModel ) | ( ExerciseModel ) | ( FogisGameModel ) | ( PhysicalTestModel ) | ( PlannedExerciseModel );
+  Activity: ( CustomGameModel ) | ( ExerciseModel ) | ( FogisGameModel ) | ( PhysicalTestModel ) | ( PlannedExerciseModel ) | ( TravelModel );
   ExerciseDuration: ( Omit<ExerciseDurationLevel, 'levelType'> & { levelType: RefType['ExerciseTypeLevel'] } ) | ( ExerciseDurationRepetitions ) | ( ExerciseDurationTime );
 };
 
 /** Mapping of interface types */
 export type ResolversInterfaceTypes<RefType extends Record<string, unknown>> = {
-  ActivityBase: ( CustomGameModel ) | ( ExerciseModel ) | ( FogisGameModel ) | ( PhysicalTestModel ) | ( PlannedExerciseModel );
+  ActivityBase: ( CustomGameModel ) | ( ExerciseModel ) | ( FogisGameModel ) | ( PhysicalTestModel ) | ( PlannedExerciseModel ) | ( TravelModel );
 };
 
 /** Mapping between all available schema types and the resolvers types */
@@ -464,6 +473,7 @@ export type ResolversTypes = {
   PlannedExercise: ResolverTypeWrapper<PlannedExerciseModel>;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
+  Travel: ResolverTypeWrapper<TravelModel>;
   User: ResolverTypeWrapper<UserModel>;
 };
 
@@ -509,15 +519,16 @@ export type ResolversParentTypes = {
   PlannedExercise: PlannedExerciseModel;
   Query: {};
   String: Scalars['String']['output'];
+  Travel: TravelModel;
   User: UserModel;
 };
 
 export type ActivityResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Activity'] = ResolversParentTypes['Activity']> = {
-  __resolveType: TypeResolveFn<'CustomGame' | 'Exercise' | 'FogisGame' | 'PhysicalTest' | 'PlannedExercise', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'CustomGame' | 'Exercise' | 'FogisGame' | 'PhysicalTest' | 'PlannedExercise' | 'Travel', ParentType, ContextType>;
 };
 
 export type ActivityBaseResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ActivityBase'] = ResolversParentTypes['ActivityBase']> = {
-  __resolveType: TypeResolveFn<'CustomGame' | 'Exercise' | 'FogisGame' | 'PhysicalTest' | 'PlannedExercise', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'CustomGame' | 'Exercise' | 'FogisGame' | 'PhysicalTest' | 'PlannedExercise' | 'Travel', ParentType, ContextType>;
   id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   start: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   title: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -740,6 +751,14 @@ export type QueryResolvers<ContextType = Context, ParentType extends ResolversPa
   today: Resolver<ResolversTypes['Day'], ParentType, ContextType>;
 };
 
+export type TravelResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Travel'] = ResolversParentTypes['Travel']> = {
+  end: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  start: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  title: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type UserResolvers<ContextType = Context, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
   email: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
@@ -780,6 +799,7 @@ export type Resolvers<ContextType = Context> = {
   PhysicalTest: PhysicalTestResolvers<ContextType>;
   PlannedExercise: PlannedExerciseResolvers<ContextType>;
   Query: QueryResolvers<ContextType>;
+  Travel: TravelResolvers<ContextType>;
   User: UserResolvers<ContextType>;
 };
 

@@ -31,6 +31,7 @@ model User {
   physicalTests     PhysicalTest[]
   exerciseTypes     ExerciseType[]
   customGames       CustomGame[]
+  travels           Travel[]
 }
 
 model PushSubscription {
@@ -303,6 +304,18 @@ model LawsQuestionAnswerAlternative {
 
   questionId String
   question   LawsQuestion @relation(fields: [questionId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Travel {
+  id    String   @id @default(uuid())
+  start DateTime
+  end   DateTime
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

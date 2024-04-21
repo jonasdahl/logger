@@ -344,7 +344,14 @@ export default function DashboardIndex() {
                 );
               }
 
-              return null;
+              return (
+                <Box key={e.node.id} bg="gray.50" borderRadius="md" padding={3}>
+                  {DateTime.fromISO(e.node.start)
+                    .setZone(timeZone)
+                    .toFormat("HH:mm")}{" "}
+                  {e.node.title}
+                </Box>
+              );
             })}
           </Stack>
         </Stack>

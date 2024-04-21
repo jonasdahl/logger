@@ -1,0 +1,6 @@
+type Travel implements ActivityBase {
+  id: ID!
+  start: DateTime!
+  end: DateTime!
+  title: String!
+}

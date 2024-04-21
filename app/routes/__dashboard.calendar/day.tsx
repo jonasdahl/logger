@@ -205,6 +205,17 @@ export function Day({
                     >
                       Match
                     </ButtonLink>
+
+                    <ButtonLink
+                      to={`/travel/create?date=${start.toFormat(
+                        "yyyy-MM-dd"
+                      )}&redirectTo=${location.pathname}`}
+                      colorScheme="blue"
+                      size="sm"
+                      flex={1}
+                    >
+                      Resa
+                    </ButtonLink>
                   </HStack>
                 </Stack>
               </PopoverBody>
@@ -339,6 +350,10 @@ const DayPreview = forwardRef<HTMLButtonElement, { day: CalendarDayFragment }>(
       );
     }
 
+    if (activities.some((a) => a.__typename === "Travel")) {
+      return <TravelDayPreview ref={ref} {...generalProps} />;
+    }
+
     if (isPast) {
       return <RestDayPreview ref={ref} {...generalProps} />;
     }
@@ -393,6 +408,12 @@ const GameDayPreview = forwardRef<HTMLButtonElement, {}>((props, ref) => (
 const RestDayPreview = forwardRef<HTMLButtonElement, {}>((props, ref) => (
   <BasePreview bg="green.500" _hover={{ bg: "green.600" }} {...props} ref={ref}>
     Vila
+  </BasePreview>
+));
+
+const TravelDayPreview = forwardRef<HTMLButtonElement, {}>((props, ref) => (
+  <BasePreview bg="gray.500" _hover={{ bg: "gray.600" }} {...props} ref={ref}>
+    Resdag
   </BasePreview>
 ));
 

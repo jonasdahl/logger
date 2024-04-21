@@ -164,6 +164,13 @@ export const queryResolvers: QueryResolvers = {
         },
       },
     });
+    const travel = await db.travel.findMany({
+      where: {
+        userId,
+        start: { lte: filter?.startTo?.toJSDate() ?? undefined },
+        end: { gte: filter?.startFrom?.toJSDate() ?? undefined },
+      },
+    });
     return {
       pageInfo: {
         endCursor: null,
@@ -193,8 +200,16 @@ export const queryResolvers: QueryResolvers = {
             cursor: activity.id,
             node: { type: "PhysicalTest" as const, value: activity },
           })),
+          ...travel.map((travel) => ({
+            cursor: travel.id,
+            node: { type: "Travel" as const, value: travel },
+          })),
         ],
-        [(x) => x.node.value.time, "asc"]
+        [
+          (x) =>
+            x.node.type === "Travel" ? x.node.value.start : x.node.value.time,
+          "asc",
+        ]
       ),
     };
   },

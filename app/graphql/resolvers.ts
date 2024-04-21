@@ -32,6 +32,7 @@ import { pageInfoResolvers } from "./types/page-info/resolvers";
 import { physicalTestResolvers } from "./types/physical-test/resolvers";
 import { plannedExerciseResolvers } from "./types/planned-exercise/resolvers";
 import { queryResolvers } from "./types/query/resolvers";
+import { travelResolvers } from "./types/travel/resolvers";
 import { userResolvers } from "./types/user/resolvers";
 
 export const resolvers: Resolvers = {
@@ -69,4 +70,5 @@ export const resolvers: Resolvers = {
   ExerciseTypeHistoryDayAmount: exerciseTypeHistoryDayAmountResolvers,
   ExerciseTypeLevel: exerciseTypeLevelResolvers,
   ExerciseDurationLevel: exerciseDurationLevelResolvers,
+  Travel: travelResolvers,
 };
