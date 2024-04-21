@@ -210,7 +210,7 @@ export function Day({
                       to={`/travel/create?date=${start.toFormat(
                         "yyyy-MM-dd"
                       )}&redirectTo=${location.pathname}`}
-                      colorScheme="blue"
+                      colorScheme="yellow"
                       size="sm"
                       flex={1}
                     >
