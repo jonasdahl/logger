@@ -412,7 +412,12 @@ const RestDayPreview = forwardRef<HTMLButtonElement, {}>((props, ref) => (
 ));
 
 const TravelDayPreview = forwardRef<HTMLButtonElement, {}>((props, ref) => (
-  <BasePreview bg="gray.500" _hover={{ bg: "gray.600" }} {...props} ref={ref}>
+  <BasePreview
+    bg="orange.500"
+    _hover={{ bg: "orange.600" }}
+    {...props}
+    ref={ref}
+  >
     Resdag
   </BasePreview>
 ));
