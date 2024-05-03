@@ -19,7 +19,12 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Form, useLoaderData, useLocation } from "@remix-run/react";
+import {
+  Form,
+  Link as RemixLink,
+  useLoaderData,
+  useLocation,
+} from "@remix-run/react";
 import { DateTime } from "luxon";
 import { authenticator } from "~/.server/auth.server";
 import { ButtonLink } from "~/components/button-link";
@@ -195,35 +200,26 @@ export default function DashboardIndex() {
                 );
               }
 
-              if (e.node?.__typename === "CustomGame") {
+              if (
+                e.node?.__typename === "CustomGame" ||
+                e.node?.__typename === "FogisGame"
+              ) {
                 return (
-                  <Box
+                  <LinkBox
                     key={e.node.id}
                     bg="red.50"
                     borderRadius="md"
                     padding={3}
+                    fontWeight="bold"
+                    _hover={{ textDecoration: "underline" }}
                   >
                     {DateTime.fromISO(e.node.start)
                       .setZone(timeZone)
                       .toFormat("HH:mm")}{" "}
-                    {e.node.title}
-                  </Box>
-                );
-              }
-
-              if (e.node?.__typename === "FogisGame") {
-                return (
-                  <Box
-                    key={e.node.id}
-                    bg="red.50"
-                    borderRadius="md"
-                    padding={3}
-                  >
-                    {DateTime.fromISO(e.node.start)
-                      .setZone(timeZone)
-                      .toFormat("HH:mm")}{" "}
-                    {e.node.title}
-                  </Box>
+                    <LinkOverlay as={RemixLink} to={`/games/${e.node.id}`}>
+                      {e.node.title}
+                    </LinkOverlay>
+                  </LinkBox>
                 );
               }
 

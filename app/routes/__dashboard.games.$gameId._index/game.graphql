@@ -1,0 +1,12 @@
+query Game($gameId: ID!) {
+  game(id: $gameId) {
+    ... on ActivityGame {
+      id
+    }
+    ... on ActivityBase {
+      id
+      title
+      start
+    }
+  }
+}

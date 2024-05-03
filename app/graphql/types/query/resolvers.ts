@@ -246,4 +246,19 @@ export const queryResolvers: QueryResolvers = {
   today: (_, __, { timeZone }) => ({
     start: DateTime.now()!.setZone(timeZone)!,
   }),
+  game: async (_, { id }, { userId }) => {
+    if (!userId) {
+      throw new Error("Not authenticated");
+    }
+    const fogisGame = await db.fogisGame.findFirst({
+      where: { id, deletedAt: null, userId },
+    });
+    if (fogisGame) {
+      return { type: "FogisGame", value: fogisGame };
+    }
+    const customGame = await db.customGame.findFirstOrThrow({
+      where: { id, deletedAt: null, userId },
+    });
+    return { type: "CustomGame", value: customGame };
+  },
 };

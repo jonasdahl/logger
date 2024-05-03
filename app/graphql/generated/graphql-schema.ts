@@ -21,13 +21,17 @@ input ActivityFilter {
   startTo: DateTime
 }
 
+interface ActivityGame {
+  id: ID!
+}
+
 enum AmountType {
   Levels
   Repetitions
   Time
 }
 
-type CustomGame implements ActivityBase {
+type CustomGame implements ActivityBase & ActivityGame {
   id: ID!
   start: DateTime!
   title: String!
@@ -158,7 +162,7 @@ type ExerciseTypeLevel {
   ordinal: Float!
 }
 
-type FogisGame implements ActivityBase {
+type FogisGame implements ActivityBase & ActivityGame {
   awayTeam: String!
   homeTeam: String!
   id: ID!
@@ -210,6 +214,7 @@ type Query {
   exercise(id: ID!): Exercise
   exerciseType(id: ID!): ExerciseType
   exerciseTypes(filter: ExerciseTypeFilter): ExerciseTypeConnection!
+  game(id: ID!): ActivityGame
   me: User
   today: Day!
 }

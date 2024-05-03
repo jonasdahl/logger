@@ -1,4 +1,4 @@
-type FogisGame implements ActivityBase {
+type FogisGame implements ActivityBase & ActivityGame {
   id: ID!
   start: DateTime!
   title: String!

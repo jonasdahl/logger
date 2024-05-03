@@ -1,11 +1,11 @@
 import { Box, Progress } from "@chakra-ui/react";
 import type { IconDefinition } from "@fortawesome/free-solid-svg-icons";
 import {
+  faBars,
   faCalendar,
   faEllipsis,
   faHome,
   faLineChart,
-  faRunning,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { LoaderFunctionArgs } from "@remix-run/node";
@@ -53,11 +53,7 @@ export default function Dashboard() {
           <BottomMenuItem icon={faHome} label="Start" to="/" />
           <BottomMenuItem icon={faCalendar} label="Kalender" to="/calendar" />
           <Link
-            to={
-              currentActivity?.__typename === "Exercise"
-                ? `/exercises/${currentActivity.id}`
-                : "/exercises/live"
-            }
+            to="/actions"
             className={cx(
               "py-3 flex flex-col items-center justify-center w-20 h-20 truncate rounded-full text-white -mt-6 -mb-6 transition-colors",
               currentActivity?.__typename === "Exercise"
@@ -67,18 +63,11 @@ export default function Dashboard() {
           >
             <div
               className={cx(
-                "flex flex-col items-center justify-center",
+                "flex flex-col items-center justify-center text-white text-2xl",
                 currentActivity?.__typename === "Exercise" && "animate-pulse"
               )}
             >
-              <span className="text-white">
-                <FontAwesomeIcon icon={faRunning} />
-              </span>
-              <span className="text-white truncate max-w-full">
-                {currentActivity?.__typename === "Exercise"
-                  ? "Tränar"
-                  : "Träna"}
-              </span>
+              <FontAwesomeIcon icon={faBars} />
             </div>
           </Link>
           <BottomMenuItem

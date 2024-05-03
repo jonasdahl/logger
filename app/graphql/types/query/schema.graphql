@@ -6,6 +6,7 @@ type Query {
   exerciseType(id: ID!): ExerciseType
 
   currentActivity: Activity
+  game(id: ID!): ActivityGame
 
   activities(
     first: Int

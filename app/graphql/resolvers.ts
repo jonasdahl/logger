@@ -3,6 +3,7 @@ import { dateTimeScalar } from "./scalars/date-time/scalar";
 import { activityBaseResolvers } from "./types/activity-base/resolvers";
 import { activityConnectionResolvers } from "./types/activity-connection/resolvers";
 import { activityEdgeResolvers } from "./types/activity-edge/resolvers";
+import { activityGameResolvers } from "./types/activity-game/resolvers";
 import { activityResolvers } from "./types/activity/resolvers";
 import { customGameResolvers } from "./types/custom-game/resolvers";
 import { dayConnectionResolvers } from "./types/day-connection/resolvers";
@@ -71,4 +72,5 @@ export const resolvers: Resolvers = {
   ExerciseTypeLevel: exerciseTypeLevelResolvers,
   ExerciseDurationLevel: exerciseDurationLevelResolvers,
   Travel: travelResolvers,
+  ActivityGame: activityGameResolvers,
 };

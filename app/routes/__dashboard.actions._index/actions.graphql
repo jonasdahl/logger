@@ -1,0 +1,22 @@
+query Actions {
+  currentActivity {
+    __typename
+    ... on Exercise {
+      id
+    }
+  }
+
+  today {
+    activities {
+      edges {
+        node {
+          __typename
+          ... on ActivityBase {
+            id
+            title
+          }
+        }
+      }
+    }
+  }
+}
