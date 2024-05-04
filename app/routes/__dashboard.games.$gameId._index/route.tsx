@@ -22,7 +22,7 @@ import { authenticator } from "~/.server/auth.server";
 import { HiddenReturnToInput } from "~/services/return-to";
 
 import { useLoaderData } from "@remix-run/react";
-import { DateTime } from "luxon";
+import { DateTime, Duration } from "luxon";
 import { z } from "zod";
 import { ButtonLink } from "~/components/button-link";
 import { GameDocument } from "~/graphql/generated/documents";
@@ -101,23 +101,43 @@ function Overview({ data }: { data: SerializeFrom<typeof loader> }) {
         <Tbody>
           <Tr>
             <Td>Tid i zon 5:</Td>
-            <Td>{totalTime?.zone5}</Td>
+            <Td>
+              {Duration.fromMillis((totalTime?.zone1 ?? 0) * 1000)
+                .shiftTo("minutes", "seconds")
+                .toFormat("m'min' ss's'")}
+            </Td>
           </Tr>
           <Tr>
             <Td>Tid i zon 4:</Td>
-            <Td>{totalTime?.zone4}</Td>
+            <Td>
+              {Duration.fromMillis((totalTime?.zone1 ?? 0) * 1000)
+                .shiftTo("minutes", "seconds")
+                .toFormat("m'min' ss's'")}
+            </Td>
           </Tr>
           <Tr>
             <Td>Tid i zon 3:</Td>
-            <Td>{totalTime?.zone3}</Td>
+            <Td>
+              {Duration.fromMillis((totalTime?.zone1 ?? 0) * 1000)
+                .shiftTo("minutes", "seconds")
+                .toFormat("m'min' ss's'")}
+            </Td>
           </Tr>
           <Tr>
             <Td>Tid i zon 2:</Td>
-            <Td>{totalTime?.zone2}</Td>
+            <Td>
+              {Duration.fromMillis((totalTime?.zone1 ?? 0) * 1000)
+                .shiftTo("minutes", "seconds")
+                .toFormat("m'min' ss's'")}
+            </Td>
           </Tr>
           <Tr>
             <Td>Tid i zon 1:</Td>
-            <Td>{totalTime?.zone1}</Td>
+            <Td>
+              {Duration.fromMillis((totalTime?.zone1 ?? 0) * 1000)
+                .shiftTo("minutes", "seconds")
+                .toFormat("m'min' ss's'")}
+            </Td>
           </Tr>
         </Tbody>
       </Table>

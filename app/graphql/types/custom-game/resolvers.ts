@@ -9,5 +9,5 @@ export const customGameResolvers: CustomGameResolvers = {
       .setZone(timeZone)
       .startOf("day"),
   }),
-  title: (parent) => `Match`,
+  title: () => `Match`,
 };
