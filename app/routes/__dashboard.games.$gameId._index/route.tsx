@@ -8,11 +8,15 @@ import {
   TabList,
   TabPanel,
   TabPanels,
+  Table,
   Tabs,
+  Tbody,
+  Td,
+  Tr,
   Wrap,
   WrapItem,
 } from "@chakra-ui/react";
-import type { LoaderFunctionArgs } from "@remix-run/node";
+import type { LoaderFunctionArgs, SerializeFrom } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { authenticator } from "~/.server/auth.server";
 import { HiddenReturnToInput } from "~/services/return-to";
@@ -66,12 +70,18 @@ export default function Game() {
 
         <Tabs>
           <TabList>
+            {isStarted ? <Tab>Översikt</Tab> : null}
             {isStarted ? <Tab>Tidslinje</Tab> : null}
             <Tab>Packlista</Tab>
           </TabList>
           <TabPanels>
             {isStarted ? (
-              <TabPanel>
+              <TabPanel px={0}>
+                <Overview data={data} />
+              </TabPanel>
+            ) : null}
+            {isStarted ? (
+              <TabPanel px={0}>
                 <TimeLine />
               </TabPanel>
             ) : null}
@@ -80,6 +90,38 @@ export default function Game() {
         </Tabs>
       </Stack>
     </Container>
+  );
+}
+
+function Overview({ data }: { data: SerializeFrom<typeof loader> }) {
+  const totalTime = data?.game?.startDay.heartRateSummary;
+  return (
+    <Box>
+      <Table size="sm">
+        <Tbody>
+          <Tr>
+            <Td>Tid i zon 5:</Td>
+            <Td>{totalTime?.zone5}</Td>
+          </Tr>
+          <Tr>
+            <Td>Tid i zon 4:</Td>
+            <Td>{totalTime?.zone4}</Td>
+          </Tr>
+          <Tr>
+            <Td>Tid i zon 3:</Td>
+            <Td>{totalTime?.zone3}</Td>
+          </Tr>
+          <Tr>
+            <Td>Tid i zon 2:</Td>
+            <Td>{totalTime?.zone2}</Td>
+          </Tr>
+          <Tr>
+            <Td>Tid i zon 1:</Td>
+            <Td>{totalTime?.zone1}</Td>
+          </Tr>
+        </Tbody>
+      </Table>
+    </Box>
   );
 }
 

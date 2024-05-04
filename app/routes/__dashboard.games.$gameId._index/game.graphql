@@ -1,5 +1,16 @@
 query Game($gameId: ID!) {
   game(id: $gameId) {
+    ... on ActivityBase {
+      startDay {
+        heartRateSummary {
+          zone1: secondsInZone(heartRateZone: Zone1)
+          zone2: secondsInZone(heartRateZone: Zone2)
+          zone3: secondsInZone(heartRateZone: Zone3)
+          zone4: secondsInZone(heartRateZone: Zone4)
+          zone5: secondsInZone(heartRateZone: Zone5)
+        }
+      }
+    }
     ... on ActivityGame {
       id
     }
