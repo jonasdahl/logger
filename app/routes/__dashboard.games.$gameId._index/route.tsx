@@ -1,4 +1,5 @@
 import {
+  Box,
   Container,
   Heading,
   Spacer,
@@ -69,11 +70,19 @@ export default function Game() {
             <Tab>Packlista</Tab>
           </TabList>
           <TabPanels>
-            {isStarted ? <TabPanel>TBD</TabPanel> : null}
+            {isStarted ? (
+              <TabPanel>
+                <TimeLine />
+              </TabPanel>
+            ) : null}
             <TabPanel>TBD</TabPanel>
           </TabPanels>
         </Tabs>
       </Stack>
     </Container>
   );
+}
+
+function TimeLine() {
+  return <Box>TBD</Box>;
 }

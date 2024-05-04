@@ -21,6 +21,7 @@ export type Activity = CustomGame | Exercise | FogisGame | PhysicalTest | Planne
 export type ActivityBase = {
   readonly id: Scalars['ID']['output'];
   readonly start: Scalars['DateTime']['output'];
+  readonly startDay: Day;
   readonly title: Scalars['String']['output'];
 };
 
@@ -55,6 +56,7 @@ export type CustomGame = ActivityBase & ActivityGame & {
   readonly __typename?: 'CustomGame';
   readonly id: Scalars['ID']['output'];
   readonly start: Scalars['DateTime']['output'];
+  readonly startDay: Day;
   readonly title: Scalars['String']['output'];
 };
 
@@ -97,6 +99,7 @@ export type Exercise = ActivityBase & {
   readonly primaryPurpose: Maybe<ExercisePurpose>;
   readonly secondaryPurpose: Maybe<ExercisePurpose>;
   readonly start: Scalars['DateTime']['output'];
+  readonly startDay: Day;
   readonly title: Scalars['String']['output'];
 };
 
@@ -216,6 +219,7 @@ export type FogisGame = ActivityBase & ActivityGame & {
   readonly homeTeam: Scalars['String']['output'];
   readonly id: Scalars['ID']['output'];
   readonly start: Scalars['DateTime']['output'];
+  readonly startDay: Day;
   readonly title: Scalars['String']['output'];
 };
 
@@ -249,6 +253,7 @@ export type PhysicalTest = ActivityBase & {
   readonly __typename?: 'PhysicalTest';
   readonly id: Scalars['ID']['output'];
   readonly start: Scalars['DateTime']['output'];
+  readonly startDay: Day;
   readonly title: Scalars['String']['output'];
 };
 
@@ -260,6 +265,7 @@ export type PlannedExercise = ActivityBase & {
   readonly primaryPurpose: Maybe<ExercisePurpose>;
   readonly secondaryPurpose: Maybe<ExercisePurpose>;
   readonly start: Scalars['DateTime']['output'];
+  readonly startDay: Day;
   readonly title: Scalars['String']['output'];
 };
 
@@ -330,6 +336,7 @@ export type Travel = ActivityBase & {
   readonly end: Scalars['DateTime']['output'];
   readonly id: Scalars['ID']['output'];
   readonly start: Scalars['DateTime']['output'];
+  readonly startDay: Day;
   readonly title: Scalars['String']['output'];
 };
 

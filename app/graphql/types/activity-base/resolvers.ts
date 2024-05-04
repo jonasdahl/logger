@@ -7,7 +7,15 @@ export const activityBaseResolvers: ActivityBaseResolvers = {
     parent.type === "Travel"
       ? DateTime.fromJSDate(parent.value.start)
       : DateTime.fromJSDate(parent.value.time),
-  title: (parent) => {
+  startDay: (parent) => {
+    return {
+      start:
+        parent.type === "Travel"
+          ? DateTime.fromJSDate(parent.value.start)
+          : DateTime.fromJSDate(parent.value.time),
+    };
+  },
+  title: () => {
     throw new Error("Resolver not implemented");
   },
   __resolveType: (parent) => parent.type,

@@ -3,4 +3,5 @@ type Travel implements ActivityBase {
   start: DateTime!
   end: DateTime!
   title: String!
+  startDay: Day!
 }

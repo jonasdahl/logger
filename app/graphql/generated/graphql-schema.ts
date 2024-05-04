@@ -3,6 +3,7 @@ export const typeDefinitions = `union Activity = CustomGame | Exercise | FogisGa
 interface ActivityBase {
   id: ID!
   start: DateTime!
+  startDay: Day!
   title: String!
 }
 
@@ -34,6 +35,7 @@ enum AmountType {
 type CustomGame implements ActivityBase & ActivityGame {
   id: ID!
   start: DateTime!
+  startDay: Day!
   title: String!
 }
 
@@ -65,6 +67,7 @@ type Exercise implements ActivityBase {
   primaryPurpose: ExercisePurpose
   secondaryPurpose: ExercisePurpose
   start: DateTime!
+  startDay: Day!
   title: String!
 }
 
@@ -167,6 +170,7 @@ type FogisGame implements ActivityBase & ActivityGame {
   homeTeam: String!
   id: ID!
   start: DateTime!
+  startDay: Day!
   title: String!
 }
 
@@ -192,6 +196,7 @@ type PageInfo {
 type PhysicalTest implements ActivityBase {
   id: ID!
   start: DateTime!
+  startDay: Day!
   title: String!
 }
 
@@ -202,6 +207,7 @@ type PlannedExercise implements ActivityBase {
   primaryPurpose: ExercisePurpose
   secondaryPurpose: ExercisePurpose
   start: DateTime!
+  startDay: Day!
   title: String!
 }
 
@@ -223,6 +229,7 @@ type Travel implements ActivityBase {
   end: DateTime!
   id: ID!
   start: DateTime!
+  startDay: Day!
   title: String!
 }
 

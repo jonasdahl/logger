@@ -2,6 +2,7 @@ type Exercise implements ActivityBase {
   id: ID!
   start: DateTime!
   title: String!
+  startDay: Day!
   isHiddenFromOverview: Boolean!
   items: ExerciseItemConnection!
 

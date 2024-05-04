@@ -2,6 +2,7 @@ type PlannedExercise implements ActivityBase {
   id: ID!
   start: DateTime!
   title: String!
+  startDay: Day!
 
   primaryPurpose: ExercisePurpose
   secondaryPurpose: ExercisePurpose

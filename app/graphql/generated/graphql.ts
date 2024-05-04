@@ -43,6 +43,7 @@ export type Activity = CustomGame | Exercise | FogisGame | PhysicalTest | Planne
 export type ActivityBase = {
   id: Scalars['ID']['output'];
   start: Scalars['DateTime']['output'];
+  startDay: Day;
   title: Scalars['String']['output'];
 };
 
@@ -77,6 +78,7 @@ export type CustomGame = ActivityBase & ActivityGame & {
   __typename?: 'CustomGame';
   id: Scalars['ID']['output'];
   start: Scalars['DateTime']['output'];
+  startDay: Day;
   title: Scalars['String']['output'];
 };
 
@@ -119,6 +121,7 @@ export type Exercise = ActivityBase & {
   primaryPurpose: Maybe<ExercisePurpose>;
   secondaryPurpose: Maybe<ExercisePurpose>;
   start: Scalars['DateTime']['output'];
+  startDay: Day;
   title: Scalars['String']['output'];
 };
 
@@ -238,6 +241,7 @@ export type FogisGame = ActivityBase & ActivityGame & {
   homeTeam: Scalars['String']['output'];
   id: Scalars['ID']['output'];
   start: Scalars['DateTime']['output'];
+  startDay: Day;
   title: Scalars['String']['output'];
 };
 
@@ -271,6 +275,7 @@ export type PhysicalTest = ActivityBase & {
   __typename?: 'PhysicalTest';
   id: Scalars['ID']['output'];
   start: Scalars['DateTime']['output'];
+  startDay: Day;
   title: Scalars['String']['output'];
 };
 
@@ -282,6 +287,7 @@ export type PlannedExercise = ActivityBase & {
   primaryPurpose: Maybe<ExercisePurpose>;
   secondaryPurpose: Maybe<ExercisePurpose>;
   start: Scalars['DateTime']['output'];
+  startDay: Day;
   title: Scalars['String']['output'];
 };
 
@@ -352,6 +358,7 @@ export type Travel = ActivityBase & {
   end: Scalars['DateTime']['output'];
   id: Scalars['ID']['output'];
   start: Scalars['DateTime']['output'];
+  startDay: Day;
   title: Scalars['String']['output'];
 };
 
@@ -544,6 +551,7 @@ export type ActivityBaseResolvers<ContextType = Context, ParentType extends Reso
   __resolveType: TypeResolveFn<'CustomGame' | 'Exercise' | 'FogisGame' | 'PhysicalTest' | 'PlannedExercise' | 'Travel', ParentType, ContextType>;
   id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   start: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  startDay: Resolver<ResolversTypes['Day'], ParentType, ContextType>;
   title: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 };
 
@@ -567,6 +575,7 @@ export type ActivityGameResolvers<ContextType = Context, ParentType extends Reso
 export type CustomGameResolvers<ContextType = Context, ParentType extends ResolversParentTypes['CustomGame'] = ResolversParentTypes['CustomGame']> = {
   id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   start: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  startDay: Resolver<ResolversTypes['Day'], ParentType, ContextType>;
   title: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -604,6 +613,7 @@ export type ExerciseResolvers<ContextType = Context, ParentType extends Resolver
   primaryPurpose: Resolver<Maybe<ResolversTypes['ExercisePurpose']>, ParentType, ContextType>;
   secondaryPurpose: Resolver<Maybe<ResolversTypes['ExercisePurpose']>, ParentType, ContextType>;
   start: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  startDay: Resolver<ResolversTypes['Day'], ParentType, ContextType>;
   title: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -721,6 +731,7 @@ export type FogisGameResolvers<ContextType = Context, ParentType extends Resolve
   homeTeam: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   start: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  startDay: Resolver<ResolversTypes['Day'], ParentType, ContextType>;
   title: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -741,6 +752,7 @@ export type PageInfoResolvers<ContextType = Context, ParentType extends Resolver
 export type PhysicalTestResolvers<ContextType = Context, ParentType extends ResolversParentTypes['PhysicalTest'] = ResolversParentTypes['PhysicalTest']> = {
   id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   start: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  startDay: Resolver<ResolversTypes['Day'], ParentType, ContextType>;
   title: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -752,6 +764,7 @@ export type PlannedExerciseResolvers<ContextType = Context, ParentType extends R
   primaryPurpose: Resolver<Maybe<ResolversTypes['ExercisePurpose']>, ParentType, ContextType>;
   secondaryPurpose: Resolver<Maybe<ResolversTypes['ExercisePurpose']>, ParentType, ContextType>;
   start: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  startDay: Resolver<ResolversTypes['Day'], ParentType, ContextType>;
   title: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -774,6 +787,7 @@ export type TravelResolvers<ContextType = Context, ParentType extends ResolversP
   end: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   start: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  startDay: Resolver<ResolversTypes['Day'], ParentType, ContextType>;
   title: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
