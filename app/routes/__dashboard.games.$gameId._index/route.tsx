@@ -101,39 +101,39 @@ function Overview({ data }: { data: SerializeFrom<typeof loader> }) {
         <Tbody>
           <Tr>
             <Td>Tid i zon 5:</Td>
-            <Td>
-              {Duration.fromMillis((totalTime?.zone1 ?? 0) * 1000)
+            <Td textAlign="right">
+              {Duration.fromMillis((totalTime?.zone5 ?? 0) * 1000)
                 .shiftTo("minutes", "seconds")
                 .toFormat("m'min' ss's'")}
             </Td>
           </Tr>
           <Tr>
             <Td>Tid i zon 4:</Td>
-            <Td>
-              {Duration.fromMillis((totalTime?.zone1 ?? 0) * 1000)
+            <Td textAlign="right">
+              {Duration.fromMillis((totalTime?.zone4 ?? 0) * 1000)
                 .shiftTo("minutes", "seconds")
                 .toFormat("m'min' ss's'")}
             </Td>
           </Tr>
           <Tr>
             <Td>Tid i zon 3:</Td>
-            <Td>
-              {Duration.fromMillis((totalTime?.zone1 ?? 0) * 1000)
+            <Td textAlign="right">
+              {Duration.fromMillis((totalTime?.zone3 ?? 0) * 1000)
                 .shiftTo("minutes", "seconds")
                 .toFormat("m'min' ss's'")}
             </Td>
           </Tr>
           <Tr>
             <Td>Tid i zon 2:</Td>
-            <Td>
-              {Duration.fromMillis((totalTime?.zone1 ?? 0) * 1000)
+            <Td textAlign="right">
+              {Duration.fromMillis((totalTime?.zone2 ?? 0) * 1000)
                 .shiftTo("minutes", "seconds")
                 .toFormat("m'min' ss's'")}
             </Td>
           </Tr>
           <Tr>
             <Td>Tid i zon 1:</Td>
-            <Td>
+            <Td textAlign="right">
               {Duration.fromMillis((totalTime?.zone1 ?? 0) * 1000)
                 .shiftTo("minutes", "seconds")
                 .toFormat("m'min' ss's'")}
