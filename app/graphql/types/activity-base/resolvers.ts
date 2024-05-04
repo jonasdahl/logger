@@ -7,12 +7,14 @@ export const activityBaseResolvers: ActivityBaseResolvers = {
     parent.type === "Travel"
       ? DateTime.fromJSDate(parent.value.start)
       : DateTime.fromJSDate(parent.value.time),
-  startDay: (parent) => {
+  startDay: (parent, _, { timeZone }) => {
     return {
-      start:
-        parent.type === "Travel"
-          ? DateTime.fromJSDate(parent.value.start)
-          : DateTime.fromJSDate(parent.value.time),
+      start: (parent.type === "Travel"
+        ? DateTime.fromJSDate(parent.value.start)
+        : DateTime.fromJSDate(parent.value.time)
+      )
+        .setZone(timeZone)
+        .startOf("day"),
     };
   },
   title: () => {

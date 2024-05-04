@@ -85,7 +85,7 @@ export default function Game() {
                 <TimeLine />
               </TabPanel>
             ) : null}
-            <TabPanel>TBD</TabPanel>
+            <TabPanel px={0}>TBD</TabPanel>
           </TabPanels>
         </Tabs>
       </Stack>

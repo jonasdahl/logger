@@ -5,7 +5,11 @@ import type { PlannedExerciseResolvers } from "~/graphql/generated/graphql";
 export const plannedExerciseResolvers: PlannedExerciseResolvers = {
   id: (parent) => parent.value.id,
   start: (parent) => DateTime.fromJSDate(parent.value.time),
-  startDay: (parent) => ({ start: DateTime.fromJSDate(parent.value.time) }),
+  startDay: (parent, _, { timeZone }) => ({
+    start: DateTime.fromJSDate(parent.value.time)
+      .setZone(timeZone)
+      .startOf("day"),
+  }),
   title: () => "Planerad träning",
   primaryPurpose: (parent) =>
     parent.value.primaryPurposeId
