@@ -39,6 +39,8 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 export default function Game() {
   const data = useLoaderData<typeof loader>();
   const start = data?.game?.start;
+  const now = DateTime.now();
+  const isStarted = start ? DateTime.fromISO(start) < now : false;
 
   return (
     <Container py={5} maxW="container.md">
@@ -63,9 +65,11 @@ export default function Game() {
 
         <Tabs>
           <TabList>
+            {isStarted ? <Tab>Tidslinje</Tab> : null}
             <Tab>Packlista</Tab>
           </TabList>
           <TabPanels>
+            {isStarted ? <TabPanel>TBD</TabPanel> : null}
             <TabPanel>TBD</TabPanel>
           </TabPanels>
         </Tabs>
