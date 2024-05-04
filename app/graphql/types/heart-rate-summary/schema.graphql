@@ -1,5 +1,6 @@
 type HeartRateSummary {
   secondsInZone(heartRateZone: HeartRateZone): Int
+  samples: [HeartRateSample!]!
 }
 
 enum HeartRateZone {

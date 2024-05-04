@@ -252,8 +252,15 @@ export type FogisGame = ActivityBase & ActivityGame & {
   title: Scalars['String']['output'];
 };
 
+export type HeartRateSample = {
+  __typename?: 'HeartRateSample';
+  heartRate: Maybe<Scalars['Int']['output']>;
+  time: Scalars['DateTime']['output'];
+};
+
 export type HeartRateSummary = {
   __typename?: 'HeartRateSummary';
+  samples: Array<HeartRateSample>;
   secondsInZone: Maybe<Scalars['Int']['output']>;
 };
 
@@ -492,6 +499,7 @@ export type ResolversTypes = {
   ExerciseTypeLevel: ResolverTypeWrapper<ExerciseTypeLevelModel>;
   Float: ResolverTypeWrapper<Scalars['Float']['output']>;
   FogisGame: ResolverTypeWrapper<FogisGameModel>;
+  HeartRateSample: ResolverTypeWrapper<HeartRateSample>;
   HeartRateSummary: ResolverTypeWrapper<HeartRateSummaryModel>;
   HeartRateZone: HeartRateZone;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
@@ -541,6 +549,7 @@ export type ResolversParentTypes = {
   ExerciseTypeLevel: ExerciseTypeLevelModel;
   Float: Scalars['Float']['output'];
   FogisGame: FogisGameModel;
+  HeartRateSample: HeartRateSample;
   HeartRateSummary: HeartRateSummaryModel;
   ID: Scalars['ID']['output'];
   Int: Scalars['Int']['output'];
@@ -753,7 +762,14 @@ export type FogisGameResolvers<ContextType = Context, ParentType extends Resolve
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type HeartRateSampleResolvers<ContextType = Context, ParentType extends ResolversParentTypes['HeartRateSample'] = ResolversParentTypes['HeartRateSample']> = {
+  heartRate: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  time: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type HeartRateSummaryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['HeartRateSummary'] = ResolversParentTypes['HeartRateSummary']> = {
+  samples: Resolver<Array<ResolversTypes['HeartRateSample']>, ParentType, ContextType>;
   secondsInZone: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, HeartRateSummarySecondsInZoneArgs>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -847,6 +863,7 @@ export type Resolvers<ContextType = Context> = {
   ExerciseTypeHistoryDayAmount: ExerciseTypeHistoryDayAmountResolvers<ContextType>;
   ExerciseTypeLevel: ExerciseTypeLevelResolvers<ContextType>;
   FogisGame: FogisGameResolvers<ContextType>;
+  HeartRateSample: HeartRateSampleResolvers<ContextType>;
   HeartRateSummary: HeartRateSummaryResolvers<ContextType>;
   PageInfo: PageInfoResolvers<ContextType>;
   PhysicalTest: PhysicalTestResolvers<ContextType>;

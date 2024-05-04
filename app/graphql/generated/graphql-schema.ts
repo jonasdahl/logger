@@ -180,7 +180,13 @@ type FogisGame implements ActivityBase & ActivityGame {
   title: String!
 }
 
+type HeartRateSample {
+  heartRate: Int
+  time: DateTime!
+}
+
 type HeartRateSummary {
+  samples: [HeartRateSample!]!
   secondsInZone(heartRateZone: HeartRateZone): Int
 }
 

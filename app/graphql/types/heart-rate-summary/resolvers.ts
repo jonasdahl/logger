@@ -14,6 +14,8 @@ const zoneDefinitions = [
 ];
 
 export const heartRateSummaryResolvers: HeartRateSummaryResolvers = {
+  samples: (parent) =>
+    parent.samples.map((s) => ({ heartRate: s.value, time: s.tStart })),
   secondsInZone: async (parent, { heartRateZone }, { userId }) => {
     if (!userId) {
       throw new Error("Unauthorized");

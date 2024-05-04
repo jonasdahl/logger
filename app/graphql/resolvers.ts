@@ -29,6 +29,7 @@ import { exerciseTypeLevelResolvers } from "./types/exercise-type-level/resolver
 import { exerciseTypeResolvers } from "./types/exercise-type/resolvers";
 import { exerciseResolvers } from "./types/exercise/resolvers";
 import { fogisGameResolvers } from "./types/fogis-game/resolvers";
+import { heartRateSampleResolvers } from "./types/heart-rate-sample/resolvers";
 import { heartRateSummaryResolvers } from "./types/heart-rate-summary/resolvers";
 import { pageInfoResolvers } from "./types/page-info/resolvers";
 import { physicalTestResolvers } from "./types/physical-test/resolvers";
@@ -75,4 +76,5 @@ export const resolvers: Resolvers = {
   Travel: travelResolvers,
   ActivityGame: activityGameResolvers,
   Event: eventResolvers,
+  HeartRateSample: heartRateSampleResolvers,
 };

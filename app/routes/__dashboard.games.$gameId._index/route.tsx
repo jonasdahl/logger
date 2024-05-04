@@ -26,6 +26,13 @@ import { useLoaderData } from "@remix-run/react";
 import { DateTime, Duration } from "luxon";
 import { z } from "zod";
 import { ButtonLink } from "~/components/button-link";
+import {
+  AnimatedAxis,
+  AnimatedGrid,
+  AnimatedLineSeries,
+  XYChart,
+} from "~/components/charts/xy-chart.client";
+import { ClientOnly } from "~/components/client-only";
 import { GameDocument } from "~/graphql/generated/documents";
 import { gql } from "~/graphql/graphql.server";
 
@@ -162,34 +169,76 @@ function TimeLine({ data }: { data: SerializeFrom<typeof loader> }) {
   const percentsPerSecond = 100 / (duration?.as("seconds") ?? 0);
 
   return (
-    <Box px={2}>
-      <Box position="relative" width="100%">
-        <Box position="absolute" top={1.5} h="1px" bg="gray.300" w="100%" />
-        {data?.game?.startDay.events.map((event) => {
-          return (
-            <Tooltip
-              key={event.time}
-              label={`${DateTime.fromISO(event.time, {
-                zone: data?.timeZone,
-              }).toFormat("HH:mm")}: ${event.description}`}
+    <Box>
+      <ClientOnly>
+        {() => (
+          <Box>
+            <XYChart
+              margin={{ top: 0, right: 0, bottom: 20, left: 30 }}
+              height={300}
+              xScale={{ type: "linear" }}
+              yScale={{ type: "linear" }}
             >
-              <Box
-                position="absolute"
-                left={`${(
-                  percentsPerSecond *
-                  DateTime.fromISO(event.time, { zone: data?.timeZone })
-                    .diff(start!)
-                    .as("seconds")
-                ).toFixed(3)}%`}
-                width={3}
-                height={3}
-                marginLeft={-1.5}
-                borderRadius="full"
-                bg="gray.500"
+              <AnimatedAxis
+                orientation="bottom"
+                tickFormat={(v) =>
+                  (Number(v) / 60).toLocaleString("sv-SE", {
+                    maximumFractionDigits: 1,
+                  })
+                }
               />
-            </Tooltip>
-          );
-        })}
+              <AnimatedAxis orientation="left" />
+              <AnimatedGrid />
+
+              <AnimatedLineSeries
+                dataKey="Puls"
+                data={
+                  data?.game?.startDay.heartRateSummary?.samples.map((s) => ({
+                    x: DateTime.fromISO(s.time, {
+                      zone: data?.timeZone,
+                    }).toJSDate(),
+                    y: s.heartRate,
+                  })) ?? []
+                }
+                xAccessor={(p) => p.x ?? 0}
+                yAccessor={(p) => p.y}
+                stroke="var(--chakra-colors-blue-800)"
+                strokeWidth={1}
+              />
+            </XYChart>
+          </Box>
+        )}
+      </ClientOnly>
+
+      <Box paddingLeft="30px">
+        <Box position="relative" width="100%">
+          <Box position="absolute" top={1.5} h="1px" bg="gray.300" w="100%" />
+          {data?.game?.startDay.events.map((event) => {
+            return (
+              <Tooltip
+                key={event.time}
+                label={`${DateTime.fromISO(event.time, {
+                  zone: data?.timeZone,
+                }).toFormat("HH:mm")}: ${event.description}`}
+              >
+                <Box
+                  position="absolute"
+                  left={`${(
+                    percentsPerSecond *
+                    DateTime.fromISO(event.time, { zone: data?.timeZone })
+                      .diff(start!)
+                      .as("seconds")
+                  ).toFixed(3)}%`}
+                  width={3}
+                  height={3}
+                  marginLeft={-1.5}
+                  borderRadius="full"
+                  bg="gray.500"
+                />
+              </Tooltip>
+            );
+          })}
+        </Box>
       </Box>
     </Box>
   );
