@@ -170,45 +170,47 @@ function TimeLine({ data }: { data: SerializeFrom<typeof loader> }) {
 
   return (
     <Box>
-      <ClientOnly>
-        {() => (
-          <Box>
-            <XYChart
-              margin={{ top: 0, right: 0, bottom: 20, left: 30 }}
-              height={300}
-              xScale={{ type: "linear" }}
-              yScale={{ type: "linear" }}
-            >
-              <AnimatedAxis
-                orientation="bottom"
-                tickFormat={(v) =>
-                  (Number(v) / 60).toLocaleString("sv-SE", {
-                    maximumFractionDigits: 1,
-                  })
-                }
-              />
-              <AnimatedAxis orientation="left" />
-              <AnimatedGrid />
+      {data?.game?.startDay.heartRateSummary?.samples?.length ? (
+        <ClientOnly>
+          {() => (
+            <Box>
+              <XYChart
+                margin={{ top: 0, right: 0, bottom: 20, left: 30 }}
+                height={300}
+                xScale={{ type: "linear" }}
+                yScale={{ type: "linear" }}
+              >
+                <AnimatedAxis
+                  orientation="bottom"
+                  tickFormat={(v) =>
+                    (Number(v) / 60).toLocaleString("sv-SE", {
+                      maximumFractionDigits: 1,
+                    })
+                  }
+                />
+                <AnimatedAxis orientation="left" />
+                <AnimatedGrid />
 
-              <AnimatedLineSeries
-                dataKey="Puls"
-                data={
-                  data?.game?.startDay.heartRateSummary?.samples.map((s) => ({
-                    x: DateTime.fromISO(s.time, {
-                      zone: data?.timeZone,
-                    }).toJSDate(),
-                    y: s.heartRate,
-                  })) ?? []
-                }
-                xAccessor={(p) => p.x ?? 0}
-                yAccessor={(p) => p.y}
-                stroke="var(--chakra-colors-blue-800)"
-                strokeWidth={1}
-              />
-            </XYChart>
-          </Box>
-        )}
-      </ClientOnly>
+                <AnimatedLineSeries
+                  dataKey="Puls"
+                  data={
+                    data?.game?.startDay.heartRateSummary?.samples.map((s) => ({
+                      x: DateTime.fromISO(s.time, {
+                        zone: data?.timeZone,
+                      }).toJSDate(),
+                      y: s.heartRate,
+                    })) ?? []
+                  }
+                  xAccessor={(p) => p.x ?? 0}
+                  yAccessor={(p) => p.y}
+                  stroke="var(--chakra-colors-blue-800)"
+                  strokeWidth={1}
+                />
+              </XYChart>
+            </Box>
+          )}
+        </ClientOnly>
+      ) : null}
 
       <Box paddingLeft="30px">
         <Box position="relative" width="100%">
