@@ -101,6 +101,11 @@ export function Day({
                               <Link to={`/exercises/${activityEdge.node.id}`}>
                                 {activityEdge.node.title}
                               </Link>
+                            ) : activityEdge.node.__typename === "FogisGame" ||
+                              activityEdge.node.__typename === "CustomGame" ? (
+                              <Link to={`/games/${activityEdge.node.id}`}>
+                                {activityEdge.node.title}
+                              </Link>
                             ) : (
                               <>{activityEdge.node.title}</>
                             )}
