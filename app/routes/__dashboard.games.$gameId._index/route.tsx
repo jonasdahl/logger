@@ -155,15 +155,18 @@ function Overview({ data }: { data: SerializeFrom<typeof loader> }) {
 }
 
 function TimeLine({ data }: { data: SerializeFrom<typeof loader> }) {
-  const firstEvent = data?.game?.startDay.events[0];
-  const lastEvent =
-    data?.game?.startDay.events[data?.game?.startDay.events.length - 1];
-  const start = firstEvent
-    ? DateTime.fromISO(firstEvent.time, { zone: data?.timeZone })
-    : null;
-  const end = lastEvent
-    ? DateTime.fromISO(lastEvent.time, { zone: data?.timeZone })
-    : null;
+  const timestamps = [
+    ...(data?.game?.startDay.events.map((e) =>
+      DateTime.fromISO(e.time, { zone: data.timeZone }).toMillis()
+    ) ?? []),
+    ...(data?.game?.startDay.heartRateSummary?.samples.map((s) =>
+      DateTime.fromISO(s.time, { zone: data.timeZone }).toMillis()
+    ) ?? []),
+  ];
+  const startTime = Math.min(...timestamps);
+  const endTime = Math.max(...timestamps);
+  const start = DateTime.fromMillis(startTime, { zone: data?.timeZone });
+  const end = DateTime.fromMillis(endTime, { zone: data?.timeZone });
   const duration = start && end ? end.diff(start) : null;
   const percentsPerSecond = 100 / (duration?.as("seconds") ?? 0);
 
