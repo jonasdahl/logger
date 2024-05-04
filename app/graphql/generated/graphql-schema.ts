@@ -44,6 +44,7 @@ scalar DateTime
 type Day {
   activities(after: String, before: String, first: Int, includeHidden: Boolean, last: Int): ActivityConnection!
   date: String!
+  events: [Event!]!
   heartRateSummary: HeartRateSummary
   start: DateTime!
 }
@@ -56,6 +57,11 @@ type DayConnection {
 type DayEdge {
   cursor: String!
   node: Day
+}
+
+type Event {
+  description: String!
+  time: DateTime!
 }
 
 type Exercise implements ActivityBase {

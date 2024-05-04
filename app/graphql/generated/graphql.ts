@@ -86,6 +86,7 @@ export type Day = {
   __typename?: 'Day';
   activities: ActivityConnection;
   date: Scalars['String']['output'];
+  events: Array<Event>;
   heartRateSummary: Maybe<HeartRateSummary>;
   start: Scalars['DateTime']['output'];
 };
@@ -109,6 +110,12 @@ export type DayEdge = {
   __typename?: 'DayEdge';
   cursor: Scalars['String']['output'];
   node: Maybe<Day>;
+};
+
+export type Event = {
+  __typename?: 'Event';
+  description: Scalars['String']['output'];
+  time: Scalars['DateTime']['output'];
 };
 
 export type Exercise = ActivityBase & {
@@ -462,6 +469,7 @@ export type ResolversTypes = {
   Day: ResolverTypeWrapper<DayModel>;
   DayConnection: ResolverTypeWrapper<Omit<DayConnection, 'edges'> & { edges: Array<ResolversTypes['DayEdge']> }>;
   DayEdge: ResolverTypeWrapper<Omit<DayEdge, 'node'> & { node: Maybe<ResolversTypes['Day']> }>;
+  Event: ResolverTypeWrapper<Event>;
   Exercise: ResolverTypeWrapper<ExerciseModel>;
   ExerciseAmount: ResolverTypeWrapper<ExerciseAmountModel>;
   ExerciseDuration: ResolverTypeWrapper<ResolversUnionTypes<ResolversTypes>['ExerciseDuration']>;
@@ -510,6 +518,7 @@ export type ResolversParentTypes = {
   Day: DayModel;
   DayConnection: Omit<DayConnection, 'edges'> & { edges: Array<ResolversParentTypes['DayEdge']> };
   DayEdge: Omit<DayEdge, 'node'> & { node: Maybe<ResolversParentTypes['Day']> };
+  Event: Event;
   Exercise: ExerciseModel;
   ExerciseAmount: ExerciseAmountModel;
   ExerciseDuration: ResolversUnionTypes<ResolversParentTypes>['ExerciseDuration'];
@@ -587,6 +596,7 @@ export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversT
 export type DayResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Day'] = ResolversParentTypes['Day']> = {
   activities: Resolver<ResolversTypes['ActivityConnection'], ParentType, ContextType, DayActivitiesArgs>;
   date: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  events: Resolver<Array<ResolversTypes['Event']>, ParentType, ContextType>;
   heartRateSummary: Resolver<Maybe<ResolversTypes['HeartRateSummary']>, ParentType, ContextType>;
   start: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -601,6 +611,12 @@ export type DayConnectionResolvers<ContextType = Context, ParentType extends Res
 export type DayEdgeResolvers<ContextType = Context, ParentType extends ResolversParentTypes['DayEdge'] = ResolversParentTypes['DayEdge']> = {
   cursor: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   node: Resolver<Maybe<ResolversTypes['Day']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type EventResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Event'] = ResolversParentTypes['Event']> = {
+  description: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  time: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -809,6 +825,7 @@ export type Resolvers<ContextType = Context> = {
   Day: DayResolvers<ContextType>;
   DayConnection: DayConnectionResolvers<ContextType>;
   DayEdge: DayEdgeResolvers<ContextType>;
+  Event: EventResolvers<ContextType>;
   Exercise: ExerciseResolvers<ContextType>;
   ExerciseAmount: ExerciseAmountResolvers<ContextType>;
   ExerciseDuration: ExerciseDurationResolvers<ContextType>;

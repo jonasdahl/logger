@@ -9,4 +9,5 @@ type Day {
     includeHidden: Boolean
   ): ActivityConnection!
   heartRateSummary: HeartRateSummary
+  events: [Event!]!
 }

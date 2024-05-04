@@ -154,4 +154,42 @@ export const dayResolvers: DayResolvers = {
 
     return { samples: heartRateSamples };
   },
+  events: async (parent, _, { userId }) => {
+    if (!userId) return [];
+    const start = parent.start.startOf("day");
+    const end = parent.start.endOf("day");
+
+    const customGames = await db.customGame.findMany({
+      where: {
+        userId,
+        time: { gte: start.toJSDate(), lte: end.toJSDate() },
+        deletedAt: null,
+      },
+    });
+    const fogisGames = await db.fogisGame.findMany({
+      where: {
+        userId,
+        time: { gte: start.toJSDate(), lte: end.toJSDate() },
+        deletedAt: null,
+      },
+    });
+
+    return sortBy(
+      [
+        ...customGames.flatMap((game) => [
+          {
+            time: DateTime.fromJSDate(game.time),
+            description: "Matchstart (planerad)",
+          },
+        ]),
+        ...fogisGames.flatMap((game) => [
+          {
+            time: DateTime.fromJSDate(game.time),
+            description: "Matchstart (planerad)",
+          },
+        ]),
+      ],
+      (x) => x.time
+    );
+  },
 };

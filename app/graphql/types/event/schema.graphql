@@ -1,0 +1,4 @@
+type Event {
+  time: DateTime!
+  description: String!
+}

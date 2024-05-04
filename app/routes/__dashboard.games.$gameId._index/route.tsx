@@ -73,6 +73,7 @@ export default function Game() {
             {isStarted ? <Tab>Översikt</Tab> : null}
             {isStarted ? <Tab>Tidslinje</Tab> : null}
             <Tab>Packlista</Tab>
+            <Tab>Resa</Tab>
           </TabList>
           <TabPanels>
             {isStarted ? (
@@ -82,9 +83,10 @@ export default function Game() {
             ) : null}
             {isStarted ? (
               <TabPanel px={0}>
-                <TimeLine />
+                <TimeLine data={data} />
               </TabPanel>
             ) : null}
+            <TabPanel px={0}>TBD</TabPanel>
             <TabPanel px={0}>TBD</TabPanel>
           </TabPanels>
         </Tabs>
@@ -145,6 +147,17 @@ function Overview({ data }: { data: SerializeFrom<typeof loader> }) {
   );
 }
 
-function TimeLine() {
-  return <Box>TBD</Box>;
+function TimeLine({ data }: { data: SerializeFrom<typeof loader> }) {
+  return (
+    <Box position="relative">
+      {data?.game?.startDay.events.map((event) => {
+        return (
+          <Box position="absolute" key={event.time}>
+            {DateTime.fromISO(event.time).toFormat("HH:mm")}:{" "}
+            {event.description}
+          </Box>
+        );
+      })}
+    </Box>
+  );
 }
