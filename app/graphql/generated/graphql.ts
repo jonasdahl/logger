@@ -310,6 +310,7 @@ export type Query = {
   exerciseTypes: ExerciseTypeConnection;
   game: Maybe<ActivityGame>;
   me: Maybe<User>;
+  timeZone: Scalars['String']['output'];
   today: Day;
 };
 
@@ -796,6 +797,7 @@ export type QueryResolvers<ContextType = Context, ParentType extends ResolversPa
   exerciseTypes: Resolver<ResolversTypes['ExerciseTypeConnection'], ParentType, ContextType, QueryExerciseTypesArgs>;
   game: Resolver<Maybe<ResolversTypes['ActivityGame']>, ParentType, ContextType, RequireFields<QueryGameArgs, 'id'>>;
   me: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  timeZone: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   today: Resolver<ResolversTypes['Day'], ParentType, ContextType>;
 };
 

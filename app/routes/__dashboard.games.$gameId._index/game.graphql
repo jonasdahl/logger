@@ -1,4 +1,6 @@
 query Game($gameId: ID!) {
+  timeZone
+
   game(id: $gameId) {
     ... on ActivityBase {
       startDay {

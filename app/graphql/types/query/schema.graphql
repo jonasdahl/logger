@@ -7,6 +7,7 @@ type Query {
 
   currentActivity: Activity
   game(id: ID!): ActivityGame
+  timeZone: String!
 
   activities(
     first: Int

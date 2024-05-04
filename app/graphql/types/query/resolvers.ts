@@ -5,6 +5,7 @@ import { db } from "~/db.server";
 import type { QueryResolvers } from "~/graphql/generated/graphql";
 
 export const queryResolvers: QueryResolvers = {
+  timeZone: (_, __, { timeZone }) => timeZone,
   me: async (_, __, { userId }) => {
     if (!userId) {
       return null;

@@ -228,6 +228,7 @@ type Query {
   exerciseTypes(filter: ExerciseTypeFilter): ExerciseTypeConnection!
   game(id: ID!): ActivityGame
   me: User
+  timeZone: String!
   today: Day!
 }
 

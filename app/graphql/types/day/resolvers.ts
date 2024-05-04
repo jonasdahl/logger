@@ -176,16 +176,24 @@ export const dayResolvers: DayResolvers = {
 
     return sortBy(
       [
-        ...customGames.flatMap((game) => [
+        ...[...customGames, ...fogisGames].flatMap((game) => [
           {
             time: DateTime.fromJSDate(game.time),
             description: "Matchstart (planerad)",
           },
-        ]),
-        ...fogisGames.flatMap((game) => [
           {
-            time: DateTime.fromJSDate(game.time),
-            description: "Matchstart (planerad)",
+            time: DateTime.fromJSDate(game.time).plus({ minutes: 45 }),
+            description: "Första halvlek slut (planerad)",
+          },
+          {
+            time: DateTime.fromJSDate(game.time).plus({ minutes: 45 + 15 }),
+            description: "Andra halvlek start (planerad)",
+          },
+          {
+            time: DateTime.fromJSDate(game.time).plus({
+              minutes: 45 + 15 + 45,
+            }),
+            description: "Andra halvlek slut (planerad)",
           },
         ]),
       ],

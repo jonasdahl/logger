@@ -12,6 +12,7 @@ import {
   Tabs,
   Tbody,
   Td,
+  Tooltip,
   Tr,
   Wrap,
   WrapItem,
@@ -148,16 +149,48 @@ function Overview({ data }: { data: SerializeFrom<typeof loader> }) {
 }
 
 function TimeLine({ data }: { data: SerializeFrom<typeof loader> }) {
+  const firstEvent = data?.game?.startDay.events[0];
+  const lastEvent =
+    data?.game?.startDay.events[data?.game?.startDay.events.length - 1];
+  const start = firstEvent
+    ? DateTime.fromISO(firstEvent.time, { zone: data?.timeZone })
+    : null;
+  const end = lastEvent
+    ? DateTime.fromISO(lastEvent.time, { zone: data?.timeZone })
+    : null;
+  const duration = start && end ? end.diff(start) : null;
+  const percentsPerSecond = 100 / (duration?.as("seconds") ?? 0);
+
   return (
-    <Box position="relative">
-      {data?.game?.startDay.events.map((event) => {
-        return (
-          <Box position="absolute" key={event.time}>
-            {DateTime.fromISO(event.time).toFormat("HH:mm")}:{" "}
-            {event.description}
-          </Box>
-        );
-      })}
+    <Box px={2}>
+      <Box position="relative" width="100%">
+        <Box position="absolute" top={1.5} h="1px" bg="gray.300" w="100%" />
+        {data?.game?.startDay.events.map((event) => {
+          return (
+            <Tooltip
+              key={event.time}
+              label={`${DateTime.fromISO(event.time, {
+                zone: data?.timeZone,
+              }).toFormat("HH:mm")}: ${event.description}`}
+            >
+              <Box
+                position="absolute"
+                left={`${(
+                  percentsPerSecond *
+                  DateTime.fromISO(event.time, { zone: data?.timeZone })
+                    .diff(start!)
+                    .as("seconds")
+                ).toFixed(3)}%`}
+                width={3}
+                height={3}
+                marginLeft={-1.5}
+                borderRadius="full"
+                bg="gray.500"
+              />
+            </Tooltip>
+          );
+        })}
+      </Box>
     </Box>
   );
 }
