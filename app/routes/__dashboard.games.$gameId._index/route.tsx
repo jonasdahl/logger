@@ -28,7 +28,6 @@ import { z } from "zod";
 import { ButtonLink } from "~/components/button-link";
 import {
   AnimatedAxis,
-  AnimatedGrid,
   AnimatedLineSeries,
   XYChart,
 } from "~/components/charts/xy-chart.client";
@@ -175,21 +174,16 @@ function TimeLine({ data }: { data: SerializeFrom<typeof loader> }) {
           {() => (
             <Box>
               <XYChart
-                margin={{ top: 0, right: 0, bottom: 20, left: 30 }}
+                margin={{ top: 0, right: 0, bottom: 30, left: 30 }}
                 height={300}
-                xScale={{ type: "linear" }}
+                xScale={{
+                  type: "time",
+                  domain: [start?.toJSDate() ?? 0, end?.toJSDate() ?? 0],
+                }}
                 yScale={{ type: "linear" }}
               >
-                <AnimatedAxis
-                  orientation="bottom"
-                  tickFormat={(v) =>
-                    (Number(v) / 60).toLocaleString("sv-SE", {
-                      maximumFractionDigits: 1,
-                    })
-                  }
-                />
+                <AnimatedAxis orientation="bottom" />
                 <AnimatedAxis orientation="left" />
-                <AnimatedGrid />
 
                 <AnimatedLineSeries
                   dataKey="Puls"

@@ -14,7 +14,7 @@ const zoneDefinitions = [
 ];
 
 export const heartRateSummaryResolvers: HeartRateSummaryResolvers = {
-  samples: (parent) =>
+  samples: (parent, _, { timeZone }) =>
     parent.samples.map((s) => ({ heartRate: s.value, time: s.tStart })),
   secondsInZone: async (parent, { heartRateZone }, { userId }) => {
     if (!userId) {
