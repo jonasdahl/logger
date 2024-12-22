@@ -2,11 +2,14 @@ import { Box, Card, Container, Heading, Stack, Text } from "@chakra-ui/react";
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { DateTime } from "luxon";
-import { sum } from "remeda";
+import createColormap from "colormap";
+import { DateTime, Interval } from "luxon";
+import { groupBy, mapValues, sortBy, sum, sumBy } from "remeda";
 import { authenticator } from "~/.server/auth.server";
 import {
   AnimatedAxis,
+  AnimatedBarSeries,
+  AnimatedBarStack,
   AnimatedGlyphSeries,
   AnimatedGrid,
   AnimatedLineSeries,
@@ -40,6 +43,7 @@ export default function ExerciseTypeStats() {
       <Stack spacing={5}>
         <Heading>{data?.exerciseType?.name}</Heading>
 
+        <ClientOnly>{() => <WeeklyLoadChart />}</ClientOnly>
         <ClientOnly>{() => <TimeChart />}</ClientOnly>
         <ClientOnly>{() => <RepsChart />}</ClientOnly>
         <ClientOnly>{() => <LoadChart />}</ClientOnly>
@@ -50,6 +54,116 @@ export default function ExerciseTypeStats() {
   );
 }
 
+function WeeklyLoadChart() {
+  const { data } = useLoaderData<typeof loader>();
+
+  const amountsPerLoad = groupBy(
+    data?.exerciseType?.history.dayAmounts
+      .flatMap((dayAmount) => {
+        return dayAmount.dayAmounts.map((amount) => ({
+          amount,
+          origin: dayAmount,
+        }));
+      })
+      .flatMap(({ amount, origin }) =>
+        amount.loads.map((load) => ({ load, origin: { amount, origin } }))
+      ) || [],
+    (x) => x.load.type.id
+  );
+
+  const groupedData = mapValues(amountsPerLoad, (loads) => {
+    const loadsByValue = groupBy(
+      sortBy(loads, (l) => l.load.value),
+      ({ origin, load }) => load.value
+    );
+    return loadsByValue;
+  });
+
+  const intervals = Interval.fromDateTimes(
+    DateTime.now().minus({ years: 1 }),
+    DateTime.now()
+  ).splitBy({ weeks: 1 });
+
+  const colors = createColormap({
+    colormap: "jet",
+    nshades: 10,
+  });
+
+  const series = Object.entries(groupedData).flatMap(([loadId, items]) =>
+    Object.entries(items).flatMap(([loadValue, items], index) => ({
+      typeId: loadId,
+      value: loadValue,
+      seriesId: `load:${loadId}-value:${loadValue}`,
+      color: colors[index % colors.length],
+      itemsByWeek: intervals.map((interval) => {
+        const itemsInInterval = items.filter((x) =>
+          interval.contains(DateTime.fromISO(x.origin.origin.dayStart))
+        );
+        return {
+          interval,
+          items: itemsInInterval,
+          sum: sumBy(itemsInInterval, (i) =>
+            i.origin.amount.duration.__typename ===
+            "ExerciseDurationRepetitions"
+              ? i.origin.amount.duration.repetitions
+              : 0
+          ),
+        };
+      }),
+    }))
+  );
+
+  console.log(series);
+
+  const customTheme = buildChartTheme({
+    gridColor: "var(--chakra-colors-gray-200)",
+    colors: ["var(--chakra-colors-blue-500)"],
+    backgroundColor: "",
+    tickLength: 0,
+    gridColorDark: "",
+  });
+
+  return (
+    <Stack>
+      <Heading size="md">Maximal belastning</Heading>
+      <Box>
+        <XYChart
+          theme={customTheme}
+          margin={{ top: 0, right: 0, bottom: 20, left: 30 }}
+          height={300}
+          xScale={{ type: "band" }}
+          yScale={{ type: "linear" }}
+        >
+          <AnimatedAxis
+            orientation="bottom"
+            tickFormat={(p) => DateTime.fromJSDate(p).weekNumber.toString()}
+          />
+          <AnimatedAxis orientation="left" />
+          <AnimatedGrid />
+
+          <AnimatedBarStack>
+            {series.flatMap((chartData) => {
+              return [
+                <AnimatedBarSeries
+                  dataKey={`${chartData.seriesId}glyphs`}
+                  key={`${chartData.seriesId}glyphs`}
+                  data={chartData.itemsByWeek}
+                  xAccessor={(p) => p.interval.start?.toJSDate()}
+                  yAccessor={(p) => {
+                    return p.sum || 0;
+                  }}
+                  colorAccessor={() => chartData.color?.toString()}
+                />,
+              ];
+            })}
+          </AnimatedBarStack>
+
+          <BasicTooltip />
+        </XYChart>
+      </Box>
+    </Stack>
+  );
+}
 function TimeChart() {
   const { data } = useLoaderData<typeof loader>();
 

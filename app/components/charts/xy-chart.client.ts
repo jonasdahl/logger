@@ -1,6 +1,8 @@
 export {
   AnimatedAreaSeries,
   AnimatedAxis,
+  AnimatedBarSeries,
+  AnimatedBarStack,
   AnimatedGlyphSeries,
   AnimatedGrid,
   AnimatedLineSeries,

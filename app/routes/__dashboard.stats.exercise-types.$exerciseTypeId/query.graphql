@@ -23,6 +23,7 @@ query StatsExerciseType($exerciseTypeId: ID!) {
           }
           loads {
             type {
+              id
               name
             }
             value
