@@ -4,6 +4,7 @@ import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import createColormap from "colormap";
 import { DateTime, Duration, Interval } from "luxon";
+import { useState } from "react";
 import { groupBy, mapValues, sortBy, sum, sumBy } from "remeda";
 import { authenticator } from "~/.server/auth.server";
 import {
@@ -18,8 +19,10 @@ import {
   buildChartTheme,
 } from "~/components/charts/xy-chart.client";
 import { ClientOnly } from "~/components/client-only";
+import { H1 } from "~/components/headings";
 import { StatsExerciseTypeDocument } from "~/graphql/generated/documents";
 import { gql } from "~/graphql/graphql.server";
+import { cn } from "~/lib/utils";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   await authenticator.isAuthenticated(request, {
@@ -35,15 +38,48 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   return json(res);
 }
 
+const enum TimeGrouping {
+  Month,
+  Week,
+}
+
+const timeGroupOptions = [TimeGrouping.Month, TimeGrouping.Week];
+
+const timeGroupLabels = {
+  [TimeGrouping.Month]: "Månad",
+  [TimeGrouping.Week]: "Vecka",
+};
+
 export default function ExerciseTypeStats() {
   const { data } = useLoaderData<typeof loader>();
+  const [timeGrouping, setTimeGrouping] = useState(TimeGrouping.Month);
 
   return (
     <Container py={5} maxW="container.md">
       <Stack spacing={5}>
-        <Heading>{data?.exerciseType?.name}</Heading>
+        <div className="flex flex-row gap-3 justify-between">
+          <H1>{data?.exerciseType?.name}</H1>
+          <div className="border rounded-lg px-1 py-1 gap-1 flex-row flex">
+            {timeGroupOptions.map((option) => {
+              return (
+                <button
+                  key={option}
+                  className={cn(
+                    "bg-transparent hover:bg-gray-100 rounded px-2 py-1 text-sm font-bold",
+                    timeGrouping === option && "bg-gray-200"
+                  )}
+                  onClick={() => setTimeGrouping(option)}
+                >
+                  {timeGroupLabels[option]}
+                </button>
+              );
+            })}
+          </div>
+        </div>
 
-        <ClientOnly>{() => <WeeklyLoadChart />}</ClientOnly>
+        <ClientOnly>
+          {() => <BarLoadChart timeGrouping={timeGrouping} />}
+        </ClientOnly>
         <ClientOnly>{() => <TimeChart />}</ClientOnly>
         <ClientOnly>{() => <RepsChart />}</ClientOnly>
         <ClientOnly>{() => <LoadChart />}</ClientOnly>
@@ -54,7 +90,7 @@ export default function ExerciseTypeStats() {
   );
 }
 
-function WeeklyLoadChart() {
+function BarLoadChart({ timeGrouping }: { timeGrouping: TimeGrouping }) {
   const { data } = useLoaderData<typeof loader>();
 
   const amountsPerLoad = groupBy(
@@ -88,7 +124,7 @@ function WeeklyLoadChart() {
   const intervals = Interval.fromDateTimes(
     endOfThisMonth.minus({ years: 1 }),
     endOfThisMonth
-  ).splitBy({ month: 1 });
+  ).splitBy(timeGrouping === TimeGrouping.Week ? { week: 1 } : { month: 1 });
 
   const seriesWithoutColors = Object.entries(groupedData).flatMap(
     ([loadId, items]) =>
@@ -148,7 +184,7 @@ function WeeklyLoadChart() {
 
   return (
     <Stack>
-      <Heading size="md">Månadsvis belastning</Heading>
+      <Heading size="md">Belastning över tid</Heading>
       <Box>
         <XYChart
           theme={customTheme}
