@@ -58,23 +58,28 @@ function WeeklyLoadChart() {
   const { data } = useLoaderData<typeof loader>();
 
   const amountsPerLoad = groupBy(
-    data?.exerciseType?.history.dayAmounts
+    (data?.exerciseType?.history.dayAmounts || [])
       .flatMap((dayAmount) => {
-        return dayAmount.dayAmounts.map((amount) => ({
+        return [...(dayAmount?.dayAmounts || [])].map((amount) => ({
           amount,
           origin: dayAmount,
         }));
       })
-      .flatMap(({ amount, origin }) =>
-        amount.loads.map((load) => ({ load, origin: { amount, origin } }))
-      ) || [],
-    (x) => x.load.type.id
+      .flatMap(({ amount, origin }) => {
+        return [null, ...(amount?.loads || [])].map((load) => ({
+          load,
+          origin: { amount, origin },
+        }));
+      }),
+    (x) => x.load?.type.id || "-"
   );
+
+  console.log({ amountsPerLoad });
 
   const groupedData = mapValues(amountsPerLoad, (loads) => {
     const loadsByValue = groupBy(
-      sortBy(loads, (l) => l.load.value),
-      ({ origin, load }) => load.value
+      sortBy(loads, (l) => l.load?.value || 0),
+      ({ load }) => load?.value || 0
     );
     return loadsByValue;
   });
@@ -91,16 +96,20 @@ function WeeklyLoadChart() {
       seriesId: `load:${loadId}-value:${loadValue}`,
       index,
       itemsByWeek: intervals.map((interval) => {
-        const itemsInInterval = items.filter((x) =>
-          interval.contains(DateTime.fromISO(x.origin.origin.dayStart))
+        const itemsInInterval = items.filter(
+          (x) =>
+            x.origin.origin &&
+            interval.contains(DateTime.fromISO(x.origin.origin.dayStart))
         );
         return {
           interval,
           items: itemsInInterval,
           sum: sumBy(itemsInInterval, (i) =>
-            i.origin.amount.duration.__typename ===
+            i.origin.amount?.duration.__typename ===
             "ExerciseDurationRepetitions"
               ? i.origin.amount.duration.repetitions
+              : i.origin.amount?.duration.__typename === "ExerciseDurationTime"
+              ? i.origin.amount.duration.durationSeconds
               : 0
           ),
           value: loadValue,
@@ -124,7 +133,7 @@ function WeeklyLoadChart() {
 
   return (
     <Stack>
-      <Heading size="md">Veckovis belastning</Heading>
+      <Heading size="md">Månadsvis belastning</Heading>
       <Box>
         <XYChart
           theme={customTheme}
