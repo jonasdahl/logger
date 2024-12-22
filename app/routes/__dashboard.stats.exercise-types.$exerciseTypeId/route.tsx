@@ -75,8 +75,6 @@ function WeeklyLoadChart() {
     (x) => x.load?.type.id || "-"
   );
 
-  console.log({ amountsPerLoad });
-
   const groupedData = mapValues(amountsPerLoad, (loads) => {
     const loadsByValue = groupBy(
       sortBy(loads, (l) => -(l.load?.value || 0)),
@@ -126,7 +124,8 @@ function WeeklyLoadChart() {
 
   const colors = createColormap({
     colormap: "bluered",
-    alpha: [0, 1],
+    alpha: [0.5, 1],
+    format: "rgbaString",
     nshades: Math.max(3, seriesWithoutColors.length),
   }).reverse();
 
