@@ -11,9 +11,15 @@ declare global {
 // create a new connection to the DB with every change either.
 if (process.env.NODE_ENV === "production") {
   db = new PrismaClient();
+  await db.user.count().then((count) => {
+    console.log("User count: ", count);
+  });
 } else {
   if (!global.__db) {
     global.__db = new PrismaClient();
+    await global.__db.user.findMany().then((count) => {
+      console.log("User count: ", count);
+    });
   }
   db = global.__db;
 }
