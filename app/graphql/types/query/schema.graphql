@@ -21,6 +21,8 @@ type Query {
 
   day(date: String!): Day
   today: Day!
+
+  categoryTags: [CategoryTag!]!
 }
 
 input ActivityFilter {

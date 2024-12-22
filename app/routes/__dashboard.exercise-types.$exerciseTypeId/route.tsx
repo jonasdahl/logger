@@ -13,8 +13,14 @@ import { addSearchParamToPath } from "~/utils/add-search-param-to-path";
 
 import { json, redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
+import { useMemo, useState } from "react";
+import { Combobox } from "~/components/ui/combobox";
+import { FormControl } from "~/components/ui/form-control";
+import { FormLabel } from "~/components/ui/form-label";
+import { FormStack } from "~/components/ui/form-stack";
 import { GetExcerciseTypeDocument } from "~/graphql/generated/documents";
 import { gql } from "~/graphql/graphql.server";
+import { CreateTagModal } from "../api.category-tags.modal-create/route";
 
 const validator = withZod(
   z.object({
@@ -63,6 +69,18 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
 export default function Activity() {
   const { data } = useLoaderData<typeof loader>();
+
+  const [selectedTags, setSelectedTags] = useState(
+    data?.exerciseType?.categoryTags?.map((t) => t.id) || []
+  );
+
+  const tagOptions = useMemo(
+    () =>
+      data?.categoryTags.map(({ id, name }) => ({ value: id, label: name })) ||
+      [],
+    [data?.categoryTags]
+  );
+
   return (
     <div className="container mx-auto px-3 max-w-screen-md py-5 flex flex-col gap-3">
       <H1>Ändra övningstyp</H1>
@@ -73,11 +91,29 @@ export default function Activity() {
       >
         <HiddenReturnToInput />
         <div className="flex flex-col gap-5">
-          <div>
+          <FormStack>
             <Input name="name" label="Namn" />
-          </div>
+
+            <FormControl>
+              <FormLabel>Taggar</FormLabel>
+              <Combobox
+                options={tagOptions}
+                value={selectedTags}
+                onChange={setSelectedTags}
+              />
+            </FormControl>
+          </FormStack>
           <div>
             <SubmitButton>Spara</SubmitButton>
+          </div>
+          <div>
+            <CreateTagModal
+              trigger={
+                <button className="text-sm font-bold" type="button">
+                  Skapa tagg
+                </button>
+              }
+            />
           </div>
         </div>
       </ValidatedForm>

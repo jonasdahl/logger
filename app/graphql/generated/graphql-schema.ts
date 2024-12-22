@@ -32,6 +32,11 @@ enum AmountType {
   Time
 }
 
+type CategoryTag {
+  id: ID!
+  name: String!
+}
+
 type CustomGame implements ActivityBase & ActivityGame {
   id: ID!
   start: DateTime!
@@ -132,6 +137,7 @@ type ExercisePurpose {
 }
 
 type ExerciseType {
+  categoryTags: [CategoryTag!]!
   defaultAmountType: AmountType!
   history: ExerciseTypeHistory!
   id: ID!
@@ -226,6 +232,7 @@ type PlannedExercise implements ActivityBase {
 type Query {
   activities(after: String, before: String, filter: ActivityFilter, first: Int, last: Int): ActivityConnection!
   activity(id: ID!): Activity
+  categoryTags: [CategoryTag!]!
   currentActivity: Activity
   day(date: String!): Day
   days(after: String, before: String, first: Int, last: Int): DayConnection!

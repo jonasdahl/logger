@@ -32,4 +32,10 @@ export const exerciseTypeResolvers: ExerciseTypeResolvers = {
       orderBy: { order: "asc" },
     });
   },
+  categoryTags: async (parent) => {
+    return await db.categoryTag.findMany({
+      where: { exerciseTypes: { some: { id: parent.id } } },
+      orderBy: { name: "asc" },
+    });
+  },
 };

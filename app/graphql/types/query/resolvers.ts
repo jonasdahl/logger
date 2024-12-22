@@ -262,4 +262,10 @@ export const queryResolvers: QueryResolvers = {
     });
     return { type: "CustomGame", value: customGame };
   },
+  categoryTags: (_, __, { userId }) => {
+    if (!userId) {
+      throw new Error("Not authenticated");
+    }
+    return db.categoryTag.findMany({ where: { userId } });
+  },
 };

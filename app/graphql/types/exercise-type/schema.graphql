@@ -6,6 +6,7 @@ type ExerciseType {
   history: ExerciseTypeHistory!
   levels: [ExerciseTypeLevel!]!
   lastExerciseItem: ExerciseItem
+  categoryTags: [CategoryTag!]!
 }
 
 enum AmountType {

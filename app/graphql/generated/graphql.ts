@@ -1,6 +1,7 @@
 import { DateTime } from 'luxon';
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 import { ActivityModel } from '../types/activity/model';
+import { CategoryTagModel } from '../types/category-tag/model';
 import { CustomGameModel } from '../types/custom-game/model';
 import { DayModel } from '../types/day/model';
 import { ExerciseModel } from '../types/exercise/model';
@@ -73,6 +74,12 @@ export enum AmountType {
   Repetitions = 'Repetitions',
   Time = 'Time'
 }
+
+export type CategoryTag = {
+  __typename?: 'CategoryTag';
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+};
 
 export type CustomGame = ActivityBase & ActivityGame & {
   __typename?: 'CustomGame';
@@ -198,6 +205,7 @@ export type ExercisePurpose = {
 
 export type ExerciseType = {
   __typename?: 'ExerciseType';
+  categoryTags: Array<CategoryTag>;
   defaultAmountType: AmountType;
   history: ExerciseTypeHistory;
   id: Scalars['ID']['output'];
@@ -309,6 +317,7 @@ export type Query = {
   __typename?: 'Query';
   activities: ActivityConnection;
   activity: Maybe<Activity>;
+  categoryTags: Array<CategoryTag>;
   currentActivity: Maybe<Activity>;
   day: Maybe<Day>;
   days: DayConnection;
@@ -472,6 +481,7 @@ export type ResolversTypes = {
   ActivityGame: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['ActivityGame']>;
   AmountType: AmountType;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
+  CategoryTag: ResolverTypeWrapper<CategoryTagModel>;
   CustomGame: ResolverTypeWrapper<CustomGameModel>;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']['output']>;
   Day: ResolverTypeWrapper<DayModel>;
@@ -522,6 +532,7 @@ export type ResolversParentTypes = {
   ActivityFilter: ActivityFilter;
   ActivityGame: ResolversInterfaceTypes<ResolversParentTypes>['ActivityGame'];
   Boolean: Scalars['Boolean']['output'];
+  CategoryTag: CategoryTagModel;
   CustomGame: CustomGameModel;
   DateTime: Scalars['DateTime']['output'];
   Day: DayModel;
@@ -589,6 +600,12 @@ export type ActivityEdgeResolvers<ContextType = Context, ParentType extends Reso
 export type ActivityGameResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ActivityGame'] = ResolversParentTypes['ActivityGame']> = {
   __resolveType: TypeResolveFn<'CustomGame' | 'FogisGame', ParentType, ContextType>;
   id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+};
+
+export type CategoryTagResolvers<ContextType = Context, ParentType extends ResolversParentTypes['CategoryTag'] = ResolversParentTypes['CategoryTag']> = {
+  id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  name: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type CustomGameResolvers<ContextType = Context, ParentType extends ResolversParentTypes['CustomGame'] = ResolversParentTypes['CustomGame']> = {
@@ -711,6 +728,7 @@ export type ExercisePurposeResolvers<ContextType = Context, ParentType extends R
 };
 
 export type ExerciseTypeResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ExerciseType'] = ResolversParentTypes['ExerciseType']> = {
+  categoryTags: Resolver<Array<ResolversTypes['CategoryTag']>, ParentType, ContextType>;
   defaultAmountType: Resolver<ResolversTypes['AmountType'], ParentType, ContextType>;
   history: Resolver<ResolversTypes['ExerciseTypeHistory'], ParentType, ContextType>;
   id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
@@ -805,6 +823,7 @@ export type PlannedExerciseResolvers<ContextType = Context, ParentType extends R
 export type QueryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   activities: Resolver<ResolversTypes['ActivityConnection'], ParentType, ContextType, QueryActivitiesArgs>;
   activity: Resolver<Maybe<ResolversTypes['Activity']>, ParentType, ContextType, RequireFields<QueryActivityArgs, 'id'>>;
+  categoryTags: Resolver<Array<ResolversTypes['CategoryTag']>, ParentType, ContextType>;
   currentActivity: Resolver<Maybe<ResolversTypes['Activity']>, ParentType, ContextType>;
   day: Resolver<Maybe<ResolversTypes['Day']>, ParentType, ContextType, RequireFields<QueryDayArgs, 'date'>>;
   days: Resolver<ResolversTypes['DayConnection'], ParentType, ContextType, QueryDaysArgs>;
@@ -838,6 +857,7 @@ export type Resolvers<ContextType = Context> = {
   ActivityConnection: ActivityConnectionResolvers<ContextType>;
   ActivityEdge: ActivityEdgeResolvers<ContextType>;
   ActivityGame: ActivityGameResolvers<ContextType>;
+  CategoryTag: CategoryTagResolvers<ContextType>;
   CustomGame: CustomGameResolvers<ContextType>;
   DateTime: GraphQLScalarType;
   Day: DayResolvers<ContextType>;

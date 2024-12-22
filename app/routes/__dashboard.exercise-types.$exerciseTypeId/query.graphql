@@ -2,5 +2,13 @@ query GetExcerciseType($exerciseTypeId: ID!) {
   exerciseType(id: $exerciseTypeId) {
     id
     name
+    categoryTags {
+      id
+    }
+  }
+
+  categoryTags {
+    id
+    name
   }
 }
