@@ -163,7 +163,7 @@ function BarLoadChart({ timeGrouping }: { timeGrouping: TimeGrouping }) {
       { index: 0, rgb: [0, 0, 255] },
       { index: 1, rgb: [120, 0, 255] },
     ],
-    alpha: [0.5, 1],
+    alpha: [0.2, 1],
     format: "rgbaString",
     nshades: Math.max(3, seriesWithoutColors.length),
   }).reverse();
