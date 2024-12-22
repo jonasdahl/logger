@@ -124,7 +124,7 @@ function WeeklyLoadChart() {
 
   return (
     <Stack>
-      <Heading size="md">Maximal belastning</Heading>
+      <Heading size="md">Veckovis belastning</Heading>
       <Box>
         <XYChart
           theme={customTheme}
