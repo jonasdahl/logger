@@ -23,14 +23,15 @@ export function Input({
   autoFocus?: boolean;
 }) {
   const { error, getInputProps } = useField(name);
+  const inputProps = getInputProps({ id: name } as any);
   return (
     <FormControl isInvalid={!!error}>
       <FormLabel htmlFor={name}>{label}</FormLabel>
       <ChakraInput
         type={type}
-        {...getInputProps({ id: name } as any)}
+        {...inputProps}
         autoComplete={autoComplete}
-        defaultValue={defaultValue}
+        defaultValue={inputProps?.defaultValue ?? defaultValue}
         autoFocus={autoFocus}
       />
       {error && (

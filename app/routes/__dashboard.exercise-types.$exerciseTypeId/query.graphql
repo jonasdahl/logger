@@ -1,0 +1,6 @@
+query GetExcerciseType($exerciseTypeId: ID!) {
+  exerciseType(id: $exerciseTypeId) {
+    id
+    name
+  }
+}

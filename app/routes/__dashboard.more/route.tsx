@@ -3,11 +3,15 @@ import type { IconDefinition } from "@fortawesome/free-solid-svg-icons";
 import {
   faCheck,
   faCode,
+  faCrosshairs,
   faLink,
+  faList,
   faRightFromBracket,
   faRunning,
+  faSquare,
   faUserCog,
   faUserLock,
+  faWeight,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { LoaderFunctionArgs } from "@remix-run/node";
@@ -27,6 +31,10 @@ export default function Dashboard() {
   return (
     <div className="flex flex-col gap-3 items-start p-5">
       <Item label="Övningstyper" to="/exercise-types" icon={faRunning} />
+      <Item label="Passmallar" to="/exercise-templates" icon={faList} />
+      <Item label="Mål" to="/goals" icon={faCrosshairs} />
+      <Item label="Vikt" to="/weight" icon={faWeight} />
+      <Item label="Dagsstatus" to="/day-status" icon={faSquare} />
       <Item label="Regelträning" to="/laws/quiz" icon={faCheck} />
       <Item label="Personliga inställningar" to="/user" icon={faUserCog} />
       <Item label="Anslutningar" to="/connections" icon={faLink} />

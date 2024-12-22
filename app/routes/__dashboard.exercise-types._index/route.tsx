@@ -19,7 +19,7 @@ import { z } from "zod";
 
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { Form, useLoaderData } from "@remix-run/react";
+import { Form, Link, useLoaderData } from "@remix-run/react";
 import { authenticator } from "~/.server/auth.server";
 import {
   AmountType,
@@ -54,9 +54,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
 }
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-  const { id: userId } = await authenticator.isAuthenticated(request, {
-    failureRedirect: "/",
-  });
+  await authenticator.isAuthenticated(request, { failureRedirect: "/" });
 
   const res = await gql({
     document: ExerciseTypesListDocument,
@@ -94,7 +92,14 @@ export default function Activity() {
               {data?.exerciseTypes.edges.map((edge) =>
                 edge.node ? (
                   <Tr key={edge.cursor}>
-                    <Td>{edge.node?.name}</Td>
+                    <Td>
+                      <Link
+                        to={`/exercise-types/${edge.cursor}`}
+                        className="font-bold"
+                      >
+                        {edge.node?.name}
+                      </Link>
+                    </Td>
                     <Td>
                       {edge.node?.defaultAmountType === AmountType.Repetitions
                         ? "Antal"
