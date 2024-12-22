@@ -3,7 +3,7 @@ import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import createColormap from "colormap";
-import { DateTime, Interval } from "luxon";
+import { DateTime, Duration, Interval } from "luxon";
 import { groupBy, mapValues, sortBy, sum, sumBy } from "remeda";
 import { authenticator } from "~/.server/auth.server";
 import {
@@ -78,51 +78,65 @@ function WeeklyLoadChart() {
 
   const groupedData = mapValues(amountsPerLoad, (loads) => {
     const loadsByValue = groupBy(
-      sortBy(loads, (l) => l.load?.value || 0),
-      ({ load }) => -(load?.value || 0)
+      sortBy(loads, (l) => -(l.load?.value || 0)),
+      ({ load }) => load?.value || 0
     );
     return loadsByValue;
   });
 
+  const endOfThisMonth = DateTime.now().startOf("month").plus({ month: 1 });
+
   const intervals = Interval.fromDateTimes(
-    DateTime.now().minus({ years: 1 }),
-    DateTime.now()
+    endOfThisMonth.minus({ years: 1 }),
+    endOfThisMonth
   ).splitBy({ month: 1 });
 
-  const series = Object.entries(groupedData).flatMap(([loadId, items]) =>
-    Object.entries(items).flatMap(([loadValue, items], index) => ({
-      typeId: loadId,
-      value: loadValue,
-      seriesId: `load:${loadId}-value:${loadValue}`,
-      index,
-      itemsByWeek: intervals.map((interval) => {
-        const itemsInInterval = items.filter(
-          (x) =>
-            x.origin.origin &&
-            interval.contains(DateTime.fromISO(x.origin.origin.dayStart))
-        );
-        return {
-          interval,
-          items: itemsInInterval,
-          sum: sumBy(itemsInInterval, (i) =>
-            i.origin.amount?.duration.__typename ===
-            "ExerciseDurationRepetitions"
-              ? i.origin.amount.duration.repetitions
-              : i.origin.amount?.duration.__typename === "ExerciseDurationTime"
-              ? i.origin.amount.duration.durationSeconds
-              : 0
-          ),
-          value: loadValue,
-        };
-      }),
-    }))
+  const seriesWithoutColors = Object.entries(groupedData).flatMap(
+    ([loadId, items]) =>
+      Object.entries(items).flatMap(([loadValue, items], index) => ({
+        typeId: loadId,
+        value: loadValue,
+        seriesId: `load:${loadId}-value:${loadValue}`,
+        index,
+        itemsByWeek: intervals.map((interval) => {
+          const itemsInInterval = items.filter(
+            (x) =>
+              x.origin.origin &&
+              interval.contains(DateTime.fromISO(x.origin.origin.dayStart))
+          );
+          return {
+            interval,
+            items: itemsInInterval,
+            sum: sumBy(itemsInInterval, (i) =>
+              i.origin.amount?.duration.__typename ===
+              "ExerciseDurationRepetitions"
+                ? i.origin.amount.duration.repetitions
+                : i.origin.amount?.duration.__typename ===
+                  "ExerciseDurationTime"
+                ? i.origin.amount.duration.durationSeconds
+                : i.origin.amount.duration.levelType?.ordinal
+            ),
+            sumType: itemsInInterval[0]?.origin.amount?.duration.__typename,
+            value: loadValue,
+          };
+        }),
+      }))
   );
 
   const colors = createColormap({
     colormap: "bluered",
     alpha: [0, 1],
-    nshades: Math.max(3, series.length),
+    nshades: Math.max(3, seriesWithoutColors.length),
   }).reverse();
+
+  const series = sortBy(seriesWithoutColors, (x) => -x.value).map((s, i) => {
+    const color = colors[i % colors.length]!.toString();
+    return {
+      ...s,
+      color,
+      itemsByWeek: s.itemsByWeek.map((i) => ({ ...i, color })),
+    };
+  });
 
   const customTheme = buildChartTheme({
     gridColor: "var(--chakra-colors-gray-200)",
@@ -161,15 +175,69 @@ function WeeklyLoadChart() {
                   yAccessor={(p) => {
                     return p.sum || 0;
                   }}
-                  colorAccessor={() =>
-                    colors[chartData.index % colors.length]?.toString()
-                  }
+                  colorAccessor={(p) => p.color}
                 />,
               ];
             })}
           </AnimatedBarStack>
 
-          <BasicTooltip />
+          <Tooltip<typeof series[number]["itemsByWeek"][number]>
+            snapTooltipToDatumX
+            snapTooltipToDatumY
+            showVerticalCrosshair
+            showSeriesGlyphs
+            unstyled
+            applyPositionStyle
+            renderTooltip={({ tooltipData, colorScale }) => (
+              <div className="p-3 rounded-md text-sm bg-white shadow-md">
+                <h6 className="font-bold">
+                  {tooltipData?.nearestDatum?.datum?.interval?.start?.toFormat(
+                    "MMMM yyyy"
+                  )}
+                </h6>
+
+                <table className="w-full">
+                  <thead>
+                    <tr>
+                      <th className="w-1 pr-2" />
+                      <th className="text-left pr-2">Belastning</th>
+                      <th className="text-left">Totalt</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {Object.entries(tooltipData?.datumByKey ?? {})
+                      .filter((x) => x[1].datum.sum)
+                      .map(([key, i]) => {
+                        return (
+                          <tr key={key}>
+                            <td className="pr-2">
+                              <div
+                                className="rounded-full w-4 h-4"
+                                style={{ background: i.datum.color }}
+                              />
+                            </td>
+                            <td className="pr-2">
+                              {i.datum.value || "-"}{" "}
+                              {i.datum.items?.[0]?.load?.unit}
+                            </td>
+                            <td>
+                              {i.datum.sumType === "ExerciseDurationTime"
+                                ? Duration.fromMillis(i.datum.sum * 1000)
+                                    .shiftTo("hours", "minutes", "seconds")
+                                    .toHuman()
+                                : i.datum.sumType ===
+                                  "ExerciseDurationRepetitions"
+                                ? `${i.datum.sum || "-"} reps`
+                                : i.datum.sum}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          />
         </XYChart>
       </Box>
     </Stack>
