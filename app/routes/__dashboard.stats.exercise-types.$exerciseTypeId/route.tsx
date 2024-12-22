@@ -79,7 +79,7 @@ function WeeklyLoadChart() {
   const groupedData = mapValues(amountsPerLoad, (loads) => {
     const loadsByValue = groupBy(
       sortBy(loads, (l) => l.load?.value || 0),
-      ({ load }) => load?.value || 0
+      ({ load }) => -(load?.value || 0)
     );
     return loadsByValue;
   });
@@ -120,8 +120,9 @@ function WeeklyLoadChart() {
 
   const colors = createColormap({
     colormap: "bluered",
+    alpha: [0, 1],
     nshades: Math.max(3, series.length),
-  });
+  }).reverse();
 
   const customTheme = buildChartTheme({
     gridColor: "var(--chakra-colors-gray-200)",
