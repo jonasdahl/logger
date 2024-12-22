@@ -82,7 +82,7 @@ function WeeklyLoadChart() {
   const intervals = Interval.fromDateTimes(
     DateTime.now().minus({ years: 1 }),
     DateTime.now()
-  ).splitBy({ weeks: 1 });
+  ).splitBy({ month: 1 });
 
   const series = Object.entries(groupedData).flatMap(([loadId, items]) =>
     Object.entries(items).flatMap(([loadValue, items], index) => ({
@@ -135,7 +135,7 @@ function WeeklyLoadChart() {
         >
           <AnimatedAxis
             orientation="bottom"
-            tickFormat={(p) => DateTime.fromJSDate(p).weekNumber.toString()}
+            tickFormat={(p) => DateTime.fromJSDate(p).toFormat("yyyy-MM")}
           />
           <AnimatedAxis orientation="left" />
           <AnimatedGrid />
