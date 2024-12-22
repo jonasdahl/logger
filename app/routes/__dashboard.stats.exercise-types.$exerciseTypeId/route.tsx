@@ -66,7 +66,8 @@ function WeeklyLoadChart() {
         }));
       })
       .flatMap(({ amount, origin }) => {
-        return [null, ...(amount?.loads || [])].map((load) => ({
+        const array = amount?.loads?.length ? amount.loads : [null];
+        return array.map((load) => ({
           load,
           origin: { amount, origin },
         }));
