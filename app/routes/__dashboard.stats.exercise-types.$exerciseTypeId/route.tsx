@@ -159,7 +159,10 @@ function BarLoadChart({ timeGrouping }: { timeGrouping: TimeGrouping }) {
   );
 
   const colors = createColormap({
-    colormap: "bluered",
+    colormap: [
+      { index: 0, rgb: [0, 0, 255] },
+      { index: 1, rgb: [120, 0, 255] },
+    ],
     alpha: [0.5, 1],
     format: "rgbaString",
     nshades: Math.max(3, seriesWithoutColors.length),
@@ -190,7 +193,7 @@ function BarLoadChart({ timeGrouping }: { timeGrouping: TimeGrouping }) {
           theme={customTheme}
           margin={{ top: 0, right: 0, bottom: 20, left: 30 }}
           height={300}
-          xScale={{ type: "band" }}
+          xScale={{ type: "band", padding: 0.1 }}
           yScale={{ type: "linear" }}
         >
           <AnimatedAxis
@@ -211,6 +214,7 @@ function BarLoadChart({ timeGrouping }: { timeGrouping: TimeGrouping }) {
                   yAccessor={(p) => {
                     return p.sum || 0;
                   }}
+                  barPadding={0.1}
                   colorAccessor={(p) => p.color}
                 />,
               ];
