@@ -111,7 +111,7 @@ function WeeklyLoadChart() {
 
   const colors = createColormap({
     colormap: "bluered",
-    nshades: Math.min(3, series.length),
+    nshades: Math.max(3, series.length),
   });
 
   const customTheme = buildChartTheme({
