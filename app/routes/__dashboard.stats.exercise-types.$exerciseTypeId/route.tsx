@@ -84,17 +84,12 @@ function WeeklyLoadChart() {
     DateTime.now()
   ).splitBy({ weeks: 1 });
 
-  const colors = createColormap({
-    colormap: "jet",
-    nshades: 10,
-  });
-
   const series = Object.entries(groupedData).flatMap(([loadId, items]) =>
     Object.entries(items).flatMap(([loadValue, items], index) => ({
       typeId: loadId,
       value: loadValue,
       seriesId: `load:${loadId}-value:${loadValue}`,
-      color: colors[index % colors.length],
+      index,
       itemsByWeek: intervals.map((interval) => {
         const itemsInInterval = items.filter((x) =>
           interval.contains(DateTime.fromISO(x.origin.origin.dayStart))
@@ -108,10 +103,16 @@ function WeeklyLoadChart() {
               ? i.origin.amount.duration.repetitions
               : 0
           ),
+          value: loadValue,
         };
       }),
     }))
   );
+
+  const colors = createColormap({
+    colormap: "bluered",
+    nshades: series.length,
+  });
 
   console.log(series);
 
@@ -152,7 +153,9 @@ function WeeklyLoadChart() {
                   yAccessor={(p) => {
                     return p.sum || 0;
                   }}
-                  colorAccessor={() => chartData.color?.toString()}
+                  colorAccessor={() =>
+                    colors[chartData.index % colors.length]?.toString()
+                  }
                 />,
               ];
             })}
