@@ -111,10 +111,8 @@ function WeeklyLoadChart() {
 
   const colors = createColormap({
     colormap: "bluered",
-    nshades: series.length,
+    nshades: Math.min(3, series.length),
   });
-
-  console.log(series);
 
   const customTheme = buildChartTheme({
     gridColor: "var(--chakra-colors-gray-200)",
