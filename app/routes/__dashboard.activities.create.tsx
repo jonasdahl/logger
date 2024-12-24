@@ -189,7 +189,7 @@ export default function DashboardIndex() {
             defaultValue={plannedActivity?.comment ?? undefined}
           />
           <Box>
-            <SubmitButton colorScheme="green">Skapa</SubmitButton>
+            <SubmitButton>Skapa</SubmitButton>
           </Box>
         </Stack>
       </ValidatedForm>

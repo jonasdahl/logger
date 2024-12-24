@@ -18,9 +18,7 @@ export default function Question() {
       <Stack spacing={5}>
         <Heading as="h1">{success ? "Rätt" : "Fel"}</Heading>
         <Box>
-          <ButtonLink colorScheme="blue" to="/laws/quiz">
-            Nästa fråga
-          </ButtonLink>
+          <ButtonLink to="/laws/quiz">Nästa fråga</ButtonLink>
         </Box>
       </Stack>
     </Container>

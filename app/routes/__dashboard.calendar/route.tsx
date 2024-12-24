@@ -64,7 +64,7 @@ export default function DashboardIndex() {
 
         <HStack>
           <Box>
-            <ButtonLink to={`/calendar`} colorScheme="blue">
+            <ButtonLink to={`/calendar`} variant="secondary">
               +/- 2 veckor
             </ButtonLink>
           </Box>

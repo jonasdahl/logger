@@ -5,6 +5,7 @@ import { activityConnectionResolvers } from "./types/activity-connection/resolve
 import { activityEdgeResolvers } from "./types/activity-edge/resolvers";
 import { activityGameResolvers } from "./types/activity-game/resolvers";
 import { activityResolvers } from "./types/activity/resolvers";
+import { categoryTagResolvers } from "./types/category-tag/resolvers";
 import { customGameResolvers } from "./types/custom-game/resolvers";
 import { dayConnectionResolvers } from "./types/day-connection/resolvers";
 import { dayEdgeResolvers } from "./types/day-edge/resolvers";
@@ -77,4 +78,5 @@ export const resolvers: Resolvers = {
   ActivityGame: activityGameResolvers,
   Event: eventResolvers,
   HeartRateSample: heartRateSampleResolvers,
+  CategoryTag: categoryTagResolvers,
 };

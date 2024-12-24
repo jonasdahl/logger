@@ -101,7 +101,6 @@ export default function DashboardIndex() {
               to={`/activities/create?date=${day.toFormat(
                 "yyyy-MM-dd"
               )}&returnTo=${pathname}`}
-              colorScheme="green"
             >
               Registrera
             </ButtonLink>
@@ -111,7 +110,6 @@ export default function DashboardIndex() {
               to={`/planned-activities/create?date=${day.toFormat(
                 "yyyy-MM-dd"
               )}&returnTo=${pathname}`}
-              colorScheme="green"
             >
               Planera
             </ButtonLink>
@@ -126,10 +124,8 @@ export default function DashboardIndex() {
               icon={<FontAwesomeIcon icon={faChevronLeft} />}
             />
           ) : (
-            <ButtonLink
-              to={`/days/${dayBefore.toFormat("yyyy-MM-dd")}`}
-              leftIcon={<FontAwesomeIcon icon={faChevronLeft} />}
-            >
+            <ButtonLink to={`/days/${dayBefore.toFormat("yyyy-MM-dd")}`}>
+              <FontAwesomeIcon icon={faChevronLeft} />{" "}
               {dayBefore.toFormat("yyyy-MM-dd")}
             </ButtonLink>
           )}
@@ -150,11 +146,9 @@ export default function DashboardIndex() {
               icon={<FontAwesomeIcon icon={faChevronRight} />}
             />
           ) : (
-            <ButtonLink
-              to={`/days/${dayAfter.toFormat("yyyy-MM-dd")}`}
-              rightIcon={<FontAwesomeIcon icon={faChevronRight} />}
-            >
+            <ButtonLink to={`/days/${dayAfter.toFormat("yyyy-MM-dd")}`}>
               {dayAfter.toFormat("yyyy-MM-dd")}
+              <FontAwesomeIcon icon={faChevronRight} />
             </ButtonLink>
           )}
         </HStack>
@@ -255,7 +249,6 @@ export default function DashboardIndex() {
                       <Box>
                         <ButtonLink
                           size="sm"
-                          colorScheme="green"
                           to={`/activities/create?from=${e.node.id}`}
                         >
                           Registrera
@@ -264,7 +257,7 @@ export default function DashboardIndex() {
                       <Box>
                         <ButtonLink
                           size="sm"
-                          colorScheme="red"
+                          variant="destructive"
                           to={`/planned-activities/${e.node.id}/delete`}
                         >
                           Radera
@@ -309,7 +302,7 @@ export default function DashboardIndex() {
                       <Box>
                         <ButtonLink
                           size="sm"
-                          colorScheme="red"
+                          variant="destructive"
                           to={`/activities/${e.node.id}/delete`}
                         >
                           Radera

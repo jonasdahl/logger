@@ -451,10 +451,7 @@ export default function Activity() {
           })}
         </Stack>
         <Box>
-          <ButtonLink
-            to={`/exercises/${exerciseId}/items/create`}
-            colorScheme="green"
-          >
+          <ButtonLink to={`/exercises/${exerciseId}/items/create`}>
             Lägg till övning
           </ButtonLink>
         </Box>

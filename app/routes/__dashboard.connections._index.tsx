@@ -60,7 +60,7 @@ export default function Connections() {
               <ButtonLink
                 to="/connections/polar/remove"
                 size="sm"
-                colorScheme="red"
+                variant="destructive"
               >
                 Ta bort
               </ButtonLink>
@@ -91,7 +91,7 @@ function AvailableConnection({
     <HStack p={3} bg="blue.200" borderRadius="md">
       <Box fontWeight="bold">{name}</Box>
       <Spacer />
-      <ButtonLink to={action} size="sm" colorScheme="yellow">
+      <ButtonLink to={action} size="sm" variant="outline">
         {callToActionText}
       </ButtonLink>
     </HStack>

@@ -127,7 +127,7 @@ export default function SettingsIndex() {
               defaultValue={defaultUrl}
             />
             <Box>
-              <SubmitButton colorScheme="green">Create webhook</SubmitButton>
+              <SubmitButton>Create webhook</SubmitButton>
             </Box>
           </Stack>
         </ValidatedForm>

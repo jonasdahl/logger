@@ -110,7 +110,7 @@ export default function CreatePlannedActivity() {
           <Textarea label="Beskrivning/innehåll" name="description" />
           <Textarea label="Övriga kommentarer" name="comment" />
           <Box>
-            <SubmitButton colorScheme="green">Skapa</SubmitButton>
+            <SubmitButton>Skapa</SubmitButton>
           </Box>
         </Stack>
       </ValidatedForm>

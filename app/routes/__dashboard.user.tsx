@@ -106,7 +106,7 @@ export default function User() {
               defaultValue={user.maxPulse?.toFixed(0) ?? undefined}
             />
             <Box>
-              <SubmitButton colorScheme="green">Spara</SubmitButton>
+              <SubmitButton>Spara</SubmitButton>
             </Box>
           </Stack>
         </ValidatedForm>
@@ -117,7 +117,6 @@ export default function User() {
             <Button isLoading isDisabled />
           ) : subscription === null ? (
             <Button
-              colorScheme="green"
               onClick={async () => {
                 const result = await Notification.requestPermission().catch(
                   () => null

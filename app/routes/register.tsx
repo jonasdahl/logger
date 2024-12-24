@@ -75,9 +75,7 @@ export default function Register() {
                 type="password"
                 autoComplete="new-password"
               />
-              <SubmitButton type="submit" colorScheme="blue" bg="blue.700">
-                Skapa konto
-              </SubmitButton>
+              <SubmitButton>Skapa konto</SubmitButton>
             </Stack>
           </ValidatedForm>
         </Card>

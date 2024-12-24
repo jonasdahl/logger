@@ -331,7 +331,7 @@ export default function Activity() {
             </Box>
             <Spacer />
             <Box>
-              <SubmitButton isDisabled={!exerciseTypeId}>Spara</SubmitButton>
+              <SubmitButton disabled={!exerciseTypeId}>Spara</SubmitButton>
             </Box>
           </HStack>
         </Stack>

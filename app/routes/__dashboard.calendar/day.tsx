@@ -162,7 +162,7 @@ export function Day({
                     <ButtonLink
                       to={`/days/${start.toFormat("yyyy-MM-dd")}`}
                       size="sm"
-                      flex={1}
+                      className="flex-1"
                     >
                       Visa dag
                     </ButtonLink>
@@ -171,9 +171,8 @@ export function Day({
                         to={`/activities/create?date=${start.toFormat(
                           "yyyy-MM-dd"
                         )}&returnTo=${returnTo}`}
-                        colorScheme="green"
+                        className="bg-green-600 flex-1"
                         size="sm"
-                        flex={1}
                       >
                         Registrera
                       </ButtonLink>
@@ -193,9 +192,8 @@ export function Day({
                       to={`/tests/create?date=${start.toFormat(
                         "yyyy-MM-dd"
                       )}&redirectTo=${location.pathname}`}
-                      colorScheme="orange"
+                      className="flex-1 bg-orange-600"
                       size="sm"
-                      flex={1}
                     >
                       Löptest
                     </ButtonLink>
@@ -204,9 +202,8 @@ export function Day({
                       to={`/games/create?date=${start.toFormat(
                         "yyyy-MM-dd"
                       )}&redirectTo=${location.pathname}`}
-                      colorScheme="red"
+                      className="flex-1 bg-red-600"
                       size="sm"
-                      flex={1}
                     >
                       Match
                     </ButtonLink>
@@ -215,9 +212,8 @@ export function Day({
                       to={`/travel/create?date=${start.toFormat(
                         "yyyy-MM-dd"
                       )}&redirectTo=${location.pathname}`}
-                      colorScheme="yellow"
+                      className="flex-1 bg-yellow-600"
                       size="sm"
-                      flex={1}
                     >
                       Resa
                     </ButtonLink>

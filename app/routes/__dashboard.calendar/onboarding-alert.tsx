@@ -1,20 +1,15 @@
-import { Alert, AlertTitle, Box, HStack, Spacer } from "@chakra-ui/react";
-import { ButtonLink } from "~/components/button-link";
+import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
+import { InlineLink } from "~/components/ui/inline-link";
 
 export function OnboardingAlert() {
   return (
     <Alert>
-      <HStack w="100%">
-        <AlertTitle>
-          Börja med att sätta upp anslutningar till tredjepartsappar.
-        </AlertTitle>
-        <Spacer />
-        <Box>
-          <ButtonLink size="sm" colorScheme="blue" to="/connections">
-            Kom igång
-          </ButtonLink>
-        </Box>
-      </HStack>
+      <AlertTitle>
+        Börja med att sätta upp anslutningar till tredjepartsappar.
+      </AlertTitle>
+      <AlertDescription>
+        <InlineLink to="/connections">Kom igång</InlineLink>
+      </AlertDescription>
     </Alert>
   );
 }

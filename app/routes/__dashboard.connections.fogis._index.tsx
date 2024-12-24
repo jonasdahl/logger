@@ -214,9 +214,7 @@ export default function Fogis() {
               autoFocus={!!fogisUsername}
             />
             <Box>
-              <SubmitButton colorScheme="blue" bg="blue.700">
-                Hämta matcher
-              </SubmitButton>
+              <SubmitButton variant="secondary">Hämta matcher</SubmitButton>
             </Box>
           </Stack>
         </ValidatedForm>

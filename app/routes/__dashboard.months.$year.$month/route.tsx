@@ -88,7 +88,7 @@ export default function DashboardIndex() {
             <Box>
               <ButtonLink
                 to={`/months/${now.toFormat("yyyy'/'MM")}`}
-                colorScheme="blue"
+                variant="secondary"
               >
                 Månadsvy
               </ButtonLink>

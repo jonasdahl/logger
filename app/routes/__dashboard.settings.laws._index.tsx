@@ -72,7 +72,7 @@ export default function SettingsLawsIndex() {
           <Heading>Regelfrågor</Heading>
           <Spacer />
           <Box>
-            <ButtonLink to="/settings/laws/create" colorScheme="green">
+            <ButtonLink to="/settings/laws/create" variant="secondary">
               Skapa
             </ButtonLink>
           </Box>

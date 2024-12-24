@@ -36,7 +36,7 @@ export default function DashboardIndex() {
           <Heading>Börja träna?</Heading>
 
           <Box>
-            <SubmitButton colorScheme="green">Ja</SubmitButton>
+            <SubmitButton variant="default">Ja</SubmitButton>
           </Box>
         </Stack>
       </ValidatedForm>
