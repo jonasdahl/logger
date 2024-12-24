@@ -7,9 +7,9 @@ import { useEffect, useState } from "react";
 import { ValidatedForm } from "remix-validated-form";
 import { z } from "zod";
 import { authenticator } from "~/.server/auth.server";
-import { Input } from "~/components/form/input";
 import { SubmitButton } from "~/components/form/submit-button";
 import { validate } from "~/components/form/validate.server";
+import { ValidatedInputField } from "~/components/form/validated-input-field";
 import { db } from "~/db.server";
 import { notify } from "~/push/notifications.server";
 import { vapidKeys } from "~/secrets.server";
@@ -99,7 +99,7 @@ export default function User() {
           <input type="hidden" name="_action" value="saveSettings" />
           <Stack spacing={5}>
             <Heading as="h1">Personliga inställningar</Heading>
-            <Input
+            <ValidatedInputField
               label="Maxpuls"
               name="maxPulse"
               type="number"

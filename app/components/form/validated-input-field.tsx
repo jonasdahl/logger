@@ -1,13 +1,11 @@
 import type { InputProps } from "@chakra-ui/react";
-import {
-  Input as ChakraInput,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-} from "@chakra-ui/react";
 import { useField } from "remix-validated-form";
+import { FormControl } from "../ui/form-control";
+import { FormErrorMessage } from "../ui/form-error-message";
+import { FormLabel } from "../ui/form-label";
+import { Input } from "../ui/input";
 
-export function Input({
+export function ValidatedInputField({
   name,
   label,
   type,
@@ -25,18 +23,16 @@ export function Input({
   const { error, getInputProps } = useField(name);
   const inputProps = getInputProps({ id: name } as any);
   return (
-    <FormControl isInvalid={!!error}>
+    <FormControl>
       <FormLabel htmlFor={name}>{label}</FormLabel>
-      <ChakraInput
+      <Input
         type={type}
         {...inputProps}
         autoComplete={autoComplete}
         defaultValue={inputProps?.defaultValue ?? defaultValue}
         autoFocus={autoFocus}
       />
-      {error && (
-        <FormErrorMessage className="my-error-class">{error}</FormErrorMessage>
-      )}
+      {error ? <FormErrorMessage>{error}</FormErrorMessage> : null}
     </FormControl>
   );
 }

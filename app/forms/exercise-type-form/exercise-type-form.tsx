@@ -16,10 +16,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import { ValidatedForm } from "remix-validated-form";
 import { v4 } from "uuid";
-import { Input } from "~/components/form/input";
-import { Select } from "~/components/form/select";
+import { ValidatedSelectField } from "~/components/form/select";
 import { SubmitButton } from "~/components/form/submit-button";
 import { Textarea } from "~/components/form/textarea";
+import { ValidatedInputField } from "~/components/form/validated-input-field";
 import { HiddenReturnToInput } from "~/services/return-to";
 import { exerciseTypeValidator } from "./schema";
 
@@ -32,8 +32,8 @@ export function ExerciseTypeForm() {
       <HiddenReturnToInput />
       <Stack spacing={5}>
         <Stack>
-          <Input name="name" label="Namn" />
-          <Select
+          <ValidatedInputField name="name" label="Namn" />
+          <ValidatedSelectField
             name="defaultAmountType"
             label="Mängdtyp"
             value={defaultAmountType}
@@ -45,7 +45,7 @@ export function ExerciseTypeForm() {
             <option value="time">Tid</option>
             <option value="repetitions">Repetitioner</option>
             <option value="levels">Nivåer</option>
-          </Select>
+          </ValidatedSelectField>
           {defaultAmountType === "levels" ? (
             <Textarea name="levels" label="Nivåer (en per rad)" />
           ) : (

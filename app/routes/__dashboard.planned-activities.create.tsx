@@ -7,11 +7,11 @@ import { DateTime } from "luxon";
 import { ValidatedForm } from "remix-validated-form";
 import { z } from "zod";
 import { authenticator } from "~/.server/auth.server";
-import { Input } from "~/components/form/input";
-import { Select } from "~/components/form/select";
+import { ValidatedSelectField } from "~/components/form/select";
 import { SubmitButton } from "~/components/form/submit-button";
 import { Textarea } from "~/components/form/textarea";
 import { validate } from "~/components/form/validate.server";
+import { ValidatedInputField } from "~/components/form/validated-input-field";
 import { db } from "~/db.server";
 import { getTimeZoneFromRequest } from "~/time";
 
@@ -80,7 +80,7 @@ export default function CreatePlannedActivity() {
       <ValidatedForm validator={createPlannedActivityValidator} method="post">
         <Stack spacing={5}>
           <Heading>Skapa planerad aktivitet</Heading>
-          <Input
+          <ValidatedInputField
             label="Datum"
             name="date"
             type="datetime-local"
@@ -88,22 +88,25 @@ export default function CreatePlannedActivity() {
               dateFromParams ? `${dateFromParams}T12:00` : undefined
             }
           />
-          <Select label="Primärt syfte" name="primaryPurposeId">
+          <ValidatedSelectField label="Primärt syfte" name="primaryPurposeId">
             <option value="null">Ej valt</option>
             {purposes.map((purpose) => (
               <option key={purpose.id} value={purpose.id}>
                 {purpose.label}
               </option>
             ))}
-          </Select>
-          <Select label="Sekundärt syfte" name="secondaryPurposeId">
+          </ValidatedSelectField>
+          <ValidatedSelectField
+            label="Sekundärt syfte"
+            name="secondaryPurposeId"
+          >
             <option value="null">Ej valt</option>
             {purposes.map((purpose) => (
               <option key={purpose.id} value={purpose.id}>
                 {purpose.label}
               </option>
             ))}
-          </Select>
+          </ValidatedSelectField>
           <Textarea label="Beskrivning/innehåll" name="description" />
           <Textarea label="Övriga kommentarer" name="comment" />
           <Box>

@@ -26,7 +26,7 @@ import type { ReactNode } from "react";
 import { forwardRef, useEffect, useRef } from "react";
 import { ValidatedForm } from "remix-validated-form";
 import { ButtonLink } from "~/components/button-link";
-import { Select } from "~/components/form/select";
+import { ValidatedSelectField } from "~/components/form/select";
 import { SubmitButton } from "~/components/form/submit-button";
 import { Textarea } from "~/components/form/textarea";
 import { Link } from "~/components/link";
@@ -276,22 +276,28 @@ function PlanButton({
                     .toFormat("yyyy-MM-dd'T'HH:mm")}
                 />
                 <Stack>
-                  <Select label="Primärt syfte" name="primaryPurposeId">
+                  <ValidatedSelectField
+                    label="Primärt syfte"
+                    name="primaryPurposeId"
+                  >
                     <option value="null">Ej valt</option>
                     {purposes.map((purpose) => (
                       <option key={purpose.id} value={purpose.id}>
                         {purpose.label}
                       </option>
                     ))}
-                  </Select>
-                  <Select label="Sekundärt syfte" name="secondaryPurposeId">
+                  </ValidatedSelectField>
+                  <ValidatedSelectField
+                    label="Sekundärt syfte"
+                    name="secondaryPurposeId"
+                  >
                     <option value="null">Ej valt</option>
                     {purposes.map((purpose) => (
                       <option key={purpose.id} value={purpose.id}>
                         {purpose.label}
                       </option>
                     ))}
-                  </Select>
+                  </ValidatedSelectField>
                   <Textarea label="Beskrivning/innehåll" name="description" />
                   <Textarea label="Övriga kommentarer" name="comment" />
                 </Stack>

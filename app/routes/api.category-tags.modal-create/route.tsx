@@ -4,8 +4,8 @@ import type { ReactNode } from "react";
 import { ValidatedForm } from "remix-validated-form";
 import { z } from "zod";
 import { authenticator } from "~/.server/auth.server";
-import { Input } from "~/components/form/input";
 import { validate } from "~/components/form/validate.server";
+import { ValidatedInputField } from "~/components/form/validated-input-field";
 import { Button } from "~/components/ui/button";
 import {
   Dialog,
@@ -50,7 +50,7 @@ export function CreateTagModal({ trigger }: { trigger: ReactNode }) {
               validator={validator}
             >
               <FormStack>
-                <Input name="name" label="Namn" />
+                <ValidatedInputField name="name" label="Namn" />
               </FormStack>
               <Button type="submit" form="create-tag">
                 Skapa

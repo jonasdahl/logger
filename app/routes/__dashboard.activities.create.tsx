@@ -7,11 +7,11 @@ import { DateTime } from "luxon";
 import { ValidatedForm } from "remix-validated-form";
 import { z } from "zod";
 import { authenticator } from "~/.server/auth.server";
-import { Input } from "~/components/form/input";
-import { Select } from "~/components/form/select";
+import { ValidatedSelectField } from "~/components/form/select";
 import { SubmitButton } from "~/components/form/submit-button";
 import { Textarea } from "~/components/form/textarea";
 import { validate } from "~/components/form/validate.server";
+import { ValidatedInputField } from "~/components/form/validated-input-field";
 import { db } from "~/db.server";
 import { HiddenReturnToInput } from "~/services/return-to";
 import { getTimeZoneFromRequest } from "~/time";
@@ -136,7 +136,7 @@ export default function DashboardIndex() {
               </Alert>
             </Box>
           ) : null}
-          <Input
+          <ValidatedInputField
             label="Datum"
             name="date"
             type="datetime-local"
@@ -154,7 +154,7 @@ export default function DashboardIndex() {
                 : undefined
             }
           />
-          <Select
+          <ValidatedSelectField
             label="Primärt syfte"
             name="primaryPurposeId"
             defaultValue={plannedActivity?.primaryPurposeId ?? undefined}
@@ -165,8 +165,8 @@ export default function DashboardIndex() {
                 {purpose.label}
               </option>
             ))}
-          </Select>
-          <Select
+          </ValidatedSelectField>
+          <ValidatedSelectField
             label="Sekundärt syfte"
             name="secondaryPurposeId"
             defaultValue={plannedActivity?.secondaryPurposeId ?? undefined}
@@ -177,7 +177,7 @@ export default function DashboardIndex() {
                 {purpose.label}
               </option>
             ))}
-          </Select>
+          </ValidatedSelectField>
           <Textarea
             label="Beskrivning/innehåll"
             name="description"

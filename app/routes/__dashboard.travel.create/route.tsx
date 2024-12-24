@@ -7,9 +7,9 @@ import { DateTime } from "luxon";
 import { ValidatedForm } from "remix-validated-form";
 import { z } from "zod";
 import { authenticator } from "~/.server/auth.server";
-import { Input } from "~/components/form/input";
 import { SubmitButton } from "~/components/form/submit-button";
 import { validate } from "~/components/form/validate.server";
+import { ValidatedInputField } from "~/components/form/validated-input-field";
 import { db } from "~/db.server";
 import { getTimeZoneFromRequest } from "~/time";
 
@@ -46,7 +46,7 @@ export default function CreateTest() {
         <Heading>Skapa resa</Heading>
         <ValidatedForm validator={validator} method="post">
           <Stack spacing={5}>
-            <Input
+            <ValidatedInputField
               label="Start"
               type="datetime-local"
               name="start"
@@ -54,7 +54,7 @@ export default function CreateTest() {
                 dateFromParams ? `${dateFromParams}T10:00` : undefined
               }
             />
-            <Input
+            <ValidatedInputField
               label="Slut"
               type="datetime-local"
               name="end"

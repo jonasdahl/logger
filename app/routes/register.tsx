@@ -5,9 +5,9 @@ import { withZod } from "@remix-validated-form/with-zod";
 import { ValidatedForm } from "remix-validated-form";
 import { z } from "zod";
 import { authenticator, signUp } from "~/.server/auth.server";
-import { Input } from "~/components/form/input";
 import { SubmitButton } from "~/components/form/submit-button";
 import { validate } from "~/components/form/validate.server";
+import { ValidatedInputField } from "~/components/form/validated-input-field";
 import { commitSession, getSessionFromRequest } from "~/session.server";
 
 const validator = withZod(
@@ -58,14 +58,18 @@ export default function Register() {
         <Card p={4}>
           <ValidatedForm validator={validator} method="post">
             <Stack spacing={5}>
-              <Input label="E-postadress" name="email" type="email" />
-              <Input
+              <ValidatedInputField
+                label="E-postadress"
+                name="email"
+                type="email"
+              />
+              <ValidatedInputField
                 label="Lösenord"
                 name="password"
                 type="password"
                 autoComplete="new-password"
               />
-              <Input
+              <ValidatedInputField
                 label="Upprepa lösenord"
                 name="confirmPassword"
                 type="password"

@@ -3,9 +3,9 @@ import { withZod } from "@remix-validated-form/with-zod";
 import { ValidatedForm } from "remix-validated-form";
 import { z } from "zod";
 import { authenticator } from "~/.server/auth.server";
-import { Input } from "~/components/form/input";
 import { SubmitButton } from "~/components/form/submit-button";
 import { validate } from "~/components/form/validate.server";
+import { ValidatedInputField } from "~/components/form/validated-input-field";
 import { H1 } from "~/components/headings";
 import { db } from "~/db.server";
 import { HiddenReturnToInput } from "~/services/return-to";
@@ -92,7 +92,7 @@ export default function Activity() {
         <HiddenReturnToInput />
         <div className="flex flex-col gap-5">
           <FormStack>
-            <Input name="name" label="Namn" />
+            <ValidatedInputField name="name" label="Namn" />
 
             <FormControl>
               <FormLabel>Taggar</FormLabel>

@@ -1,7 +1,11 @@
-import type { ButtonProps } from "@chakra-ui/react";
-import { Button } from "@chakra-ui/react";
 import { Link as RemixLink } from "@remix-run/react";
+import type { ButtonProps } from "./ui/button";
+import { Button } from "./ui/button";
 
 export function ButtonLink({ to, ...props }: { to: string } & ButtonProps) {
-  return <Button to={to} as={RemixLink} {...props} />;
+  return (
+    <Button {...props} asChild>
+      <RemixLink to={to}>{props.children}</RemixLink>
+    </Button>
+  );
 }

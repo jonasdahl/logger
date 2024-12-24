@@ -24,9 +24,9 @@ import { DateTime, Interval } from "luxon";
 import { ValidatedForm } from "remix-validated-form";
 import { z } from "zod";
 import { authenticator } from "~/.server/auth.server";
-import { Input } from "~/components/form/input";
 import { SubmitButton } from "~/components/form/submit-button";
 import { validate } from "~/components/form/validate.server";
+import { ValidatedInputField } from "~/components/form/validated-input-field";
 import { db } from "~/db.server";
 import { FogisClient } from "~/fogis/client.server";
 
@@ -201,13 +201,13 @@ export default function Fogis() {
         </Box>
         <ValidatedForm validator={validator} method="post">
           <Stack spacing={5}>
-            <Input
+            <ValidatedInputField
               name="username"
               label="Användarnamn i Fogis"
               defaultValue={fogisUsername ?? undefined}
               autoFocus={!fogisUsername}
             />
-            <Input
+            <ValidatedInputField
               name="password"
               type="password"
               label="Lösenord i Fogis"

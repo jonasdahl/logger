@@ -15,3 +15,17 @@ export const H1 = forwardRef<HTMLHeadingElement, ComponentProps<"h1">>(
 );
 
 H1.displayName = "H1";
+
+export const H2 = forwardRef<HTMLHeadingElement, ComponentProps<"h2">>(
+  (props, ref) => {
+    return (
+      <h2
+        ref={ref}
+        {...props}
+        className={cx("font-bold text-xl", props.className)}
+      />
+    );
+  }
+);
+
+H2.displayName = "H2";

@@ -14,9 +14,9 @@ import { withZod } from "@remix-validated-form/with-zod";
 import { ValidatedForm } from "remix-validated-form";
 import { z } from "zod";
 import { assertIsAdmin, authenticator } from "~/.server/auth.server";
-import { Input } from "~/components/form/input";
 import { SubmitButton } from "~/components/form/submit-button";
 import { validate } from "~/components/form/validate.server";
+import { ValidatedInputField } from "~/components/form/validated-input-field";
 import { db } from "~/db.server";
 
 const validator = withZod(
@@ -64,12 +64,12 @@ export default function PurposeEdit() {
         <Heading>Ändra "{activityPurpose.label}"</Heading>
         <ValidatedForm validator={validator} method="post">
           <Stack spacing={5}>
-            <Input
+            <ValidatedInputField
               label="Namn"
               name="label"
               defaultValue={activityPurpose.label}
             />
-            <Input
+            <ValidatedInputField
               label="Förkortat namn"
               name="shortLabel"
               defaultValue={activityPurpose.shortLabel ?? undefined}

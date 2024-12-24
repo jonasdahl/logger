@@ -33,6 +33,7 @@ model User {
   customGames       CustomGame[]
   travels           Travel[]
   categoryTags      CategoryTag[]
+  Goal              Goal[]
 }
 
 model PushSubscription {
@@ -116,6 +117,7 @@ model ExerciseType {
   deletedAt     DateTime?
   exerciseItems ExerciseItem[]
   categoryTags  CategoryTag[]
+  inGoals       Goal[]         @relation(name: "PerformExerciseTypeGoal")
 }
 
 model ExerciseTypeLevel {
@@ -335,4 +337,40 @@ model CategoryTag {
   userId String
 
   exerciseTypes ExerciseType[]
+}
+
+enum GoalType {
+  PerformExerciseType
+  DayOfRest
+  DayOfWork
+}
+
+enum GoalTimeType {
+  EveryCalendarYear
+  EveryCalendarMonth
+  EveryCalendarWeek
+  EveryRollingNumberOfDays
+}
+
+model Goal {
+  id String @id @default(uuid())
+
+  name        String
+  description String?
+  type        GoalType
+  timeType    GoalTimeType
+
+  timeTypeEveryRollingNumberOfDaysAmount Int?
+
+  typePerformExerciseTypeExerciseTypeId String?
+  typePerformExerciseTypeExerciseType   ExerciseType? @relation(name: "PerformExerciseTypeGoal", fields: [typePerformExerciseTypeExerciseTypeId], references: [id])
+  typePerformExerciseTypeNumberOfDays   Int?
+  typeDayOfRestNumberOfDays             Int?
+  typeDayOfWorkNumberOfDays             Int?
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

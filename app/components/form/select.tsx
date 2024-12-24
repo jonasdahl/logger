@@ -1,14 +1,14 @@
+import type { SelectProps } from "@chakra-ui/react";
 import {
   Select as ChakraSelect,
   FormControl,
   FormErrorMessage,
-  FormLabel,
-  SelectProps,
 } from "@chakra-ui/react";
 import type { ReactNode } from "react";
 import { useField } from "remix-validated-form";
+import { FormLabel } from "../ui/form-label";
 
-export function Select({
+export function ValidatedSelectField({
   name,
   label,
   defaultValue,

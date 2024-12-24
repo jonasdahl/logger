@@ -3,7 +3,6 @@ import type { IconDefinition } from "@fortawesome/free-solid-svg-icons";
 import {
   faCheck,
   faCode,
-  faCrosshairs,
   faLink,
   faList,
   faRightFromBracket,
@@ -32,7 +31,6 @@ export default function Dashboard() {
     <div className="flex flex-col gap-3 items-start p-5">
       <Item label="Övningstyper" to="/exercise-types" icon={faRunning} />
       <Item label="Passmallar" to="/exercise-templates" icon={faList} />
-      <Item label="Mål" to="/goals" icon={faCrosshairs} />
       <Item label="Vikt" to="/weight" icon={faWeight} />
       <Item label="Dagsstatus" to="/day-status" icon={faSquare} />
       <Item label="Regelträning" to="/laws/quiz" icon={faCheck} />

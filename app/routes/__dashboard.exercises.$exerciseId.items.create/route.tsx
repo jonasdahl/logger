@@ -22,7 +22,7 @@ import { ValidatedForm } from "remix-validated-form";
 import { z } from "zod";
 import { authenticator } from "~/.server/auth.server";
 import { ButtonLink } from "~/components/button-link";
-import { Select } from "~/components/form/select";
+import { ValidatedSelectField } from "~/components/form/select";
 import { SubmitButton } from "~/components/form/submit-button";
 import { validate } from "~/components/form/validate.server";
 import { Link } from "~/components/link";
@@ -313,13 +313,13 @@ export default function Activity() {
           ) : exerciseType?.defaultAmountType === AmountType.Levels ? (
             <Box>
               <input type="hidden" name="amountType" value="levels" />
-              <Select name="level" label="Nivå">
+              <ValidatedSelectField name="level" label="Nivå">
                 {exerciseType.levels.map((level) => (
                   <option key={level.id} value={level.id}>
                     {level.name}
                   </option>
                 ))}
-              </Select>
+              </ValidatedSelectField>
             </Box>
           ) : null}
 
