@@ -1,5 +1,5 @@
 import { Box } from "@chakra-ui/react";
-import { GoalTimeType, GoalType } from "@prisma/client";
+import { GoalTimeType } from "@prisma/client";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
@@ -16,6 +16,12 @@ import { ValidatedInputField } from "~/components/form/validated-input-field";
 import { H1 } from "~/components/headings";
 import { FormStack } from "~/components/ui/form-stack";
 import { db } from "~/db.server";
+
+const GoalType = {
+  PerformExerciseType: "PerformExerciseType",
+  DayOfRest: "DayOfRest",
+  DayOfWork: "DayOfWork",
+} as const;
 
 const validator = withZod(
   z.object({
@@ -66,7 +72,9 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
 export default function CreateTest() {
   const { exerciseTypes } = useLoaderData<typeof loader>();
-  const [goalType, setGoalType] = useState<GoalType>(GoalType.DayOfWork);
+  const [goalType, setGoalType] = useState<keyof typeof GoalType>(
+    GoalType.DayOfWork
+  );
 
   return (
     <div className="flex flex-col gap-5 py-6 container max-w-screen-md mx-auto px-4">
@@ -78,7 +86,9 @@ export default function CreateTest() {
             name="type"
             label="Måltyp"
             value={goalType}
-            onChange={({ target: { value } }) => setGoalType(value as GoalType)}
+            onChange={({ target: { value } }) =>
+              setGoalType(value as keyof typeof GoalType)
+            }
           >
             <option value={GoalType.DayOfWork}>Aktivitetsdagar</option>
             <option value={GoalType.DayOfRest}>Vilodagar</option>
