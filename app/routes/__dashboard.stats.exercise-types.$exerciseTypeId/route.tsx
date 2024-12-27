@@ -1,4 +1,4 @@
-import { Box, Card, Container, Heading, Stack, Text } from "@chakra-ui/react";
+import { Text } from "@chakra-ui/react";
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
@@ -19,7 +19,8 @@ import {
   buildChartTheme,
 } from "~/components/charts/xy-chart.client";
 import { ClientOnly } from "~/components/client-only";
-import { H1 } from "~/components/headings";
+import { H1, H2 } from "~/components/headings";
+import { Card } from "~/components/ui/card";
 import { StatsExerciseTypeDocument } from "~/graphql/generated/documents";
 import { gql } from "~/graphql/graphql.server";
 import { cn } from "~/lib/utils";
@@ -55,8 +56,8 @@ export default function ExerciseTypeStats() {
   const [timeGrouping, setTimeGrouping] = useState(TimeGrouping.Month);
 
   return (
-    <Container py={5} maxW="container.md">
-      <Stack spacing={5}>
+    <div className="container max-w-screen-md px-4 mx-auto py-5">
+      <div className="flex flex-col gap-5">
         <div className="flex flex-row gap-3 justify-between">
           <H1>{data?.exerciseType?.name}</H1>
           <div className="border rounded-lg px-1 py-1 gap-1 flex-row flex">
@@ -85,8 +86,8 @@ export default function ExerciseTypeStats() {
         <ClientOnly>{() => <LoadChart />}</ClientOnly>
         <ClientOnly>{() => <TotalLoadChart />}</ClientOnly>
         <ClientOnly>{() => <LevelsChart />}</ClientOnly>
-      </Stack>
-    </Container>
+      </div>
+    </div>
   );
 }
 
@@ -186,9 +187,9 @@ function BarLoadChart({ timeGrouping }: { timeGrouping: TimeGrouping }) {
   });
 
   return (
-    <Stack>
-      <Heading size="md">Belastning över tid</Heading>
-      <Box>
+    <div className="flex flex-col gap-3">
+      <H2>Belastning över tid</H2>
+      <div>
         <XYChart
           theme={customTheme}
           margin={{ top: 0, right: 0, bottom: 20, left: 30 }}
@@ -279,8 +280,8 @@ function BarLoadChart({ timeGrouping }: { timeGrouping: TimeGrouping }) {
             )}
           />
         </XYChart>
-      </Box>
-    </Stack>
+      </div>
+    </div>
   );
 }
 function TimeChart() {
@@ -323,9 +324,9 @@ function TimeChart() {
   }
 
   return (
-    <Stack>
-      <Heading size="md">Tid</Heading>
-      <Box>
+    <div className="flex flex-col gap-3">
+      <H2>Tid</H2>
+      <div>
         <XYChart
           theme={customTheme}
           margin={{ top: 0, right: 0, bottom: 20, left: 30 }}
@@ -365,8 +366,8 @@ function TimeChart() {
           />
           <BasicTooltip />
         </XYChart>
-      </Box>
-    </Stack>
+      </div>
+    </div>
   );
 }
 
@@ -380,15 +381,15 @@ function BasicTooltip() {
       unstyled
       applyPositionStyle
       renderTooltip={({ tooltipData, colorScale }) => (
-        <Card p={3} fontSize="sm">
+        <Card>
           {Object.entries(tooltipData?.nearestDatum?.datum ?? {}).map(
             ([key, value]) => (
-              <Box key={key}>
+              <div key={key}>
                 <Text fontWeight="bold" as="span">
                   {key}
                 </Text>
                 : {String(value)}
-              </Box>
+              </div>
             )
           )}
         </Card>
@@ -431,9 +432,9 @@ function RepsChart() {
   }
 
   return (
-    <Stack>
-      <Heading size="md">Repetitioner</Heading>
-      <Box>
+    <div className="flex flex-col gap-3">
+      <H2>Repetitioner</H2>
+      <div>
         <XYChart
           theme={customTheme}
           margin={{ top: 0, right: 0, bottom: 20, left: 30 }}
@@ -461,8 +462,8 @@ function RepsChart() {
           />
           <BasicTooltip />
         </XYChart>
-      </Box>
-    </Stack>
+      </div>
+    </div>
   );
 }
 
@@ -496,9 +497,9 @@ function LoadChart() {
   }
 
   return (
-    <Stack>
-      <Heading size="md">Belastning</Heading>
-      <Box>
+    <div className="flex flex-col gap-3">
+      <H2>Belastning</H2>
+      <div>
         <XYChart
           theme={customTheme}
           margin={{ top: 0, right: 0, bottom: 20, left: 30 }}
@@ -538,8 +539,8 @@ function LoadChart() {
           />
           <BasicTooltip />
         </XYChart>
-      </Box>
-    </Stack>
+      </div>
+    </div>
   );
 }
 
@@ -595,9 +596,9 @@ function LevelsChart() {
   }
 
   return (
-    <Stack>
-      <Heading size="md">Nivåer</Heading>
-      <Box>
+    <div className="flex flex-col gap-3">
+      <H2>Nivåer</H2>
+      <div>
         <XYChart
           theme={customTheme}
           margin={{ top: 0, right: 0, bottom: 20, left: 30 }}
@@ -637,8 +638,8 @@ function LevelsChart() {
           />
           <BasicTooltip />
         </XYChart>
-      </Box>
-    </Stack>
+      </div>
+    </div>
   );
 }
 
@@ -681,9 +682,9 @@ function TotalLoadChart() {
   }
 
   return (
-    <Stack>
-      <Heading size="md">Total belastning</Heading>
-      <Box>
+    <div className="flex flex-col gap-3">
+      <H2>Total belastning</H2>
+      <div>
         <XYChart
           theme={customTheme}
           margin={{ top: 0, right: 0, bottom: 20, left: 30 }}
@@ -710,7 +711,7 @@ function TotalLoadChart() {
           />
           <BasicTooltip />
         </XYChart>
-      </Box>
-    </Stack>
+      </div>
+    </div>
   );
 }

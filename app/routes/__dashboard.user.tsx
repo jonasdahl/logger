@@ -1,4 +1,4 @@
-import { Box, Button, Container, Heading, Stack } from "@chakra-ui/react";
+import { Button, Container, Heading, Stack } from "@chakra-ui/react";
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
@@ -105,14 +105,14 @@ export default function User() {
               type="number"
               defaultValue={user.maxPulse?.toFixed(0) ?? undefined}
             />
-            <Box>
+            <div>
               <SubmitButton>Spara</SubmitButton>
-            </Box>
+            </div>
           </Stack>
         </ValidatedForm>
 
         <Heading as="h2">Aviseringsinställningar</Heading>
-        <Box>
+        <div>
           {subscription === undefined ? (
             <Button isLoading isDisabled />
           ) : subscription === null ? (
@@ -154,7 +154,7 @@ export default function User() {
             </Button>
           ) : (
             <Stack>
-              <Box>
+              <div>
                 <Form method="post">
                   <input
                     type="hidden"
@@ -163,8 +163,8 @@ export default function User() {
                   />
                   <Button type="submit">Testa aviseringar</Button>
                 </Form>
-              </Box>
-              <Box>
+              </div>
+              <div>
                 <Button
                   colorScheme="red"
                   onClick={async () => {
@@ -181,10 +181,10 @@ export default function User() {
                 >
                   Stäng av aviseringar för denna enhet
                 </Button>
-              </Box>
+              </div>
             </Stack>
           )}
-        </Box>
+        </div>
       </Stack>
     </Container>
   );

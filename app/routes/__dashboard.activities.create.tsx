@@ -1,4 +1,4 @@
-import { Alert, Box, Container, Heading, Stack } from "@chakra-ui/react";
+import { Alert, Container, Heading, Stack } from "@chakra-ui/react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useLoaderData, useSearchParams } from "@remix-run/react";
@@ -125,7 +125,7 @@ export default function DashboardIndex() {
         <Stack spacing={5}>
           <Heading>Skapa aktivitet</Heading>
           {plannedActivity ? (
-            <Box>
+            <div>
               <input
                 type="hidden"
                 name="fromPlannedActivityId"
@@ -134,7 +134,7 @@ export default function DashboardIndex() {
               <Alert>
                 Denna aktivitet kommer att kopplas till en planerad aktivitet.
               </Alert>
-            </Box>
+            </div>
           ) : null}
           <ValidatedInputField
             label="Datum"
@@ -188,9 +188,9 @@ export default function DashboardIndex() {
             name="comment"
             defaultValue={plannedActivity?.comment ?? undefined}
           />
-          <Box>
+          <div>
             <SubmitButton>Skapa</SubmitButton>
-          </Box>
+          </div>
         </Stack>
       </ValidatedForm>
     </Container>

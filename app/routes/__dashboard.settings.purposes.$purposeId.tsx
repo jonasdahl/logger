@@ -2,7 +2,6 @@ import {
   Alert,
   AlertDescription,
   AlertTitle,
-  Box,
   Container,
   Heading,
   Stack,
@@ -84,9 +83,9 @@ export default function PurposeEdit() {
                 </AlertDescription>
               </Stack>
             </Alert>
-            <Box>
+            <div>
               <SubmitButton>Spara</SubmitButton>
-            </Box>
+            </div>
           </Stack>
         </ValidatedForm>
       </Stack>

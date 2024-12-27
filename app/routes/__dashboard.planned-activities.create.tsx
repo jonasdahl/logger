@@ -1,4 +1,4 @@
-import { Box, Container, Heading, Stack } from "@chakra-ui/react";
+import { Container, Heading, Stack } from "@chakra-ui/react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useLoaderData, useSearchParams } from "@remix-run/react";
@@ -109,9 +109,9 @@ export default function CreatePlannedActivity() {
           </ValidatedSelectField>
           <Textarea label="Beskrivning/innehåll" name="description" />
           <Textarea label="Övriga kommentarer" name="comment" />
-          <Box>
+          <div>
             <SubmitButton>Skapa</SubmitButton>
-          </Box>
+          </div>
         </Stack>
       </ValidatedForm>
     </Container>

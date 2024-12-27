@@ -1,4 +1,4 @@
-import { Box, Button, Container, Heading, Stack } from "@chakra-ui/react";
+import { Button, Container, Heading, Stack } from "@chakra-ui/react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Form } from "@remix-run/react";
@@ -50,11 +50,11 @@ export default function DashboardIndex() {
       <Form method="post">
         <Stack spacing={5}>
           <Heading>Radera planerad aktivitet?</Heading>
-          <Box>
+          <div>
             <Button type="submit" colorScheme="red">
               Radera
             </Button>
-          </Box>
+          </div>
         </Stack>
       </Form>
     </Container>

@@ -1,5 +1,4 @@
 import {
-  Box,
   Input as ChakraInput,
   FormControl,
   FormLabel,
@@ -87,7 +86,7 @@ export function ExerciseTypeForm() {
                 </Tbody>
               </Table>
 
-              <Box>
+              <div>
                 <IconButton
                   onClick={() => setLoads((ids) => [...ids, v4()])}
                   icon={<FontAwesomeIcon icon={faPlus} />}
@@ -95,13 +94,13 @@ export function ExerciseTypeForm() {
                   colorScheme="green"
                   variant="outline"
                 />
-              </Box>
+              </div>
             </FormControl>
           )}
         </Stack>
-        <Box>
+        <div>
           <SubmitButton>Spara</SubmitButton>
-        </Box>
+        </div>
       </Stack>
     </ValidatedForm>
   );

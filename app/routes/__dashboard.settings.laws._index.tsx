@@ -71,11 +71,11 @@ export default function SettingsLawsIndex() {
         <HStack>
           <Heading>Regelfrågor</Heading>
           <Spacer />
-          <Box>
+          <div>
             <ButtonLink to="/settings/laws/create" variant="secondary">
               Skapa
             </ButtonLink>
-          </Box>
+          </div>
         </HStack>
 
         <TableContainer>

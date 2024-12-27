@@ -1,4 +1,3 @@
-import { Box } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useFormContext } from "remix-validated-form";
 
@@ -16,12 +15,12 @@ export function ErrorText() {
   }
 
   return (
-    <Box color="red.500">
+    <div className="text-red-500">
       {Object.entries(fieldErrors).map(([key, value]) => (
-        <Box key={key}>
+        <div key={key}>
           {key}: {value}
-        </Box>
+        </div>
       ))}
-    </Box>
+    </div>
   );
 }

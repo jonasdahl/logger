@@ -1,5 +1,4 @@
 import {
-  Box,
   Button,
   Container,
   HStack,
@@ -74,9 +73,9 @@ export default function Activity() {
         <HStack>
           <Heading as="h1">Övningstyper</Heading>
           <Spacer />
-          <Box>
+          <div>
             <ButtonLink to="/exercise-types/create">Skapa ny</ButtonLink>
-          </Box>
+          </div>
         </HStack>
         <TableContainer>
           <Table size="sm">

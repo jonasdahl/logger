@@ -1,4 +1,4 @@
-import { Box, Container, HStack, SimpleGrid, Stack } from "@chakra-ui/react";
+import { Container, HStack, SimpleGrid, Stack } from "@chakra-ui/react";
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
@@ -63,16 +63,16 @@ export default function DashboardIndex() {
         {showFogisSync ? <FogisSyncAlert /> : null}
 
         <HStack>
-          <Box>
+          <div>
             <ButtonLink to={`/calendar`} variant="secondary">
               +/- 2 veckor
             </ButtonLink>
-          </Box>
-          <Box>
+          </div>
+          <div>
             <ButtonLink to={`/months/${now.toFormat("yyyy'/'MM")}`}>
               Månadsvy
             </ButtonLink>
-          </Box>
+          </div>
         </HStack>
 
         <SimpleGrid columns={7} rowGap={2} columnGap={1}>

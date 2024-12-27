@@ -1,4 +1,4 @@
-import { Box, Container, HStack, Heading, Stack } from "@chakra-ui/react";
+import { Container, HStack, Heading, Stack } from "@chakra-ui/react";
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { withZod } from "@remix-validated-form/with-zod";
@@ -50,16 +50,16 @@ export default function SettingsIndex() {
         <HStack>
           <Heading>Skapa träningssyften</Heading>
         </HStack>
-        <Box>Lägg till en per rad nedan</Box>
+        <div>Lägg till en per rad nedan</div>
         <ValidatedForm validator={validator} method="post">
           <Stack>
             <Textarea
               label="Träningssyften (en per rad kommer skapas)"
               name="entries"
             />
-            <Box>
+            <div>
               <SubmitButton>Skapa</SubmitButton>
-            </Box>
+            </div>
           </Stack>
         </ValidatedForm>
       </Stack>

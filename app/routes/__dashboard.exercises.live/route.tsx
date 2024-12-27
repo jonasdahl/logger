@@ -1,4 +1,3 @@
-import { Box, Container, Heading, Stack } from "@chakra-ui/react";
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { withZod } from "@remix-validated-form/with-zod";
@@ -7,6 +6,7 @@ import { ValidatedForm } from "remix-validated-form";
 import { z } from "zod";
 import { authenticator } from "~/.server/auth.server";
 import { SubmitButton } from "~/components/form/submit-button";
+import { H1 } from "~/components/headings";
 import { db } from "~/db.server";
 import { HiddenReturnToInput } from "~/services/return-to";
 
@@ -29,17 +29,17 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export default function DashboardIndex() {
   return (
-    <Container py={5}>
+    <div className="py-5 container mx-auto px-4 max-w-screen-md">
       <ValidatedForm validator={validator} method="post">
         <HiddenReturnToInput />
-        <Stack spacing={5}>
-          <Heading>Börja träna?</Heading>
+        <div className="flex flex-col gap-5">
+          <H1>Börja träna?</H1>
 
-          <Box>
+          <div>
             <SubmitButton variant="default">Ja</SubmitButton>
-          </Box>
-        </Stack>
+          </div>
+        </div>
       </ValidatedForm>
-    </Container>
+    </div>
   );
 }

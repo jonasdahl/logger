@@ -105,7 +105,7 @@ export default function Game() {
 function Overview({ data }: { data: SerializeFrom<typeof loader> }) {
   const totalTime = data?.game?.startDay.heartRateSummary;
   return (
-    <Box>
+    <div>
       <Table size="sm">
         <Tbody>
           <Tr>
@@ -150,7 +150,7 @@ function Overview({ data }: { data: SerializeFrom<typeof loader> }) {
           </Tr>
         </Tbody>
       </Table>
-    </Box>
+    </div>
   );
 }
 
@@ -171,11 +171,11 @@ function TimeLine({ data }: { data: SerializeFrom<typeof loader> }) {
   const percentsPerSecond = 100 / (duration?.as("seconds") ?? 0);
 
   return (
-    <Box>
+    <div>
       {data?.game?.startDay.heartRateSummary?.samples?.length ? (
         <ClientOnly>
           {() => (
-            <Box>
+            <div>
               <XYChart
                 margin={{ top: 0, right: 0, bottom: 30, left: 30 }}
                 height={300}
@@ -204,7 +204,7 @@ function TimeLine({ data }: { data: SerializeFrom<typeof loader> }) {
                   strokeWidth={1}
                 />
               </XYChart>
-            </Box>
+            </div>
           )}
         </ClientOnly>
       ) : null}
@@ -239,6 +239,6 @@ function TimeLine({ data }: { data: SerializeFrom<typeof loader> }) {
           })}
         </Box>
       </Box>
-    </Box>
+    </div>
   );
 }

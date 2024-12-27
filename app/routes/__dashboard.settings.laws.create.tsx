@@ -1,5 +1,4 @@
 import {
-  Box,
   Input as ChakraInput,
   Checkbox,
   Container,
@@ -134,9 +133,9 @@ export default function SettingsLawsCreate() {
                 </Tr>
               </Tbody>
             </Table>
-            <Box>
+            <div>
               <SubmitButton>Skapa</SubmitButton>
-            </Box>
+            </div>
           </Stack>
         </ValidatedForm>
       </Stack>

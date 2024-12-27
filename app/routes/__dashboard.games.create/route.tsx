@@ -1,4 +1,4 @@
-import { Box, Container, Heading, Stack } from "@chakra-ui/react";
+import { Container, Heading, Stack } from "@chakra-ui/react";
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { useSearchParams } from "@remix-run/react";
@@ -49,9 +49,9 @@ export default function CreateTest() {
                 dateFromParams ? `${dateFromParams}T12:00` : undefined
               }
             />
-            <Box>
+            <div>
               <SubmitButton>Skapa</SubmitButton>
-            </Box>
+            </div>
           </Stack>
         </ValidatedForm>
       </Stack>

@@ -1,5 +1,4 @@
 import {
-  Box,
   Button,
   Checkbox,
   Container,
@@ -110,7 +109,7 @@ export default function Fogis() {
             <Stack>
               <Heading size="md">Matcher som kommer läggas till</Heading>
               {actionData.toAdd.length === 0 ? (
-                <Box>Inga nya matcher.</Box>
+                <div>Inga nya matcher.</div>
               ) : (
                 <TableContainer>
                   <Table size="sm">
@@ -148,7 +147,7 @@ export default function Fogis() {
             <Stack>
               <Heading size="md">Matcher som kommer tas bort</Heading>
               {actionData.toDelete.length === 0 ? (
-                <Box>Inga matcher tas bort.</Box>
+                <div>Inga matcher tas bort.</div>
               ) : (
                 <TableContainer>
                   <Table size="sm">
@@ -175,7 +174,7 @@ export default function Fogis() {
               )}
             </Stack>
 
-            <Box>
+            <div>
               <Button
                 type="submit"
                 colorScheme="green"
@@ -184,7 +183,7 @@ export default function Fogis() {
               >
                 Genomför ändringar
               </Button>
-            </Box>
+            </div>
           </Stack>
         </Form>
       </Container>
@@ -195,10 +194,10 @@ export default function Fogis() {
     <Container py={6}>
       <Stack spacing={5}>
         <Heading>Importera från Fogis</Heading>
-        <Box>
+        <div>
           Fyll i dina inloggningsuppgifter till Fogis nedan så importeras dina
           matcher automatiskt.
-        </Box>
+        </div>
         <ValidatedForm validator={validator} method="post">
           <Stack spacing={5}>
             <ValidatedInputField
@@ -213,9 +212,9 @@ export default function Fogis() {
               label="Lösenord i Fogis"
               autoFocus={!!fogisUsername}
             />
-            <Box>
+            <div>
               <SubmitButton variant="secondary">Hämta matcher</SubmitButton>
-            </Box>
+            </div>
           </Stack>
         </ValidatedForm>
       </Stack>

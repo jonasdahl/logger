@@ -247,7 +247,7 @@ export default function Activity() {
           })}
 
           {exerciseType?.defaultAmountType === AmountType.Time ? (
-            <Box>
+            <div>
               <input type="hidden" name="amountType" value="time" />
               <Stack>
                 {/* <HStack>
@@ -255,12 +255,12 @@ export default function Activity() {
               Mängd
             </Heading>
             <Spacer />
-            <Box>
+            <div>
               <Select name="amountType" label="Typ" hideLabel size="sm">
                 <option value="time">Tid</option>
                 <option value="repetitions">Repetitioner</option>
               </Select>
-            </Box>
+            </div>
           </HStack> */}
 
                 <TimeInput
@@ -272,9 +272,9 @@ export default function Activity() {
                   }
                 />
               </Stack>
-            </Box>
+            </div>
           ) : exerciseType?.defaultAmountType === AmountType.Repetitions ? (
-            <Box>
+            <div>
               <input type="hidden" name="amountType" value="repetitions" />
               <Stack>
                 {/* <HStack>
@@ -282,12 +282,12 @@ export default function Activity() {
                   Mängd
                 </Heading>
                 <Spacer />
-                <Box>
+                <div>
                   <Select name="amountType" label="Typ" hideLabel size="sm">
                     <option value="time">Tid</option>
                     <option value="repetitions">Repetitioner</option>
                   </Select>
-                </Box>
+                </div>
               </HStack> */}
 
                 <FormControl>
@@ -304,9 +304,9 @@ export default function Activity() {
                   />
                 </FormControl>
               </Stack>
-            </Box>
+            </div>
           ) : exerciseType?.defaultAmountType === AmountType.Levels ? (
-            <Box>
+            <div>
               <input type="hidden" name="amountType" value="levels" />
               <ValidatedSelectField name="level" label="Nivå">
                 {exerciseType.levels.map((level) => (
@@ -315,19 +315,19 @@ export default function Activity() {
                   </option>
                 ))}
               </ValidatedSelectField>
-            </Box>
+            </div>
           ) : null}
 
           <HStack>
-            <Box>
+            <div>
               <ButtonLink variant="ghost" to={`/exercises/${exerciseId}`}>
                 Avbryt
               </ButtonLink>
-            </Box>
+            </div>
             <Spacer />
-            <Box>
+            <div>
               <SubmitButton disabled={!exerciseTypeId}>Spara</SubmitButton>
-            </Box>
+            </div>
           </HStack>
         </Stack>
       </ValidatedForm>

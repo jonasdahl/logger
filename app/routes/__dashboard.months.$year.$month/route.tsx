@@ -1,5 +1,4 @@
 import {
-  Box,
   Container,
   HStack,
   Heading,
@@ -82,21 +81,21 @@ export default function DashboardIndex() {
         <Wrap>
           <HStack>
             <Spacer />
-            <Box>
+            <div>
               <ButtonLink to={`/calendar`}>+/- 2 veckor</ButtonLink>
-            </Box>
-            <Box>
+            </div>
+            <div>
               <ButtonLink
                 to={`/months/${now.toFormat("yyyy'/'MM")}`}
                 variant="secondary"
               >
                 Månadsvy
               </ButtonLink>
-            </Box>
+            </div>
           </HStack>
 
           <HStack flex={1}>
-            <Box>
+            <div>
               <IconButtonLink
                 to={`/months/${previousMonth.toFormat("yyyy'/'MM")}`}
                 icon={<FontAwesomeIcon icon={faChevronLeft} />}
@@ -104,13 +103,13 @@ export default function DashboardIndex() {
                   locale: "sv-SE",
                 })}
               />
-            </Box>
+            </div>
             <Spacer />
             <Heading as="h1" size="sm" textTransform="capitalize">
               {month.start!.toFormat("LLLL yyyy", { locale: "sv-SE" })}
             </Heading>
             <Spacer />
-            <Box>
+            <div>
               <IconButtonLink
                 to={`/months/${nextMonth.toFormat("yyyy'/'MM")}`}
                 icon={<FontAwesomeIcon icon={faChevronRight} />}
@@ -118,7 +117,7 @@ export default function DashboardIndex() {
                   locale: "sv-SE",
                 })}
               />
-            </Box>
+            </div>
           </HStack>
         </Wrap>
 

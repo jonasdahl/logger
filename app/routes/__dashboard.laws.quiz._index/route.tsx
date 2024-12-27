@@ -1,8 +1,6 @@
 import {
-  Box,
   Checkbox,
   Container,
-  Heading,
   Radio,
   RadioGroup,
   Stack,
@@ -18,6 +16,7 @@ import { authenticator } from "~/.server/auth.server";
 import { ErrorText } from "~/components/form/error-text";
 import { SubmitButton } from "~/components/form/submit-button";
 import { validate } from "~/components/form/validate.server";
+import { H1 } from "~/components/headings";
 import { db } from "~/db.server";
 import { HiddenReturnToInput } from "~/services/return-to";
 
@@ -96,33 +95,33 @@ export default function Question() {
         <ErrorText />
         <input type="hidden" name="questionId" value={question.id} />
         <Stack spacing={5}>
-          <Heading>Regelfråga</Heading>
+          <H1>Regelfråga</H1>
 
-          <Box>{question.question}</Box>
+          <div>{question.question}</div>
           <Wrapper multiple={multiple}>
             <Stack>
               {alternatives.map((alternative) => {
                 if (multiple) {
                   return (
-                    <Box key={alternative.id}>
+                    <div key={alternative.id}>
                       <Checkbox name="answer" value={alternative.id}>
                         {alternative.text}
                       </Checkbox>
-                    </Box>
+                    </div>
                   );
                 }
                 return (
-                  <Box key={alternative.id}>
+                  <div key={alternative.id}>
                     <Radio value={alternative.id}>{alternative.text}</Radio>
-                  </Box>
+                  </div>
                 );
               })}
             </Stack>
           </Wrapper>
 
-          <Box>
+          <div>
             <SubmitButton>Svara</SubmitButton>
-          </Box>
+          </div>
         </Stack>
       </ValidatedForm>
     </Container>

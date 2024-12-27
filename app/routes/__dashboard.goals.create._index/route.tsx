@@ -1,4 +1,3 @@
-import { Box } from "@chakra-ui/react";
 import { GoalTimeType } from "@prisma/client";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
@@ -130,9 +129,9 @@ export default function CreateTest() {
               />
             </>
           ) : null}
-          <Box>
+          <div>
             <SubmitButton>Skapa</SubmitButton>
-          </Box>
+          </div>
         </FormStack>
       </ValidatedForm>
     </div>

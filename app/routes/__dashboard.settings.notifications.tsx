@@ -1,4 +1,4 @@
-import { Box, Button, Container, Heading, Stack } from "@chakra-ui/react";
+import { Button, Container, Heading, Stack } from "@chakra-ui/react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
@@ -44,7 +44,7 @@ export default function Notifications() {
     <Container py={5} maxW="container.xl">
       <Stack spacing={5}>
         <Heading>Aviseringsprenumerationer</Heading>
-        <Box>{count}</Box>
+        <div>{count}</div>
         <Form method="post">
           <input type="hidden" name="_action" value="truncate" />
           <Button type="submit">Radera alla</Button>

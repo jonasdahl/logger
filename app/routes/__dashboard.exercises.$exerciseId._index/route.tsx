@@ -1,5 +1,4 @@
 import {
-  Box,
   Button,
   Checkbox,
   Container,
@@ -270,7 +269,7 @@ export default function Activity() {
           </Heading>
           <Spacer />
           {selectedExerciseItemIds.length > 0 ? (
-            <Box>
+            <div>
               <Form method="post">
                 <input type="hidden" name="_action" value="duplicateItems" />
                 <HiddenReturnToInput />
@@ -283,7 +282,7 @@ export default function Activity() {
                   Duplicera valda
                 </Button>
               </Form>
-            </Box>
+            </div>
           ) : null}
         </HStack>
         <Stack spacing={2}>
@@ -293,7 +292,7 @@ export default function Activity() {
             }
             return (
               <HStack key={edge.cursor}>
-                <Box>
+                <div>
                   <Checkbox
                     onChange={(e) => {
                       if (e.target.checked) {
@@ -313,7 +312,7 @@ export default function Activity() {
                   >
                     {edge.node?.exerciseType.name}
                   </Checkbox>
-                </Box>
+                </div>
 
                 <Stack>
                   {edge.node.amount.map((set) => {
@@ -334,12 +333,12 @@ export default function Activity() {
                       set.duration.__typename === "ExerciseDurationRepetitions"
                     ) {
                       return (
-                        <Box>{`${set.duration.repetitions}st${loads}`}</Box>
+                        <div>{`${set.duration.repetitions}st${loads}`}</div>
                       );
                     } else if (
                       set.duration.__typename === "ExerciseDurationLevel"
                     ) {
-                      return <Box>{set.duration.levelType.name}</Box>;
+                      return <div>{set.duration.levelType.name}</div>;
                     } else {
                       const duration = Duration.fromObject({
                         hours: 0,
@@ -352,12 +351,12 @@ export default function Activity() {
                           : duration.toMillis() < 10_000
                           ? duration.toFormat("s.S's'")
                           : duration.toFormat("s's'");
-                      return <Box>{`${timeString}${loads}`}</Box>;
+                      return <div>{`${timeString}${loads}`}</div>;
                     }
                   })}
                 </Stack>
                 <Spacer />
-                <Box>
+                <div>
                   <Form method="post">
                     <input
                       type="hidden"
@@ -372,8 +371,8 @@ export default function Activity() {
                       size="xs"
                     />
                   </Form>
-                </Box>
-                <Box>
+                </div>
+                <div>
                   <Form method="post">
                     <input
                       type="hidden"
@@ -388,8 +387,8 @@ export default function Activity() {
                       size="xs"
                     />
                   </Form>
-                </Box>
-                <Box>
+                </div>
+                <div>
                   <Menu>
                     <MenuButton
                       as={IconButton}
@@ -445,16 +444,16 @@ export default function Activity() {
                       </Form>
                     </MenuList>
                   </Menu>
-                </Box>
+                </div>
               </HStack>
             );
           })}
         </Stack>
-        <Box>
+        <div>
           <ButtonLink to={`/exercises/${exerciseId}/items/create`}>
             Lägg till övning
           </ButtonLink>
-        </Box>
+        </div>
       </Stack>
     </Container>
   );

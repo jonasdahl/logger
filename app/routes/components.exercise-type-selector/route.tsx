@@ -11,7 +11,6 @@ import { faTimesCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Combobox } from "@headlessui/react";
 import type { LoaderFunctionArgs } from "@remix-run/node";
-import { json } from "@remix-run/node";
 import { useFetcher } from "@remix-run/react";
 import { z } from "zod";
 import { ComponentExerciseTypeSelectorDocument } from "~/graphql/generated/documents";
@@ -27,7 +26,7 @@ export async function action({ request }: LoaderFunctionArgs) {
     request,
   });
 
-  return json(data?.exerciseTypes);
+  return data?.exerciseTypes ?? null;
 }
 
 type Value = { id: string; name: string };
@@ -45,7 +44,7 @@ export function ExerciseCombobox({
   const suggestions = fetcher.data?.edges ?? [];
 
   return (
-    <Box>
+    <div>
       <Combobox
         defaultValue={defaultValue}
         value={value}
@@ -118,6 +117,6 @@ export function ExerciseCombobox({
           </>
         )}
       </Combobox>
-    </Box>
+    </div>
   );
 }

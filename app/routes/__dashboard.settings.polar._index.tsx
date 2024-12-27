@@ -1,6 +1,5 @@
 import {
   Alert,
-  Box,
   Button,
   Container,
   Heading,
@@ -126,9 +125,9 @@ export default function SettingsIndex() {
               label="URL"
               defaultValue={defaultUrl}
             />
-            <Box>
+            <div>
               <SubmitButton>Create webhook</SubmitButton>
-            </Box>
+            </div>
           </Stack>
         </ValidatedForm>
 

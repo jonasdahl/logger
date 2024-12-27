@@ -235,26 +235,26 @@ export default function DashboardIndex() {
                         </Box>
 
                         {e.node.primaryPurpose ? (
-                          <Box>Primärt: {e.node.primaryPurpose.label}</Box>
+                          <div>Primärt: {e.node.primaryPurpose.label}</div>
                         ) : null}
                         {e.node.secondaryPurpose ? (
-                          <Box>Sekundärt: {e.node.secondaryPurpose.label}</Box>
+                          <div>Sekundärt: {e.node.secondaryPurpose.label}</div>
                         ) : null}
                         {e.node.description ? (
-                          <Box>{e.node.description}</Box>
+                          <div>{e.node.description}</div>
                         ) : null}
-                        {e.node.comment ? <Box>{e.node.comment}</Box> : null}
+                        {e.node.comment ? <div>{e.node.comment}</div> : null}
                       </Wrap>
                       <Spacer />
-                      <Box>
+                      <div>
                         <ButtonLink
                           size="sm"
                           to={`/activities/create?from=${e.node.id}`}
                         >
                           Registrera
                         </ButtonLink>
-                      </Box>
-                      <Box>
+                      </div>
+                      <div>
                         <ButtonLink
                           size="sm"
                           variant="destructive"
@@ -262,7 +262,7 @@ export default function DashboardIndex() {
                         >
                           Radera
                         </ButtonLink>
-                      </Box>
+                      </div>
                     </HStack>
                   </Box>
                 );
@@ -288,21 +288,21 @@ export default function DashboardIndex() {
                               .toFormat("HH:mm")}
                           </LinkOverlay>
                           {e.node.primaryPurpose ? (
-                            <Box>Primärt: {e.node.primaryPurpose.label}</Box>
+                            <div>Primärt: {e.node.primaryPurpose.label}</div>
                           ) : null}
                           {e.node.secondaryPurpose ? (
-                            <Box>
+                            <div>
                               Sekundärt: {e.node.secondaryPurpose.label}
-                            </Box>
+                            </div>
                           ) : null}
                           {e.node.description ? (
-                            <Box>{e.node.description}</Box>
+                            <div>{e.node.description}</div>
                           ) : null}
-                          {e.node.comment ? <Box>{e.node.comment}</Box> : null}
+                          {e.node.comment ? <div>{e.node.comment}</div> : null}
                         </Wrap>
                       </LinkBox>
                       <Spacer />
-                      <Box>
+                      <div>
                         <ButtonLink
                           size="sm"
                           variant="destructive"
@@ -310,8 +310,8 @@ export default function DashboardIndex() {
                         >
                           Radera
                         </ButtonLink>
-                      </Box>
-                      <Box>
+                      </div>
+                      <div>
                         <Form
                           method="post"
                           action={`/activities/${e.node.id}/hide`}
@@ -330,7 +330,7 @@ export default function DashboardIndex() {
                             </Button>
                           )}
                         </Form>
-                      </Box>
+                      </div>
                     </HStack>
                   </Box>
                 );

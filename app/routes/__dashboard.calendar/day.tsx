@@ -115,16 +115,16 @@ export function Day({
                           {activityEdge.node.__typename === "Exercise" ? (
                             <>
                               {activityEdge.node.primaryPurpose ? (
-                                <Box>{`Primärt syfte: ${activityEdge.node.primaryPurpose.label}`}</Box>
+                                <div>{`Primärt syfte: ${activityEdge.node.primaryPurpose.label}`}</div>
                               ) : null}
                               {activityEdge.node.secondaryPurpose ? (
-                                <Box>{`Sekundärt syfte: ${activityEdge.node.secondaryPurpose.label}`}</Box>
+                                <div>{`Sekundärt syfte: ${activityEdge.node.secondaryPurpose.label}`}</div>
                               ) : null}
                               {activityEdge.node.description ? (
-                                <Box>{`Beskrivning: ${activityEdge.node.description}`}</Box>
+                                <div>{`Beskrivning: ${activityEdge.node.description}`}</div>
                               ) : null}
                               {activityEdge.node.comment ? (
-                                <Box>{`Kommentar: ${activityEdge.node.comment}`}</Box>
+                                <div>{`Kommentar: ${activityEdge.node.comment}`}</div>
                               ) : null}
                             </>
                           ) : null}
@@ -134,24 +134,24 @@ export function Day({
                   )}
 
                   {day.heartRateSummary?.secondsInZone4 ? (
-                    <Box>
+                    <div>
                       Tid i zon 4:{" "}
                       {Duration.fromMillis(
                         day.heartRateSummary.secondsInZone4 * 1000
                       )
                         .shiftTo("minutes", "seconds")
                         .toFormat("m'min' ss's'")}
-                    </Box>
+                    </div>
                   ) : null}
                   {day.heartRateSummary?.secondsInZone5 ? (
-                    <Box>
+                    <div>
                       Tid i zon 5:{" "}
                       {Duration.fromMillis(
                         day.heartRateSummary.secondsInZone5 * 1000
                       )
                         .shiftTo("minutes", "seconds")
                         .toFormat("m'min' ss's'")}
-                    </Box>
+                    </div>
                   ) : null}
 
                   <HStack

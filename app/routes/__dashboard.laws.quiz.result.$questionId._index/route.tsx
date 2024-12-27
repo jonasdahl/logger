@@ -1,8 +1,9 @@
-import { Box, Container, Heading, Stack } from "@chakra-ui/react";
+import { Container, Stack } from "@chakra-ui/react";
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { ButtonLink } from "~/components/button-link";
+import { H1 } from "~/components/headings";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   return json({
@@ -16,10 +17,10 @@ export default function Question() {
   return (
     <Container py={5}>
       <Stack spacing={5}>
-        <Heading as="h1">{success ? "Rätt" : "Fel"}</Heading>
-        <Box>
+        <H1>{success ? "Rätt" : "Fel"}</H1>
+        <div>
           <ButtonLink to="/laws/quiz">Nästa fråga</ButtonLink>
-        </Box>
+        </div>
       </Stack>
     </Container>
   );

@@ -1,7 +1,6 @@
 import {
   Alert,
   AlertDescription,
-  Box,
   Container,
   Heading,
   Stack,
@@ -177,7 +176,7 @@ export default function PolarExercise() {
                 </TableContainer>
               </TabPanel>
               <TabPanel px={0}>
-                <Box>
+                <div>
                   <ClientOnly>
                     {() => (
                       <XYChart
@@ -237,23 +236,11 @@ export default function PolarExercise() {
                       </XYChart>
                     )}
                   </ClientOnly>
-                </Box>
+                </div>
               </TabPanel>
             </TabPanels>
           </Tabs>
         )}
-        {/* 
-        <Code as="pre" p={3} overflowX="auto">
-          {JSON.stringify(exercise, null, 4)}
-        </Code>
-        <Heading>Raw</Heading>
-        <Code as="pre" p={3} overflowX="auto">
-          {JSON.stringify(JSON.parse(exercise.raw), null, 4)}
-        </Code>
-        <Heading>Samples</Heading>
-        <Code as="pre" p={3} overflowX="auto">
-          {JSON.stringify(samples, null, 4)}
-        </Code> */}
       </Stack>
     </Container>
   );
