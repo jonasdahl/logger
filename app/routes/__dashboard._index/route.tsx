@@ -15,10 +15,8 @@ import { TitleRow } from "~/components/ui/title-row";
 import { DashboardOverviewDocument } from "~/graphql/generated/documents";
 import { gql } from "~/graphql/graphql.server";
 
-export async function loader({ request, params }: LoaderFunctionArgs) {
-  const { id: userId } = await authenticator.isAuthenticated(request, {
-    failureRedirect: "/login",
-  });
+export async function loader({ request }: LoaderFunctionArgs) {
+  await authenticator.isAuthenticated(request, { failureRedirect: "/login" });
   return json(
     await gql({
       document: DashboardOverviewDocument,
