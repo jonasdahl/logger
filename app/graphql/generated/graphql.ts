@@ -14,6 +14,11 @@ import { ExerciseTypeHistoryModel } from '../types/exercise-type-history/model';
 import { ExerciseTypeHistoryDayAmountModel } from '../types/exercise-type-history-day-amount/model';
 import { ExerciseTypeLevelModel } from '../types/exercise-type-level/model';
 import { FogisGameModel } from '../types/fogis-game/model';
+import { GoalModel } from '../types/goal/model';
+import { GoalBaseModel } from '../types/goal-base/model';
+import { GoalDayOfRestModel } from '../types/goal-day-of-rest/model';
+import { GoalDayOfWorkModel } from '../types/goal-day-of-work/model';
+import { GoalGenericModel } from '../types/goal-generic/model';
 import { HeartRateSummaryModel } from '../types/heart-rate-summary/model';
 import { PhysicalTestModel } from '../types/physical-test/model';
 import { PlannedExerciseModel } from '../types/planned-exercise/model';
@@ -260,6 +265,35 @@ export type FogisGame = ActivityBase & ActivityGame & {
   title: Scalars['String']['output'];
 };
 
+export type Goal = GoalDayOfRest | GoalDayOfWork | GoalGeneric;
+
+export type GoalBase = {
+  currentProgress: Maybe<Scalars['Float']['output']>;
+  id: Scalars['ID']['output'];
+  title: Scalars['String']['output'];
+};
+
+export type GoalDayOfRest = GoalBase & {
+  __typename?: 'GoalDayOfRest';
+  currentProgress: Scalars['Float']['output'];
+  id: Scalars['ID']['output'];
+  title: Scalars['String']['output'];
+};
+
+export type GoalDayOfWork = GoalBase & {
+  __typename?: 'GoalDayOfWork';
+  currentProgress: Scalars['Float']['output'];
+  id: Scalars['ID']['output'];
+  title: Scalars['String']['output'];
+};
+
+export type GoalGeneric = GoalBase & {
+  __typename?: 'GoalGeneric';
+  currentProgress: Scalars['Float']['output'];
+  id: Scalars['ID']['output'];
+  title: Scalars['String']['output'];
+};
+
 export type HeartRateSample = {
   __typename?: 'HeartRateSample';
   heartRate: Maybe<Scalars['Int']['output']>;
@@ -325,6 +359,7 @@ export type Query = {
   exerciseType: Maybe<ExerciseType>;
   exerciseTypes: ExerciseTypeConnection;
   game: Maybe<ActivityGame>;
+  goals: Array<Goal>;
   me: Maybe<User>;
   timeZone: Scalars['String']['output'];
   today: Day;
@@ -463,12 +498,14 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversUnionTypes<RefType extends Record<string, unknown>> = {
   Activity: ( CustomGameModel ) | ( ExerciseModel ) | ( FogisGameModel ) | ( PhysicalTestModel ) | ( PlannedExerciseModel ) | ( TravelModel );
   ExerciseDuration: ( Omit<ExerciseDurationLevel, 'levelType'> & { levelType: RefType['ExerciseTypeLevel'] } ) | ( ExerciseDurationRepetitions ) | ( ExerciseDurationTime );
+  Goal: ( GoalDayOfRestModel ) | ( GoalDayOfWorkModel ) | ( GoalGenericModel );
 };
 
 /** Mapping of interface types */
 export type ResolversInterfaceTypes<RefType extends Record<string, unknown>> = {
   ActivityBase: ( CustomGameModel ) | ( ExerciseModel ) | ( FogisGameModel ) | ( PhysicalTestModel ) | ( PlannedExerciseModel ) | ( TravelModel );
   ActivityGame: ( CustomGameModel ) | ( FogisGameModel );
+  GoalBase: ( GoalDayOfRestModel ) | ( GoalDayOfWorkModel ) | ( GoalGenericModel );
 };
 
 /** Mapping between all available schema types and the resolvers types */
@@ -509,6 +546,11 @@ export type ResolversTypes = {
   ExerciseTypeLevel: ResolverTypeWrapper<ExerciseTypeLevelModel>;
   Float: ResolverTypeWrapper<Scalars['Float']['output']>;
   FogisGame: ResolverTypeWrapper<FogisGameModel>;
+  Goal: ResolverTypeWrapper<GoalModel>;
+  GoalBase: ResolverTypeWrapper<GoalBaseModel>;
+  GoalDayOfRest: ResolverTypeWrapper<GoalDayOfRestModel>;
+  GoalDayOfWork: ResolverTypeWrapper<GoalDayOfWorkModel>;
+  GoalGeneric: ResolverTypeWrapper<GoalGenericModel>;
   HeartRateSample: ResolverTypeWrapper<HeartRateSample>;
   HeartRateSummary: ResolverTypeWrapper<HeartRateSummaryModel>;
   HeartRateZone: HeartRateZone;
@@ -560,6 +602,11 @@ export type ResolversParentTypes = {
   ExerciseTypeLevel: ExerciseTypeLevelModel;
   Float: Scalars['Float']['output'];
   FogisGame: FogisGameModel;
+  Goal: GoalModel;
+  GoalBase: GoalBaseModel;
+  GoalDayOfRest: GoalDayOfRestModel;
+  GoalDayOfWork: GoalDayOfWorkModel;
+  GoalGeneric: GoalGenericModel;
   HeartRateSample: HeartRateSample;
   HeartRateSummary: HeartRateSummaryModel;
   ID: Scalars['ID']['output'];
@@ -780,6 +827,38 @@ export type FogisGameResolvers<ContextType = Context, ParentType extends Resolve
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type GoalResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Goal'] = ResolversParentTypes['Goal']> = {
+  __resolveType: TypeResolveFn<'GoalDayOfRest' | 'GoalDayOfWork' | 'GoalGeneric', ParentType, ContextType>;
+};
+
+export type GoalBaseResolvers<ContextType = Context, ParentType extends ResolversParentTypes['GoalBase'] = ResolversParentTypes['GoalBase']> = {
+  __resolveType: TypeResolveFn<'GoalDayOfRest' | 'GoalDayOfWork' | 'GoalGeneric', ParentType, ContextType>;
+  currentProgress: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
+  id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  title: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+};
+
+export type GoalDayOfRestResolvers<ContextType = Context, ParentType extends ResolversParentTypes['GoalDayOfRest'] = ResolversParentTypes['GoalDayOfRest']> = {
+  currentProgress: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  title: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type GoalDayOfWorkResolvers<ContextType = Context, ParentType extends ResolversParentTypes['GoalDayOfWork'] = ResolversParentTypes['GoalDayOfWork']> = {
+  currentProgress: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  title: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type GoalGenericResolvers<ContextType = Context, ParentType extends ResolversParentTypes['GoalGeneric'] = ResolversParentTypes['GoalGeneric']> = {
+  currentProgress: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  title: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type HeartRateSampleResolvers<ContextType = Context, ParentType extends ResolversParentTypes['HeartRateSample'] = ResolversParentTypes['HeartRateSample']> = {
   heartRate: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   time: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
@@ -831,6 +910,7 @@ export type QueryResolvers<ContextType = Context, ParentType extends ResolversPa
   exerciseType: Resolver<Maybe<ResolversTypes['ExerciseType']>, ParentType, ContextType, RequireFields<QueryExerciseTypeArgs, 'id'>>;
   exerciseTypes: Resolver<ResolversTypes['ExerciseTypeConnection'], ParentType, ContextType, QueryExerciseTypesArgs>;
   game: Resolver<Maybe<ResolversTypes['ActivityGame']>, ParentType, ContextType, RequireFields<QueryGameArgs, 'id'>>;
+  goals: Resolver<Array<ResolversTypes['Goal']>, ParentType, ContextType>;
   me: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   timeZone: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   today: Resolver<ResolversTypes['Day'], ParentType, ContextType>;
@@ -883,6 +963,11 @@ export type Resolvers<ContextType = Context> = {
   ExerciseTypeHistoryDayAmount: ExerciseTypeHistoryDayAmountResolvers<ContextType>;
   ExerciseTypeLevel: ExerciseTypeLevelResolvers<ContextType>;
   FogisGame: FogisGameResolvers<ContextType>;
+  Goal: GoalResolvers<ContextType>;
+  GoalBase: GoalBaseResolvers<ContextType>;
+  GoalDayOfRest: GoalDayOfRestResolvers<ContextType>;
+  GoalDayOfWork: GoalDayOfWorkResolvers<ContextType>;
+  GoalGeneric: GoalGenericResolvers<ContextType>;
   HeartRateSample: HeartRateSampleResolvers<ContextType>;
   HeartRateSummary: HeartRateSummaryResolvers<ContextType>;
   PageInfo: PageInfoResolvers<ContextType>;

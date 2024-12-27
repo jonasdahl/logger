@@ -1,0 +1,5 @@
+type GoalDayOfWork implements GoalBase {
+  id: ID!
+  title: String!
+  currentProgress: Float!
+}

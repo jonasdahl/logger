@@ -186,6 +186,32 @@ type FogisGame implements ActivityBase & ActivityGame {
   title: String!
 }
 
+union Goal = GoalDayOfRest | GoalDayOfWork | GoalGeneric
+
+interface GoalBase {
+  currentProgress: Float
+  id: ID!
+  title: String!
+}
+
+type GoalDayOfRest implements GoalBase {
+  currentProgress: Float!
+  id: ID!
+  title: String!
+}
+
+type GoalDayOfWork implements GoalBase {
+  currentProgress: Float!
+  id: ID!
+  title: String!
+}
+
+type GoalGeneric implements GoalBase {
+  currentProgress: Float!
+  id: ID!
+  title: String!
+}
+
 type HeartRateSample {
   heartRate: Int
   time: DateTime!
@@ -240,6 +266,7 @@ type Query {
   exerciseType(id: ID!): ExerciseType
   exerciseTypes(filter: ExerciseTypeFilter): ExerciseTypeConnection!
   game(id: ID!): ActivityGame
+  goals: [Goal!]!
   me: User
   timeZone: String!
   today: Day!

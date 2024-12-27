@@ -23,6 +23,7 @@ type Query {
   today: Day!
 
   categoryTags: [CategoryTag!]!
+  goals: [Goal!]!
 }
 
 input ActivityFilter {

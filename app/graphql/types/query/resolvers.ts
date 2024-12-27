@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import { DateTime, Interval } from "luxon";
 import { matchSorter } from "match-sorter";
 import { sortBy } from "remeda";
@@ -267,5 +268,11 @@ export const queryResolvers: QueryResolvers = {
       throw new Error("Not authenticated");
     }
     return db.categoryTag.findMany({ where: { userId } });
+  },
+  goals: async (_, __, { userId }) => {
+    if (!userId) {
+      throw new Error("Not authenticated");
+    }
+    return db.goal.findMany({ where: { userId } });
   },
 };

@@ -2,35 +2,35 @@ import { H1, H2 } from "~/components/headings";
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 import { InlineLink } from "~/components/ui/inline-link";
 
+import { faCheck } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { Check } from "lucide-react";
 import { authenticator } from "~/.server/auth.server";
 import { ButtonLink } from "~/components/button-link";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "~/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Progress } from "~/components/ui/progress";
 import { TitleRow } from "~/components/ui/title-row";
-import { db } from "~/db.server";
+import { DashboardOverviewDocument } from "~/graphql/generated/documents";
+import { gql } from "~/graphql/graphql.server";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const { id: userId } = await authenticator.isAuthenticated(request, {
     failureRedirect: "/login",
   });
-  const goals = await db.goal.findMany({
-    where: { userId },
-  });
-  return json({ goals });
+  return json(
+    await gql({
+      document: DashboardOverviewDocument,
+      variables: {},
+      request,
+    })
+  );
 }
 
 export default function Index() {
-  const { goals } = useLoaderData<typeof loader>();
+  const { data } = useLoaderData<typeof loader>();
+  const goals = data?.goals ?? [];
 
   return (
     <div className="container mx-auto py-6 px-4 max-w-screen-md flex flex-col gap-5">
@@ -64,19 +64,29 @@ export default function Index() {
             return (
               <Card key={goal.id}>
                 <div className="flex flex-row gap-5 justify-between">
-                  <CardHeader>
-                    <CardTitle>{goal.name}</CardTitle>
-                    <CardDescription>{goal.type}</CardDescription>
+                  <CardHeader className="pb-0">
+                    <CardTitle>{goal.title}</CardTitle>
                   </CardHeader>
 
-                  <div className="px-6 flex flex-col justify-center items-center self-stretch">
-                    <Check />
-                  </div>
+                  {goal.currentProgress && goal.currentProgress >= 1 ? (
+                    <div className="flex flex-col justify-center items-center self-stretch text-green-600">
+                      <FontAwesomeIcon icon={faCheck} />
+                    </div>
+                  ) : null}
                 </div>
 
-                <CardContent>
-                  <Progress value={50} indicatorClassName="bg-yellow-500" />
-                </CardContent>
+                {typeof goal.currentProgress === "number" ? (
+                  <CardContent>
+                    <Progress
+                      value={goal.currentProgress * 100}
+                      indicatorClassName={
+                        goal.currentProgress >= 1
+                          ? "bg-green-600"
+                          : "bg-yellow-600"
+                      }
+                    />
+                  </CardContent>
+                ) : null}
               </Card>
             );
           })

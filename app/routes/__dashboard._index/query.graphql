@@ -1,0 +1,9 @@
+query DashboardOverview {
+  goals {
+    ... on GoalBase {
+      id
+      title
+      currentProgress
+    }
+  }
+}

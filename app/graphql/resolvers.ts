@@ -30,6 +30,11 @@ import { exerciseTypeLevelResolvers } from "./types/exercise-type-level/resolver
 import { exerciseTypeResolvers } from "./types/exercise-type/resolvers";
 import { exerciseResolvers } from "./types/exercise/resolvers";
 import { fogisGameResolvers } from "./types/fogis-game/resolvers";
+import { goalBaseResolvers } from "./types/goal-base/resolvers";
+import { goalDayOfRestResolvers } from "./types/goal-day-of-rest/resolvers";
+import { goalDayOfWorkResolvers } from "./types/goal-day-of-work/resolvers";
+import { goalGenericResolvers } from "./types/goal-generic/resolvers";
+import { goalResolvers } from "./types/goal/resolvers";
 import { heartRateSampleResolvers } from "./types/heart-rate-sample/resolvers";
 import { heartRateSummaryResolvers } from "./types/heart-rate-summary/resolvers";
 import { pageInfoResolvers } from "./types/page-info/resolvers";
@@ -79,4 +84,9 @@ export const resolvers: Resolvers = {
   Event: eventResolvers,
   HeartRateSample: heartRateSampleResolvers,
   CategoryTag: categoryTagResolvers,
+  Goal: goalResolvers,
+  GoalBase: goalBaseResolvers,
+  GoalDayOfRest: goalDayOfRestResolvers,
+  GoalGeneric: goalGenericResolvers,
+  GoalDayOfWork: goalDayOfWorkResolvers,
 };
