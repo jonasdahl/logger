@@ -8,6 +8,8 @@ export const goalBaseResolvers: GoalBaseResolvers = {
         return "GoalDayOfRest";
       case GoalType.DayOfWork:
         return "GoalDayOfWork";
+      case GoalType.PerformExerciseType:
+        return "GoalPerformExerciseType";
       default:
         return "GoalGeneric";
     }

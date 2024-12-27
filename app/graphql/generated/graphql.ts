@@ -19,6 +19,7 @@ import { GoalBaseModel } from '../types/goal-base/model';
 import { GoalDayOfRestModel } from '../types/goal-day-of-rest/model';
 import { GoalDayOfWorkModel } from '../types/goal-day-of-work/model';
 import { GoalGenericModel } from '../types/goal-generic/model';
+import { GoalPerformExerciseTypeModel } from '../types/goal-perform-exercise-type/model';
 import { HeartRateSummaryModel } from '../types/heart-rate-summary/model';
 import { PhysicalTestModel } from '../types/physical-test/model';
 import { PlannedExerciseModel } from '../types/planned-exercise/model';
@@ -265,7 +266,7 @@ export type FogisGame = ActivityBase & ActivityGame & {
   title: Scalars['String']['output'];
 };
 
-export type Goal = GoalDayOfRest | GoalDayOfWork | GoalGeneric;
+export type Goal = GoalDayOfRest | GoalDayOfWork | GoalGeneric | GoalPerformExerciseType;
 
 export type GoalBase = {
   currentProgress: Maybe<Scalars['Float']['output']>;
@@ -290,6 +291,13 @@ export type GoalDayOfWork = GoalBase & {
 export type GoalGeneric = GoalBase & {
   __typename?: 'GoalGeneric';
   currentProgress: Maybe<Scalars['Float']['output']>;
+  id: Scalars['ID']['output'];
+  title: Scalars['String']['output'];
+};
+
+export type GoalPerformExerciseType = GoalBase & {
+  __typename?: 'GoalPerformExerciseType';
+  currentProgress: Scalars['Float']['output'];
   id: Scalars['ID']['output'];
   title: Scalars['String']['output'];
 };
@@ -498,14 +506,14 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversUnionTypes<RefType extends Record<string, unknown>> = {
   Activity: ( CustomGameModel ) | ( ExerciseModel ) | ( FogisGameModel ) | ( PhysicalTestModel ) | ( PlannedExerciseModel ) | ( TravelModel );
   ExerciseDuration: ( Omit<ExerciseDurationLevel, 'levelType'> & { levelType: RefType['ExerciseTypeLevel'] } ) | ( ExerciseDurationRepetitions ) | ( ExerciseDurationTime );
-  Goal: ( GoalDayOfRestModel ) | ( GoalDayOfWorkModel ) | ( GoalGenericModel );
+  Goal: ( GoalDayOfRestModel ) | ( GoalDayOfWorkModel ) | ( GoalGenericModel ) | ( GoalPerformExerciseTypeModel );
 };
 
 /** Mapping of interface types */
 export type ResolversInterfaceTypes<RefType extends Record<string, unknown>> = {
   ActivityBase: ( CustomGameModel ) | ( ExerciseModel ) | ( FogisGameModel ) | ( PhysicalTestModel ) | ( PlannedExerciseModel ) | ( TravelModel );
   ActivityGame: ( CustomGameModel ) | ( FogisGameModel );
-  GoalBase: ( GoalDayOfRestModel ) | ( GoalDayOfWorkModel ) | ( GoalGenericModel );
+  GoalBase: ( GoalDayOfRestModel ) | ( GoalDayOfWorkModel ) | ( GoalGenericModel ) | ( GoalPerformExerciseTypeModel );
 };
 
 /** Mapping between all available schema types and the resolvers types */
@@ -551,6 +559,7 @@ export type ResolversTypes = {
   GoalDayOfRest: ResolverTypeWrapper<GoalDayOfRestModel>;
   GoalDayOfWork: ResolverTypeWrapper<GoalDayOfWorkModel>;
   GoalGeneric: ResolverTypeWrapper<GoalGenericModel>;
+  GoalPerformExerciseType: ResolverTypeWrapper<GoalPerformExerciseTypeModel>;
   HeartRateSample: ResolverTypeWrapper<HeartRateSample>;
   HeartRateSummary: ResolverTypeWrapper<HeartRateSummaryModel>;
   HeartRateZone: HeartRateZone;
@@ -607,6 +616,7 @@ export type ResolversParentTypes = {
   GoalDayOfRest: GoalDayOfRestModel;
   GoalDayOfWork: GoalDayOfWorkModel;
   GoalGeneric: GoalGenericModel;
+  GoalPerformExerciseType: GoalPerformExerciseTypeModel;
   HeartRateSample: HeartRateSample;
   HeartRateSummary: HeartRateSummaryModel;
   ID: Scalars['ID']['output'];
@@ -828,11 +838,11 @@ export type FogisGameResolvers<ContextType = Context, ParentType extends Resolve
 };
 
 export type GoalResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Goal'] = ResolversParentTypes['Goal']> = {
-  __resolveType: TypeResolveFn<'GoalDayOfRest' | 'GoalDayOfWork' | 'GoalGeneric', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'GoalDayOfRest' | 'GoalDayOfWork' | 'GoalGeneric' | 'GoalPerformExerciseType', ParentType, ContextType>;
 };
 
 export type GoalBaseResolvers<ContextType = Context, ParentType extends ResolversParentTypes['GoalBase'] = ResolversParentTypes['GoalBase']> = {
-  __resolveType: TypeResolveFn<'GoalDayOfRest' | 'GoalDayOfWork' | 'GoalGeneric', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'GoalDayOfRest' | 'GoalDayOfWork' | 'GoalGeneric' | 'GoalPerformExerciseType', ParentType, ContextType>;
   currentProgress: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
   id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   title: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -854,6 +864,13 @@ export type GoalDayOfWorkResolvers<ContextType = Context, ParentType extends Res
 
 export type GoalGenericResolvers<ContextType = Context, ParentType extends ResolversParentTypes['GoalGeneric'] = ResolversParentTypes['GoalGeneric']> = {
   currentProgress: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
+  id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  title: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type GoalPerformExerciseTypeResolvers<ContextType = Context, ParentType extends ResolversParentTypes['GoalPerformExerciseType'] = ResolversParentTypes['GoalPerformExerciseType']> = {
+  currentProgress: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   title: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -968,6 +985,7 @@ export type Resolvers<ContextType = Context> = {
   GoalDayOfRest: GoalDayOfRestResolvers<ContextType>;
   GoalDayOfWork: GoalDayOfWorkResolvers<ContextType>;
   GoalGeneric: GoalGenericResolvers<ContextType>;
+  GoalPerformExerciseType: GoalPerformExerciseTypeResolvers<ContextType>;
   HeartRateSample: HeartRateSampleResolvers<ContextType>;
   HeartRateSummary: HeartRateSummaryResolvers<ContextType>;
   PageInfo: PageInfoResolvers<ContextType>;

@@ -34,6 +34,7 @@ import { goalBaseResolvers } from "./types/goal-base/resolvers";
 import { goalDayOfRestResolvers } from "./types/goal-day-of-rest/resolvers";
 import { goalDayOfWorkResolvers } from "./types/goal-day-of-work/resolvers";
 import { goalGenericResolvers } from "./types/goal-generic/resolvers";
+import { goalPerformExerciseTypeResolvers } from "./types/goal-perform-exercise-type/resolvers";
 import { goalResolvers } from "./types/goal/resolvers";
 import { heartRateSampleResolvers } from "./types/heart-rate-sample/resolvers";
 import { heartRateSummaryResolvers } from "./types/heart-rate-summary/resolvers";
@@ -89,4 +90,5 @@ export const resolvers: Resolvers = {
   GoalDayOfRest: goalDayOfRestResolvers,
   GoalGeneric: goalGenericResolvers,
   GoalDayOfWork: goalDayOfWorkResolvers,
+  GoalPerformExerciseType: goalPerformExerciseTypeResolvers,
 };

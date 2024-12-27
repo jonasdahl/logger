@@ -186,7 +186,7 @@ type FogisGame implements ActivityBase & ActivityGame {
   title: String!
 }
 
-union Goal = GoalDayOfRest | GoalDayOfWork | GoalGeneric
+union Goal = GoalDayOfRest | GoalDayOfWork | GoalGeneric | GoalPerformExerciseType
 
 interface GoalBase {
   currentProgress: Float
@@ -208,6 +208,12 @@ type GoalDayOfWork implements GoalBase {
 
 type GoalGeneric implements GoalBase {
   currentProgress: Float
+  id: ID!
+  title: String!
+}
+
+type GoalPerformExerciseType implements GoalBase {
+  currentProgress: Float!
   id: ID!
   title: String!
 }

@@ -1,1 +1,5 @@
-union Goal = GoalDayOfRest | GoalDayOfWork | GoalGeneric
+union Goal =
+    GoalDayOfRest
+  | GoalDayOfWork
+  | GoalPerformExerciseType
+  | GoalGeneric

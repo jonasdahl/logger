@@ -237,7 +237,7 @@ export type FogisGame = ActivityBase & ActivityGame & {
   readonly title: Scalars['String']['output'];
 };
 
-export type Goal = GoalDayOfRest | GoalDayOfWork | GoalGeneric;
+export type Goal = GoalDayOfRest | GoalDayOfWork | GoalGeneric | GoalPerformExerciseType;
 
 export type GoalBase = {
   readonly currentProgress: Maybe<Scalars['Float']['output']>;
@@ -262,6 +262,13 @@ export type GoalDayOfWork = GoalBase & {
 export type GoalGeneric = GoalBase & {
   readonly __typename?: 'GoalGeneric';
   readonly currentProgress: Maybe<Scalars['Float']['output']>;
+  readonly id: Scalars['ID']['output'];
+  readonly title: Scalars['String']['output'];
+};
+
+export type GoalPerformExerciseType = GoalBase & {
+  readonly __typename?: 'GoalPerformExerciseType';
+  readonly currentProgress: Scalars['Float']['output'];
   readonly id: Scalars['ID']['output'];
   readonly title: Scalars['String']['output'];
 };
@@ -402,7 +409,7 @@ export type User = {
 export type DashboardOverviewQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type DashboardOverviewQuery = { readonly __typename?: 'Query', readonly goals: ReadonlyArray<{ readonly __typename?: 'GoalDayOfRest', readonly id: string, readonly title: string, readonly currentProgress: number } | { readonly __typename?: 'GoalDayOfWork', readonly id: string, readonly title: string, readonly currentProgress: number } | { readonly __typename?: 'GoalGeneric', readonly id: string, readonly title: string, readonly currentProgress: number | null }> };
+export type DashboardOverviewQuery = { readonly __typename?: 'Query', readonly goals: ReadonlyArray<{ readonly __typename?: 'GoalDayOfRest', readonly id: string, readonly title: string, readonly currentProgress: number } | { readonly __typename?: 'GoalDayOfWork', readonly id: string, readonly title: string, readonly currentProgress: number } | { readonly __typename?: 'GoalGeneric', readonly id: string, readonly title: string, readonly currentProgress: number | null } | { readonly __typename?: 'GoalPerformExerciseType', readonly id: string, readonly title: string, readonly currentProgress: number }> };
 
 export type ActionsQueryVariables = Exact<{ [key: string]: never; }>;
 
