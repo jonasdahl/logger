@@ -14,7 +14,7 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
 import { authenticator } from "~/.server/auth.server";
-import { Link } from "~/components/link";
+import { InlineLink } from "~/components/ui/inline-link";
 import { commitSession, getSessionFromRequest } from "~/session.server";
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -74,7 +74,7 @@ export default function Login() {
                 Logga in
               </Button>
               <Center>
-                <Link to="/register">Skapa konto</Link>
+                <InlineLink to="/register">Skapa konto</InlineLink>
               </Center>
             </Stack>
           </Form>

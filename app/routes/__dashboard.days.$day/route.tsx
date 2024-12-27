@@ -29,7 +29,7 @@ import { DateTime } from "luxon";
 import { authenticator } from "~/.server/auth.server";
 import { ButtonLink } from "~/components/button-link";
 import { IconButtonLink } from "~/components/icon-button-link";
-import { Link } from "~/components/link";
+import { InlineLink } from "~/components/ui/inline-link";
 import { db } from "~/db.server";
 import { ShowDayDocument } from "~/graphql/generated/documents";
 import { gql } from "~/graphql/graphql.server";
@@ -159,11 +159,11 @@ export default function DashboardIndex() {
             <Stack>
               {polarEntries.map((e) => (
                 <Box key={e.id} bg="blue.50" borderRadius="md" padding={3}>
-                  <Link to={`/connections/polar/exercise/${e.id}`}>
+                  <InlineLink to={`/connections/polar/exercise/${e.id}`}>
                     {DateTime.fromISO(e.startTime)
                       .setZone(timeZone)
                       .toFormat("HH:mm")}
-                  </Link>
+                  </InlineLink>
                 </Box>
               ))}
             </Stack>
@@ -279,7 +279,10 @@ export default function DashboardIndex() {
                     <HStack>
                       <LinkBox>
                         <Wrap spacing={3}>
-                          <LinkOverlay as={Link} to={`/exercises/${e.node.id}`}>
+                          <LinkOverlay
+                            as={InlineLink}
+                            to={`/exercises/${e.node.id}`}
+                          >
                             {DateTime.fromISO(e.node.start)
                               .setZone(timeZone)
                               .toFormat("HH:mm")}

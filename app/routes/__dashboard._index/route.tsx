@@ -5,7 +5,6 @@ import { InlineLink } from "~/components/ui/inline-link";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { LoaderFunctionArgs } from "@remix-run/node";
-import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { authenticator } from "~/.server/auth.server";
 import { ButtonLink } from "~/components/button-link";
@@ -17,13 +16,11 @@ import { gql } from "~/graphql/graphql.server";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   await authenticator.isAuthenticated(request, { failureRedirect: "/login" });
-  return json(
-    await gql({
-      document: DashboardOverviewDocument,
-      variables: {},
-      request,
-    })
-  );
+  return await gql({
+    document: DashboardOverviewDocument,
+    variables: {},
+    request,
+  });
 }
 
 export default function Index() {

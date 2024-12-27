@@ -34,7 +34,7 @@ import {
   XYChart,
 } from "~/components/charts/xy-chart.client";
 import { ClientOnly } from "~/components/client-only";
-import { Link } from "~/components/link";
+import { InlineLink } from "~/components/ui/inline-link";
 import { db } from "~/db.server";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -125,9 +125,9 @@ export default function PolarExercise() {
         {!maxHeartRate ? (
           <Alert status="warning">
             <AlertDescription>
-              <Link to={`/user?returnTo=${location.pathname}`}>
+              <InlineLink to={`/user?returnTo=${location.pathname}`}>
                 Lägg in din maxpuls
-              </Link>{" "}
+              </InlineLink>{" "}
               för att visa pulszoner.
             </AlertDescription>
           </Alert>

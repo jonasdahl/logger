@@ -15,7 +15,7 @@ import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { assertIsAdmin, authenticator } from "~/.server/auth.server";
 import { ButtonLink } from "~/components/button-link";
-import { Link } from "~/components/link";
+import { InlineLink } from "~/components/ui/inline-link";
 import { db } from "~/db.server";
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -48,14 +48,14 @@ export default function SettingsIndex() {
               {purposes.map((purpose) => (
                 <Tr key={purpose.id}>
                   <Td>
-                    <Link to={`/settings/purposes/${purpose.id}`}>
+                    <InlineLink to={`/settings/purposes/${purpose.id}`}>
                       {purpose.label}
-                    </Link>
+                    </InlineLink>
                   </Td>
                   <Td>
-                    <Link to={`/settings/purposes/${purpose.id}`}>
+                    <InlineLink to={`/settings/purposes/${purpose.id}`}>
                       {purpose.shortLabel}
-                    </Link>
+                    </InlineLink>
                   </Td>
                 </Tr>
               ))}

@@ -20,7 +20,7 @@ import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import type { ReactNode } from "react";
 import { assertIsAdmin, authenticator } from "~/.server/auth.server";
-import { Link } from "~/components/link";
+import { InlineLink } from "~/components/ui/inline-link";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const sessionUser = await authenticator.isAuthenticated(request, {
@@ -76,7 +76,7 @@ function Item({
     <GridItem as={LinkBox} padding={5} bg="blue.50" borderRadius="md">
       <VStack>
         <Box fontSize="xl">{icon}</Box>
-        <LinkOverlay as={Link} to={to}>
+        <LinkOverlay as={InlineLink} to={to}>
           {children}
         </LinkOverlay>
       </VStack>

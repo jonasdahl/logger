@@ -29,7 +29,7 @@ import { ButtonLink } from "~/components/button-link";
 import { ValidatedSelectField } from "~/components/form/select";
 import { SubmitButton } from "~/components/form/submit-button";
 import { Textarea } from "~/components/form/textarea";
-import { Link } from "~/components/link";
+import { InlineLink } from "~/components/ui/inline-link";
 import type { CalendarDayFragment } from "~/graphql/generated/documents";
 import { useToggle } from "~/hooks/use-toggle";
 import { useReturnToUrl } from "~/services/return-to";
@@ -98,14 +98,16 @@ export function Day({
                         <Stack spacing={0}>
                           <Box fontWeight="bold">
                             {activityEdge.node.__typename === "Exercise" ? (
-                              <Link to={`/exercises/${activityEdge.node.id}`}>
+                              <InlineLink
+                                to={`/exercises/${activityEdge.node.id}`}
+                              >
                                 {activityEdge.node.title}
-                              </Link>
+                              </InlineLink>
                             ) : activityEdge.node.__typename === "FogisGame" ||
                               activityEdge.node.__typename === "CustomGame" ? (
-                              <Link to={`/games/${activityEdge.node.id}`}>
+                              <InlineLink to={`/games/${activityEdge.node.id}`}>
                                 {activityEdge.node.title}
-                              </Link>
+                              </InlineLink>
                             ) : (
                               <>{activityEdge.node.title}</>
                             )}

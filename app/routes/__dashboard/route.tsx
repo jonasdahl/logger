@@ -10,9 +10,8 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Outlet, useLoaderData, useNavigation } from "@remix-run/react";
+import { Link, Outlet, useLoaderData, useNavigation } from "@remix-run/react";
 import { authenticator } from "~/.server/auth.server";
-import { Link } from "~/components/link";
 import { DashboardDocument } from "~/graphql/generated/documents";
 import { gql } from "~/graphql/graphql.server";
 import { cx } from "~/utils/cx";

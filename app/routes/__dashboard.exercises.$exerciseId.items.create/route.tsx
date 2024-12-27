@@ -25,7 +25,7 @@ import { ButtonLink } from "~/components/button-link";
 import { ValidatedSelectField } from "~/components/form/select";
 import { SubmitButton } from "~/components/form/submit-button";
 import { validate } from "~/components/form/validate.server";
-import { Link } from "~/components/link";
+import { InlineLink } from "~/components/ui/inline-link";
 import { db } from "~/db.server";
 import {
   AmountType,
@@ -179,23 +179,18 @@ export default function Activity() {
               />
             </FormControl>
             <HStack>
-              <Link
-                fontSize="sm"
-                textDecoration="underline"
+              <InlineLink
+                className="text-sm underline"
                 to={`/exercise-types/create?returnTo=${encodeURIComponent(
                   `/exercises/${exerciseId}/items/create`
                 )}`}
               >
                 Skapa ny
-              </Link>
+              </InlineLink>
               <Spacer />
-              <Link
-                fontSize="sm"
-                textDecoration="underline"
-                to={`/exercise-types`}
-              >
+              <InlineLink className="text-sm underline" to={`/exercise-types`}>
                 Hantera övningstyper
-              </Link>
+              </InlineLink>
             </HStack>
           </Stack>
 
