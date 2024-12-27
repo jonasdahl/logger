@@ -62,7 +62,7 @@ export default function Index() {
         ) : (
           goals.map((goal) => {
             return (
-              <Card key={goal.id}>
+              <Card key={goal.id} className="p-4 gap-2">
                 <div className="flex flex-row gap-5 justify-between">
                   <CardHeader className="pb-0">
                     <CardTitle>{goal.title}</CardTitle>
@@ -79,6 +79,7 @@ export default function Index() {
                   <CardContent>
                     <Progress
                       value={goal.currentProgress * 100}
+                      className="h-1.5"
                       indicatorClassName={
                         goal.currentProgress >= 1
                           ? "bg-green-600"
