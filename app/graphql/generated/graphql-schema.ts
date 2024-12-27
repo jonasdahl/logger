@@ -213,6 +213,7 @@ type GoalGeneric implements GoalBase {
 }
 
 type GoalPerformExerciseType implements GoalBase {
+  currentDayCount: Int!
   currentProgress: Float!
   id: ID!
   title: String!

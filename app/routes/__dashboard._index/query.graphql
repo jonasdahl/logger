@@ -1,9 +1,13 @@
 query DashboardOverview {
   goals {
+    __typename
     ... on GoalBase {
       id
       title
       currentProgress
+    }
+    ... on GoalPerformExerciseType {
+      currentDayCount
     }
   }
 }

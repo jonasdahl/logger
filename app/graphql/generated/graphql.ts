@@ -297,6 +297,7 @@ export type GoalGeneric = GoalBase & {
 
 export type GoalPerformExerciseType = GoalBase & {
   __typename?: 'GoalPerformExerciseType';
+  currentDayCount: Scalars['Int']['output'];
   currentProgress: Scalars['Float']['output'];
   id: Scalars['ID']['output'];
   title: Scalars['String']['output'];
@@ -870,6 +871,7 @@ export type GoalGenericResolvers<ContextType = Context, ParentType extends Resol
 };
 
 export type GoalPerformExerciseTypeResolvers<ContextType = Context, ParentType extends ResolversParentTypes['GoalPerformExerciseType'] = ResolversParentTypes['GoalPerformExerciseType']> = {
+  currentDayCount: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   currentProgress: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   title: Resolver<ResolversTypes['String'], ParentType, ContextType>;

@@ -8,7 +8,13 @@ import type { LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { authenticator } from "~/.server/auth.server";
 import { ButtonLink } from "~/components/button-link";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "~/components/ui/card";
 import { Progress } from "~/components/ui/progress";
 import { TitleRow } from "~/components/ui/title-row";
 import { DashboardOverviewDocument } from "~/graphql/generated/documents";
@@ -61,6 +67,11 @@ export default function Index() {
                 <div className="flex flex-row gap-5 justify-between">
                   <CardHeader className="pb-0">
                     <CardTitle>{goal.title}</CardTitle>
+                    {goal.__typename === "GoalPerformExerciseType" ? (
+                      <CardDescription>
+                        Denna vecka: {goal.currentDayCount}
+                      </CardDescription>
+                    ) : null}
                   </CardHeader>
 
                   {goal.currentProgress && goal.currentProgress >= 1 ? (
