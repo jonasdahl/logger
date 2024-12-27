@@ -14,5 +14,5 @@ export const goalBaseResolvers: GoalBaseResolvers = {
   },
   id: (goal) => goal.id,
   title: (goal) => goal.name,
-  currentProgress: () => 0,
+  currentProgress: () => null,
 };

@@ -1,5 +1,5 @@
 type GoalGeneric implements GoalBase {
   id: ID!
   title: String!
-  currentProgress: Float!
+  currentProgress: Float
 }

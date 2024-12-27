@@ -207,7 +207,7 @@ type GoalDayOfWork implements GoalBase {
 }
 
 type GoalGeneric implements GoalBase {
-  currentProgress: Float!
+  currentProgress: Float
   id: ID!
   title: String!
 }

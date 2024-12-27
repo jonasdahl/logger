@@ -4,5 +4,5 @@ import { goalBaseResolvers } from "../goal-base/resolvers";
 export const goalGenericResolvers: GoalGenericResolvers = {
   id: goalBaseResolvers.id,
   title: goalBaseResolvers.title,
-  currentProgress: () => 0,
+  currentProgress: () => null,
 };

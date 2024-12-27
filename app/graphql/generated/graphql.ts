@@ -289,7 +289,7 @@ export type GoalDayOfWork = GoalBase & {
 
 export type GoalGeneric = GoalBase & {
   __typename?: 'GoalGeneric';
-  currentProgress: Scalars['Float']['output'];
+  currentProgress: Maybe<Scalars['Float']['output']>;
   id: Scalars['ID']['output'];
   title: Scalars['String']['output'];
 };
@@ -853,7 +853,7 @@ export type GoalDayOfWorkResolvers<ContextType = Context, ParentType extends Res
 };
 
 export type GoalGenericResolvers<ContextType = Context, ParentType extends ResolversParentTypes['GoalGeneric'] = ResolversParentTypes['GoalGeneric']> = {
-  currentProgress: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  currentProgress: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
   id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   title: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;

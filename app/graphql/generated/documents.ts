@@ -261,7 +261,7 @@ export type GoalDayOfWork = GoalBase & {
 
 export type GoalGeneric = GoalBase & {
   readonly __typename?: 'GoalGeneric';
-  readonly currentProgress: Scalars['Float']['output'];
+  readonly currentProgress: Maybe<Scalars['Float']['output']>;
   readonly id: Scalars['ID']['output'];
   readonly title: Scalars['String']['output'];
 };
@@ -402,7 +402,7 @@ export type User = {
 export type DashboardOverviewQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type DashboardOverviewQuery = { readonly __typename?: 'Query', readonly goals: ReadonlyArray<{ readonly __typename?: 'GoalDayOfRest', readonly id: string, readonly title: string, readonly currentProgress: number } | { readonly __typename?: 'GoalDayOfWork', readonly id: string, readonly title: string, readonly currentProgress: number } | { readonly __typename?: 'GoalGeneric', readonly id: string, readonly title: string, readonly currentProgress: number }> };
+export type DashboardOverviewQuery = { readonly __typename?: 'Query', readonly goals: ReadonlyArray<{ readonly __typename?: 'GoalDayOfRest', readonly id: string, readonly title: string, readonly currentProgress: number } | { readonly __typename?: 'GoalDayOfWork', readonly id: string, readonly title: string, readonly currentProgress: number } | { readonly __typename?: 'GoalGeneric', readonly id: string, readonly title: string, readonly currentProgress: number | null }> };
 
 export type ActionsQueryVariables = Exact<{ [key: string]: never; }>;
 
