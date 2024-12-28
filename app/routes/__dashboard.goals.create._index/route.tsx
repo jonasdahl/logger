@@ -21,14 +21,23 @@ export async function action({ request }: ActionFunctionArgs) {
       userId,
       name: data.name,
       type: data.type,
-      typeDayOfRestNumberOfDays: data.typeDayOfRestNumberOfDays ?? undefined,
-      typeDayOfWorkNumberOfDays: data.typeDayOfWorkNumberOfDays ?? undefined,
+      typeDayOfRestNumberOfDays:
+        "typeDayOfRestNumberOfDays" in data
+          ? data.typeDayOfRestNumberOfDays
+          : undefined,
+      typeDayOfWorkNumberOfDays:
+        "typeDayOfWorkNumberOfDays" in data
+          ? data.typeDayOfWorkNumberOfDays
+          : undefined,
       typePerformExerciseTypeNumberOfDays:
-        data.typePerformExerciseTypeNumberOfDays ?? undefined,
+        "typePerformExerciseTypeNumberOfDays" in data
+          ? data.typePerformExerciseTypeNumberOfDays
+          : undefined,
       typePerformExerciseTypeExerciseTypeId:
-        data.typePerformExerciseTypeExerciseTypeId ?? undefined,
-      timeType: GoalTimeType.EveryRollingNumberOfDays,
-      timeTypeEveryRollingNumberOfDaysAmount: 7,
+        "typePerformExerciseTypeExerciseTypeId" in data
+          ? data.typePerformExerciseTypeExerciseTypeId
+          : undefined,
+      timeType: GoalTimeType.EveryCalendarWeek,
     },
   });
 
