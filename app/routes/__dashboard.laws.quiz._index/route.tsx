@@ -1,10 +1,4 @@
-import {
-  Checkbox,
-  Container,
-  Radio,
-  RadioGroup,
-  Stack,
-} from "@chakra-ui/react";
+import { Container, RadioGroup, Stack } from "@chakra-ui/react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
@@ -17,6 +11,9 @@ import { ErrorText } from "~/components/form/error-text";
 import { SubmitButton } from "~/components/form/submit-button";
 import { validate } from "~/components/form/validate.server";
 import { H1 } from "~/components/headings";
+import { Button } from "~/components/ui/button";
+import { Checkbox } from "~/components/ui/checkbox";
+import { FormLabel } from "~/components/ui/form-label";
 import { db } from "~/db.server";
 import { HiddenReturnToInput } from "~/services/return-to";
 
@@ -99,24 +96,35 @@ export default function Question() {
 
           <div>{question.question}</div>
           <Wrapper multiple={multiple}>
-            <Stack>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               {alternatives.map((alternative) => {
                 if (multiple) {
                   return (
-                    <div key={alternative.id}>
-                      <Checkbox name="answer" value={alternative.id}>
-                        {alternative.text}
-                      </Checkbox>
+                    <div
+                      key={alternative.id}
+                      className="flex items-center space-x-2"
+                    >
+                      <Checkbox
+                        name="answer"
+                        id="answer"
+                        value={alternative.id}
+                      />
+                      <FormLabel htmlFor="answer">{alternative.text}</FormLabel>
                     </div>
                   );
                 }
                 return (
-                  <div key={alternative.id}>
-                    <Radio value={alternative.id}>{alternative.text}</Radio>
-                  </div>
+                  <Button
+                    variant="outline"
+                    value={alternative.id}
+                    key={alternative.id}
+                    className="truncate"
+                  >
+                    {alternative.text}
+                  </Button>
                 );
               })}
-            </Stack>
+            </div>
           </Wrapper>
 
           <div>
