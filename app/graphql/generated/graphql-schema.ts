@@ -189,24 +189,32 @@ type FogisGame implements ActivityBase & ActivityGame {
 union Goal = GoalDayOfRest | GoalDayOfWork | GoalGeneric | GoalPerformExerciseType
 
 interface GoalBase {
+  currentPeriodEnd: DateTime!
+  currentPeriodStart: DateTime!
   currentProgress: Float
   id: ID!
   title: String!
 }
 
 type GoalDayOfRest implements GoalBase {
+  currentPeriodEnd: DateTime!
+  currentPeriodStart: DateTime!
   currentProgress: Float!
   id: ID!
   title: String!
 }
 
 type GoalDayOfWork implements GoalBase {
+  currentPeriodEnd: DateTime!
+  currentPeriodStart: DateTime!
   currentProgress: Float!
   id: ID!
   title: String!
 }
 
 type GoalGeneric implements GoalBase {
+  currentPeriodEnd: DateTime!
+  currentPeriodStart: DateTime!
   currentProgress: Float
   id: ID!
   title: String!
@@ -214,6 +222,8 @@ type GoalGeneric implements GoalBase {
 
 type GoalPerformExerciseType implements GoalBase {
   currentDayCount: Int!
+  currentPeriodEnd: DateTime!
+  currentPeriodStart: DateTime!
   currentProgress: Float!
   id: ID!
   title: String!
@@ -273,6 +283,7 @@ type Query {
   exerciseType(id: ID!): ExerciseType
   exerciseTypes(filter: ExerciseTypeFilter): ExerciseTypeConnection!
   game(id: ID!): ActivityGame
+  goal(id: ID!): Goal
   goals: [Goal!]!
   me: User
   timeZone: String!

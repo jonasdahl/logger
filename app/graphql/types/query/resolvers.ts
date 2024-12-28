@@ -275,4 +275,10 @@ export const queryResolvers: QueryResolvers = {
     }
     return db.goal.findMany({ where: { userId } });
   },
+  goal: async (_, { id }, { userId }) => {
+    if (!userId) {
+      throw new Error("Not authenticated");
+    }
+    return db.goal.findFirstOrThrow({ where: { id, userId } });
+  },
 };

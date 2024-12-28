@@ -5,7 +5,7 @@ import { InlineLink } from "~/components/ui/inline-link";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { LoaderFunctionArgs } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { Link, useLoaderData } from "@remix-run/react";
 import { authenticator } from "~/.server/auth.server";
 import { ButtonLink } from "~/components/button-link";
 import {
@@ -63,13 +63,20 @@ export default function Index() {
         ) : (
           goals.map((goal) => {
             return (
-              <Card key={goal.id} className="p-4 gap-2">
+              <Card key={goal.id} className="p-4 gap-2 relative">
                 <div className="flex flex-row gap-5 justify-between">
                   <CardHeader className="pb-0">
-                    <CardTitle>{goal.title}</CardTitle>
+                    <CardTitle>
+                      <Link
+                        to={`/goals/${goal.id}`}
+                        className="after:absolute after:inset-0"
+                      >
+                        {goal.title}
+                      </Link>
+                    </CardTitle>
                     {goal.__typename === "GoalPerformExerciseType" ? (
                       <CardDescription>
-                        Denna vecka: {goal.currentDayCount}
+                        Denna period: {goal.currentDayCount}
                       </CardDescription>
                     ) : null}
                   </CardHeader>
@@ -85,7 +92,7 @@ export default function Index() {
                   <CardContent>
                     <Progress
                       value={goal.currentProgress * 100}
-                      className="h-1.5"
+                      className="h-1.5 pointer-events-none"
                       indicatorClassName={
                         goal.currentProgress >= 1
                           ? "bg-green-600"

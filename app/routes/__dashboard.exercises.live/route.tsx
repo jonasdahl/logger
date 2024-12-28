@@ -18,10 +18,7 @@ export async function action({ request }: ActionFunctionArgs) {
   });
 
   const activity = await db.activity.create({
-    data: {
-      userId,
-      time: DateTime.now().toJSDate(),
-    },
+    data: { userId, time: DateTime.now().toJSDate() },
   });
 
   return redirect(`/exercises/${activity.id}`);

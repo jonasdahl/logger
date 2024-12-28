@@ -1,10 +1,9 @@
-import type { IconButtonProps } from "@chakra-ui/react";
-import { IconButton } from "@chakra-ui/react";
-import { Link as RemixLink } from "@remix-run/react";
+import type { ComponentProps } from "react";
+import { ButtonLink } from "./button-link";
 
 export function IconButtonLink({
   to,
   ...props
-}: { to: string } & IconButtonProps) {
-  return <IconButton to={to} as={RemixLink} {...props} />;
+}: { to: string } & ComponentProps<typeof ButtonLink>) {
+  return <ButtonLink to={to} variant="ghost" {...props} />;
 }

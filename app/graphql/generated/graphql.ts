@@ -269,6 +269,8 @@ export type FogisGame = ActivityBase & ActivityGame & {
 export type Goal = GoalDayOfRest | GoalDayOfWork | GoalGeneric | GoalPerformExerciseType;
 
 export type GoalBase = {
+  currentPeriodEnd: Scalars['DateTime']['output'];
+  currentPeriodStart: Scalars['DateTime']['output'];
   currentProgress: Maybe<Scalars['Float']['output']>;
   id: Scalars['ID']['output'];
   title: Scalars['String']['output'];
@@ -276,6 +278,8 @@ export type GoalBase = {
 
 export type GoalDayOfRest = GoalBase & {
   __typename?: 'GoalDayOfRest';
+  currentPeriodEnd: Scalars['DateTime']['output'];
+  currentPeriodStart: Scalars['DateTime']['output'];
   currentProgress: Scalars['Float']['output'];
   id: Scalars['ID']['output'];
   title: Scalars['String']['output'];
@@ -283,6 +287,8 @@ export type GoalDayOfRest = GoalBase & {
 
 export type GoalDayOfWork = GoalBase & {
   __typename?: 'GoalDayOfWork';
+  currentPeriodEnd: Scalars['DateTime']['output'];
+  currentPeriodStart: Scalars['DateTime']['output'];
   currentProgress: Scalars['Float']['output'];
   id: Scalars['ID']['output'];
   title: Scalars['String']['output'];
@@ -290,6 +296,8 @@ export type GoalDayOfWork = GoalBase & {
 
 export type GoalGeneric = GoalBase & {
   __typename?: 'GoalGeneric';
+  currentPeriodEnd: Scalars['DateTime']['output'];
+  currentPeriodStart: Scalars['DateTime']['output'];
   currentProgress: Maybe<Scalars['Float']['output']>;
   id: Scalars['ID']['output'];
   title: Scalars['String']['output'];
@@ -298,6 +306,8 @@ export type GoalGeneric = GoalBase & {
 export type GoalPerformExerciseType = GoalBase & {
   __typename?: 'GoalPerformExerciseType';
   currentDayCount: Scalars['Int']['output'];
+  currentPeriodEnd: Scalars['DateTime']['output'];
+  currentPeriodStart: Scalars['DateTime']['output'];
   currentProgress: Scalars['Float']['output'];
   id: Scalars['ID']['output'];
   title: Scalars['String']['output'];
@@ -368,6 +378,7 @@ export type Query = {
   exerciseType: Maybe<ExerciseType>;
   exerciseTypes: ExerciseTypeConnection;
   game: Maybe<ActivityGame>;
+  goal: Maybe<Goal>;
   goals: Array<Goal>;
   me: Maybe<User>;
   timeZone: Scalars['String']['output'];
@@ -418,6 +429,11 @@ export type QueryExerciseTypesArgs = {
 
 
 export type QueryGameArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryGoalArgs = {
   id: Scalars['ID']['input'];
 };
 
@@ -844,12 +860,16 @@ export type GoalResolvers<ContextType = Context, ParentType extends ResolversPar
 
 export type GoalBaseResolvers<ContextType = Context, ParentType extends ResolversParentTypes['GoalBase'] = ResolversParentTypes['GoalBase']> = {
   __resolveType: TypeResolveFn<'GoalDayOfRest' | 'GoalDayOfWork' | 'GoalGeneric' | 'GoalPerformExerciseType', ParentType, ContextType>;
+  currentPeriodEnd: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  currentPeriodStart: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   currentProgress: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
   id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   title: Resolver<ResolversTypes['String'], ParentType, ContextType>;
 };
 
 export type GoalDayOfRestResolvers<ContextType = Context, ParentType extends ResolversParentTypes['GoalDayOfRest'] = ResolversParentTypes['GoalDayOfRest']> = {
+  currentPeriodEnd: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  currentPeriodStart: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   currentProgress: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   title: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -857,6 +877,8 @@ export type GoalDayOfRestResolvers<ContextType = Context, ParentType extends Res
 };
 
 export type GoalDayOfWorkResolvers<ContextType = Context, ParentType extends ResolversParentTypes['GoalDayOfWork'] = ResolversParentTypes['GoalDayOfWork']> = {
+  currentPeriodEnd: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  currentPeriodStart: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   currentProgress: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   title: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -864,6 +886,8 @@ export type GoalDayOfWorkResolvers<ContextType = Context, ParentType extends Res
 };
 
 export type GoalGenericResolvers<ContextType = Context, ParentType extends ResolversParentTypes['GoalGeneric'] = ResolversParentTypes['GoalGeneric']> = {
+  currentPeriodEnd: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  currentPeriodStart: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   currentProgress: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
   id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   title: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -872,6 +896,8 @@ export type GoalGenericResolvers<ContextType = Context, ParentType extends Resol
 
 export type GoalPerformExerciseTypeResolvers<ContextType = Context, ParentType extends ResolversParentTypes['GoalPerformExerciseType'] = ResolversParentTypes['GoalPerformExerciseType']> = {
   currentDayCount: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  currentPeriodEnd: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  currentPeriodStart: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   currentProgress: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   title: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -929,6 +955,7 @@ export type QueryResolvers<ContextType = Context, ParentType extends ResolversPa
   exerciseType: Resolver<Maybe<ResolversTypes['ExerciseType']>, ParentType, ContextType, RequireFields<QueryExerciseTypeArgs, 'id'>>;
   exerciseTypes: Resolver<ResolversTypes['ExerciseTypeConnection'], ParentType, ContextType, QueryExerciseTypesArgs>;
   game: Resolver<Maybe<ResolversTypes['ActivityGame']>, ParentType, ContextType, RequireFields<QueryGameArgs, 'id'>>;
+  goal: Resolver<Maybe<ResolversTypes['Goal']>, ParentType, ContextType, RequireFields<QueryGoalArgs, 'id'>>;
   goals: Resolver<Array<ResolversTypes['Goal']>, ParentType, ContextType>;
   me: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   timeZone: Resolver<ResolversTypes['String'], ParentType, ContextType>;

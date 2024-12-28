@@ -24,6 +24,7 @@ type Query {
 
   categoryTags: [CategoryTag!]!
   goals: [Goal!]!
+  goal(id: ID!): Goal
 }
 
 input ActivityFilter {

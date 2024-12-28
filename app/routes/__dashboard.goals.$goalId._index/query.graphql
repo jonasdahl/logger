@@ -1,0 +1,13 @@
+query GoalDetails($goalId: ID!) {
+  timeZone
+  goal(id: $goalId) {
+    __typename
+    ... on GoalBase {
+      id
+      title
+      currentProgress
+      currentPeriodStart
+      currentPeriodEnd
+    }
+  }
+}

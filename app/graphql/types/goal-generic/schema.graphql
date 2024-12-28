@@ -2,4 +2,6 @@ type GoalGeneric implements GoalBase {
   id: ID!
   title: String!
   currentProgress: Float
+  currentPeriodStart: DateTime!
+  currentPeriodEnd: DateTime!
 }

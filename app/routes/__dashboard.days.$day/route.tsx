@@ -92,7 +92,11 @@ export default function DashboardIndex() {
     <Container py={5} maxW="container.md">
       <Stack spacing={5}>
         <HStack>
-          <ButtonLink to={`/days/${DateTime.now().toFormat("yyyy-MM-dd")}`}>
+          <ButtonLink
+            to={`/days/${DateTime.now()
+              .setZone(timeZone)
+              .toFormat("yyyy-MM-dd")}`}
+          >
             Idag
           </ButtonLink>
           <Spacer />
@@ -143,8 +147,9 @@ export default function DashboardIndex() {
             <IconButtonLink
               to={`/days/${dayAfter.toFormat("yyyy-MM-dd")}`}
               aria-label="Nästa dag"
-              icon={<FontAwesomeIcon icon={faChevronRight} />}
-            />
+            >
+              <FontAwesomeIcon icon={faChevronRight} />
+            </IconButtonLink>
           ) : (
             <ButtonLink to={`/days/${dayAfter.toFormat("yyyy-MM-dd")}`}>
               {dayAfter.toFormat("yyyy-MM-dd")}

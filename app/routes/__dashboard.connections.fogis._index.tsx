@@ -28,6 +28,7 @@ import { validate } from "~/components/form/validate.server";
 import { ValidatedInputField } from "~/components/form/validated-input-field";
 import { db } from "~/db.server";
 import { FogisClient } from "~/fogis/client.server";
+import { getTimeZoneFromRequest } from "~/time";
 
 const validator = withZod(
   z.object({
@@ -50,9 +51,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export async function action({ request }: ActionFunctionArgs) {
   const { username, password } = await validate({ request, validator });
+  const timeZone = getTimeZoneFromRequest(request);
 
-  const syncStart = DateTime.now().minus({ days: 30 });
-  const syncEnd = DateTime.now().plus({ years: 1 });
+  const syncStart = DateTime.now().setZone(timeZone).minus({ days: 30 });
+  const syncEnd = DateTime.now().setZone(timeZone).plus({ years: 1 });
   const syncInterval = Interval.fromDateTimes(syncStart, syncEnd);
   const usersGames = await db.fogisGame.findMany({
     where: {

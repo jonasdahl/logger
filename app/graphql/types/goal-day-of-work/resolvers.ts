@@ -8,11 +8,16 @@ import { getGoalIntervalDays } from "../goal/utils";
 export const goalDayOfWorkResolvers: GoalDayOfWorkResolvers = {
   id: goalBaseResolvers.id,
   title: goalBaseResolvers.title,
-  currentProgress: async (goal, _, { userId }) => {
+  currentPeriodEnd: goalBaseResolvers.currentPeriodEnd,
+  currentPeriodStart: goalBaseResolvers.currentPeriodStart,
+  currentProgress: async (goal, _, { userId, timeZone }) => {
     if (!userId) {
       throw new Error("Unauthorized");
     }
-    const daysInPeriod = getGoalIntervalDays(goal, DateTime.now());
+    const daysInPeriod = getGoalIntervalDays(
+      goal,
+      DateTime.now().setZone(timeZone)
+    );
 
     const activities = await db.activity.findMany({
       where: { userId, deletedAt: null },

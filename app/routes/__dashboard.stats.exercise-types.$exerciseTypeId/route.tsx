@@ -24,6 +24,7 @@ import { Card } from "~/components/ui/card";
 import { StatsExerciseTypeDocument } from "~/graphql/generated/documents";
 import { gql } from "~/graphql/graphql.server";
 import { cn } from "~/lib/utils";
+import { getTimeZoneFromRequest } from "~/time";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   await authenticator.isAuthenticated(request, {
@@ -36,7 +37,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     variables: { exerciseTypeId: params.exerciseTypeId! },
   });
 
-  return json(res);
+  return json({ ...res, timeZone: getTimeZoneFromRequest(request) });
 }
 
 const enum TimeGrouping {
@@ -92,7 +93,7 @@ export default function ExerciseTypeStats() {
 }
 
 function BarLoadChart({ timeGrouping }: { timeGrouping: TimeGrouping }) {
-  const { data } = useLoaderData<typeof loader>();
+  const { data, timeZone } = useLoaderData<typeof loader>();
 
   const amountsPerLoad = groupBy(
     (data?.exerciseType?.history.dayAmounts || [])
@@ -120,7 +121,10 @@ function BarLoadChart({ timeGrouping }: { timeGrouping: TimeGrouping }) {
     return loadsByValue;
   });
 
-  const endOfThisMonth = DateTime.now().startOf("month").plus({ month: 1 });
+  const endOfThisMonth = DateTime.now()
+    .setZone(timeZone)
+    .startOf("month")
+    .plus({ month: 1 });
 
   const intervals = Interval.fromDateTimes(
     endOfThisMonth.minus({ years: 1 }),

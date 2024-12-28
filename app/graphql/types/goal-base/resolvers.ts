@@ -1,5 +1,7 @@
 import { GoalType } from "@prisma/client";
+import { DateTime } from "luxon";
 import type { GoalBaseResolvers } from "~/graphql/generated/graphql";
+import { getGoalInterval } from "../goal/utils";
 
 export const goalBaseResolvers: GoalBaseResolvers = {
   __resolveType: (goal) => {
@@ -17,4 +19,8 @@ export const goalBaseResolvers: GoalBaseResolvers = {
   id: (goal) => goal.id,
   title: (goal) => goal.name,
   currentProgress: () => null,
+  currentPeriodEnd: (goal, _, { timeZone }) =>
+    getGoalInterval(goal, DateTime.now().setZone(timeZone)).end!,
+  currentPeriodStart: (goal, _, { timeZone }) =>
+    getGoalInterval(goal, DateTime.now().setZone(timeZone)).start!,
 };

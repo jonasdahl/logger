@@ -6,12 +6,15 @@ import type { GoalPerformExerciseTypeResolvers } from "~/graphql/generated/graph
 import { goalBaseResolvers } from "../goal-base/resolvers";
 import { getGoalIntervalDays } from "../goal/utils";
 
-async function getDayCount(userId: string, goal: Goal) {
+async function getDayCount(userId: string, goal: Goal, timeZone: string) {
   if (!goal.typePerformExerciseTypeExerciseTypeId) {
     throw new Error("Missing exercise type");
   }
 
-  const currentIntervalDays = getGoalIntervalDays(goal, DateTime.now());
+  const currentIntervalDays = getGoalIntervalDays(
+    goal,
+    DateTime.now().setZone(timeZone)
+  );
 
   const activities = await db.activity.findMany({
     where: { userId, deletedAt: null },
@@ -39,19 +42,21 @@ export const goalPerformExerciseTypeResolvers: GoalPerformExerciseTypeResolvers 
   {
     id: goalBaseResolvers.id,
     title: goalBaseResolvers.title,
-    currentProgress: async (goal, _, { userId }) => {
+    currentPeriodEnd: goalBaseResolvers.currentPeriodEnd,
+    currentPeriodStart: goalBaseResolvers.currentPeriodStart,
+    currentProgress: async (goal, _, { userId, timeZone }) => {
       if (!userId) {
         throw new Error("Unauthorized");
       }
       return clamp({ min: 0, max: 1 })(
-        (await getDayCount(userId, goal)) /
+        (await getDayCount(userId, goal, timeZone)) /
           (goal.typePerformExerciseTypeNumberOfDays || 0) || 0
       );
     },
-    currentDayCount: async (goal, _, { userId }) => {
+    currentDayCount: async (goal, _, { userId, timeZone }) => {
       if (!userId) {
         throw new Error("Unauthorized");
       }
-      return getDayCount(userId, goal);
+      return getDayCount(userId, goal, timeZone);
     },
   };

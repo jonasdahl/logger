@@ -67,7 +67,7 @@ export async function action({ request }: ActionFunctionArgs) {
   const redirectTo =
     data.returnTo ??
     url.searchParams.get("returnTo") ??
-    `/days/${DateTime.now().toFormat("yyyy-MM-dd")}`;
+    `/days/${DateTime.now().setZone(timeZone).toFormat("yyyy-MM-dd")}`;
 
   return redirect(redirectTo);
 }
