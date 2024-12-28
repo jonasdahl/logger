@@ -36,15 +36,14 @@ export function ExerciseTypeForm() {
             name="defaultAmountType"
             label="Mängdtyp"
             value={defaultAmountType}
-            onChange={(e) => {
-              setDefaultAmountType(e.target.value);
-            }}
-          >
-            <option value="null">- Välj -</option>
-            <option value="time">Tid</option>
-            <option value="repetitions">Repetitioner</option>
-            <option value="levels">Nivåer</option>
-          </ValidatedSelectField>
+            onChangeValue={(value) => setDefaultAmountType(value)}
+            options={[
+              { value: "null", label: "- Välj -" },
+              { value: "time", label: "Tid" },
+              { value: "repetitions", label: "Repetitioner" },
+              { value: "levels", label: "Nivåer" },
+            ]}
+          />
           {defaultAmountType === "levels" ? (
             <Textarea name="levels" label="Nivåer (en per rad)" />
           ) : (

@@ -1,48 +1,60 @@
-import type { SelectProps } from "@chakra-ui/react";
-import {
-  Select as ChakraSelect,
-  FormControl,
-  FormErrorMessage,
-} from "@chakra-ui/react";
 import type { ReactNode } from "react";
 import { useField } from "remix-validated-form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
+import { FormControl } from "../ui/form-control";
+import { FormErrorMessage } from "../ui/form-error-message";
 import { FormLabel } from "../ui/form-label";
 
 export function ValidatedSelectField({
   name,
   label,
   defaultValue,
-  children,
-  size,
   hideLabel,
-  onChange,
+  onChangeValue,
   value,
+  options,
 }: {
   name: string;
   defaultValue?: string;
   label: string;
-  children: ReactNode;
-  size?: SelectProps["size"];
   hideLabel?: boolean;
-  onChange?: SelectProps["onChange"];
+  onChangeValue?: (value: string) => void;
   value?: string;
+  options: { value: string; label: ReactNode }[];
 }) {
   const { error, getInputProps } = useField(name);
+  const inputProps = getInputProps({ id: name, value } as any);
   return (
-    <FormControl isInvalid={!!error}>
+    <FormControl>
       <FormLabel htmlFor={name} hidden={hideLabel}>
         {label}
       </FormLabel>
-      <ChakraSelect
-        {...getInputProps({ id: name, onChange, value } as any)}
-        defaultValue={defaultValue}
-        size={size}
+      <Select
+        {...inputProps}
+        defaultValue={inputProps?.defaultValue ?? defaultValue}
+        onValueChange={(value) => {
+          onChangeValue?.(value);
+          inputProps.onChange?.(value);
+        }}
       >
-        {children}
-      </ChakraSelect>
-      {error && (
-        <FormErrorMessage className="my-error-class">{error}</FormErrorMessage>
-      )}
+        <SelectTrigger>
+          <SelectValue placeholder="Välj..." />
+        </SelectTrigger>
+        <SelectContent>
+          {options.map(({ value, label }) => (
+            <SelectItem key={value} value={value}>
+              {label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+      {error ? <FormErrorMessage>{error}</FormErrorMessage> : null}
     </FormControl>
   );
 }

@@ -308,13 +308,14 @@ export default function Activity() {
           ) : exerciseType?.defaultAmountType === AmountType.Levels ? (
             <div>
               <input type="hidden" name="amountType" value="levels" />
-              <ValidatedSelectField name="level" label="Nivå">
-                {exerciseType.levels.map((level) => (
-                  <option key={level.id} value={level.id}>
-                    {level.name}
-                  </option>
-                ))}
-              </ValidatedSelectField>
+              <ValidatedSelectField
+                name="level"
+                label="Nivå"
+                options={exerciseType.levels.map((level) => ({
+                  value: level.id,
+                  label: level.name,
+                }))}
+              />
             </div>
           ) : null}
 

@@ -88,25 +88,28 @@ export default function CreatePlannedActivity() {
               dateFromParams ? `${dateFromParams}T12:00` : undefined
             }
           />
-          <ValidatedSelectField label="Primärt syfte" name="primaryPurposeId">
-            <option value="null">Ej valt</option>
-            {purposes.map((purpose) => (
-              <option key={purpose.id} value={purpose.id}>
-                {purpose.label}
-              </option>
-            ))}
-          </ValidatedSelectField>
+          <ValidatedSelectField
+            label="Primärt syfte"
+            name="primaryPurposeId"
+            options={[
+              { value: "null", label: "Ej valt" },
+              ...purposes.map((purpose) => ({
+                value: purpose.id,
+                label: purpose.label,
+              })),
+            ]}
+          />
           <ValidatedSelectField
             label="Sekundärt syfte"
             name="secondaryPurposeId"
-          >
-            <option value="null">Ej valt</option>
-            {purposes.map((purpose) => (
-              <option key={purpose.id} value={purpose.id}>
-                {purpose.label}
-              </option>
-            ))}
-          </ValidatedSelectField>
+            options={[
+              { value: "null", label: "Ej valt" },
+              ...purposes.map((purpose) => ({
+                value: purpose.id,
+                label: purpose.label,
+              })),
+            ]}
+          />
           <Textarea label="Beskrivning/innehåll" name="description" />
           <Textarea label="Övriga kommentarer" name="comment" />
           <div>

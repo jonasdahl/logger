@@ -158,26 +158,26 @@ export default function DashboardIndex() {
             label="Primärt syfte"
             name="primaryPurposeId"
             defaultValue={plannedActivity?.primaryPurposeId ?? undefined}
-          >
-            <option value="null">Ej valt</option>
-            {purposes.map((purpose) => (
-              <option key={purpose.id} value={purpose.id}>
-                {purpose.label}
-              </option>
-            ))}
-          </ValidatedSelectField>
+            options={[
+              { value: "null", label: "Ej valt" },
+              ...purposes.map((purpose) => ({
+                value: purpose.id,
+                label: purpose.label,
+              })),
+            ]}
+          />
           <ValidatedSelectField
             label="Sekundärt syfte"
             name="secondaryPurposeId"
             defaultValue={plannedActivity?.secondaryPurposeId ?? undefined}
-          >
-            <option value="null">Ej valt</option>
-            {purposes.map((purpose) => (
-              <option key={purpose.id} value={purpose.id}>
-                {purpose.label}
-              </option>
-            ))}
-          </ValidatedSelectField>
+            options={[
+              { value: "null", label: "Ej valt" },
+              ...purposes.map((purpose) => ({
+                value: purpose.id,
+                label: purpose.label,
+              })),
+            ]}
+          />
           <Textarea
             label="Beskrivning/innehåll"
             name="description"
