@@ -4,4 +4,5 @@ type GoalDayOfWork implements GoalBase {
   currentProgress: Float!
   currentPeriodStart: DateTime!
   currentPeriodEnd: DateTime!
+  currentDaysOfWork: Int!
 }

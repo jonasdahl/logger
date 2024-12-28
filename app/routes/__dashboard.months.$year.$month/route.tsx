@@ -98,11 +98,12 @@ export default function DashboardIndex() {
             <div>
               <IconButtonLink
                 to={`/months/${previousMonth.toFormat("yyyy'/'MM")}`}
-                icon={<FontAwesomeIcon icon={faChevronLeft} />}
                 aria-label={previousMonth.toFormat("LLLL yyyy", {
                   locale: "sv-SE",
                 })}
-              />
+              >
+                <FontAwesomeIcon icon={faChevronLeft} />
+              </IconButtonLink>
             </div>
             <Spacer />
             <Heading as="h1" size="sm" textTransform="capitalize">
@@ -112,11 +113,12 @@ export default function DashboardIndex() {
             <div>
               <IconButtonLink
                 to={`/months/${nextMonth.toFormat("yyyy'/'MM")}`}
-                icon={<FontAwesomeIcon icon={faChevronRight} />}
                 aria-label={nextMonth.toFormat("LLLL yyyy", {
                   locale: "sv-SE",
                 })}
-              />
+              >
+                <FontAwesomeIcon icon={faChevronRight} />
+              </IconButtonLink>
             </div>
           </HStack>
         </Wrap>

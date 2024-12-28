@@ -197,6 +197,7 @@ interface GoalBase {
 }
 
 type GoalDayOfRest implements GoalBase {
+  currentDaysOfRest: Int!
   currentPeriodEnd: DateTime!
   currentPeriodStart: DateTime!
   currentProgress: Float!
@@ -205,6 +206,7 @@ type GoalDayOfRest implements GoalBase {
 }
 
 type GoalDayOfWork implements GoalBase {
+  currentDaysOfWork: Int!
   currentPeriodEnd: DateTime!
   currentPeriodStart: DateTime!
   currentProgress: Float!

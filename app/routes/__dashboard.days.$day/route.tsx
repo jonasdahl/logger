@@ -125,8 +125,9 @@ export default function DashboardIndex() {
             <IconButtonLink
               to={`/days/${dayBefore.toFormat("yyyy-MM-dd")}`}
               aria-label="Föregående dag"
-              icon={<FontAwesomeIcon icon={faChevronLeft} />}
-            />
+            >
+              <FontAwesomeIcon icon={faChevronLeft} />
+            </IconButtonLink>
           ) : (
             <ButtonLink to={`/days/${dayBefore.toFormat("yyyy-MM-dd")}`}>
               <FontAwesomeIcon icon={faChevronLeft} />{" "}

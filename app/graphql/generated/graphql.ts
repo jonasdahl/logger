@@ -278,6 +278,7 @@ export type GoalBase = {
 
 export type GoalDayOfRest = GoalBase & {
   __typename?: 'GoalDayOfRest';
+  currentDaysOfRest: Scalars['Int']['output'];
   currentPeriodEnd: Scalars['DateTime']['output'];
   currentPeriodStart: Scalars['DateTime']['output'];
   currentProgress: Scalars['Float']['output'];
@@ -287,6 +288,7 @@ export type GoalDayOfRest = GoalBase & {
 
 export type GoalDayOfWork = GoalBase & {
   __typename?: 'GoalDayOfWork';
+  currentDaysOfWork: Scalars['Int']['output'];
   currentPeriodEnd: Scalars['DateTime']['output'];
   currentPeriodStart: Scalars['DateTime']['output'];
   currentProgress: Scalars['Float']['output'];
@@ -868,6 +870,7 @@ export type GoalBaseResolvers<ContextType = Context, ParentType extends Resolver
 };
 
 export type GoalDayOfRestResolvers<ContextType = Context, ParentType extends ResolversParentTypes['GoalDayOfRest'] = ResolversParentTypes['GoalDayOfRest']> = {
+  currentDaysOfRest: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   currentPeriodEnd: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   currentPeriodStart: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   currentProgress: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
@@ -877,6 +880,7 @@ export type GoalDayOfRestResolvers<ContextType = Context, ParentType extends Res
 };
 
 export type GoalDayOfWorkResolvers<ContextType = Context, ParentType extends ResolversParentTypes['GoalDayOfWork'] = ResolversParentTypes['GoalDayOfWork']> = {
+  currentDaysOfWork: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   currentPeriodEnd: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   currentPeriodStart: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   currentProgress: Resolver<ResolversTypes['Float'], ParentType, ContextType>;

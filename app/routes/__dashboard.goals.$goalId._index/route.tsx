@@ -98,8 +98,8 @@ export default function CreateTest() {
       ) : null}
 
       <div>
-        <p>
-          Nuvarande period:{" "}
+        <div>
+          <span className="font-bold">Nuvarande period:</span>{" "}
           {DateTime.fromISO(goal.currentPeriodStart)
             .setZone(timeZone)
             .toFormat("yyyy-MM-dd")}{" "}
@@ -107,7 +107,21 @@ export default function CreateTest() {
           {DateTime.fromISO(goal.currentPeriodEnd)
             .setZone(timeZone)
             .toFormat("yyyy-MM-dd")}
-        </p>
+        </div>
+
+        {goal.__typename === "GoalDayOfRest" ? (
+          <div>
+            <span className="font-bold">Antal vilodagar hittills:</span>{" "}
+            {goal.currentDaysOfRest}
+          </div>
+        ) : null}
+
+        {goal.__typename === "GoalDayOfWork" ? (
+          <div>
+            <span className="font-bold">Antal träningsdagar hittills:</span>{" "}
+            {goal.currentDaysOfWork}
+          </div>
+        ) : null}
       </div>
     </div>
   );

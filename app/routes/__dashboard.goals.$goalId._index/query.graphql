@@ -9,5 +9,11 @@ query GoalDetails($goalId: ID!) {
       currentPeriodStart
       currentPeriodEnd
     }
+    ... on GoalDayOfRest {
+      currentDaysOfRest
+    }
+    ... on GoalDayOfWork {
+      currentDaysOfWork
+    }
   }
 }

@@ -9,5 +9,11 @@ query DashboardOverview {
     ... on GoalPerformExerciseType {
       currentDayCount
     }
+    ... on GoalDayOfRest {
+      currentDaysOfRest
+    }
+    ... on GoalDayOfWork {
+      currentDaysOfWork
+    }
   }
 }

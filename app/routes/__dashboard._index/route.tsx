@@ -74,6 +74,16 @@ export default function Index() {
                         {goal.title}
                       </Link>
                     </CardTitle>
+                    {goal.__typename === "GoalDayOfRest" ? (
+                      <CardDescription>
+                        Denna period: {goal.currentDaysOfRest}
+                      </CardDescription>
+                    ) : null}
+                    {goal.__typename === "GoalDayOfWork" ? (
+                      <CardDescription>
+                        Denna period: {goal.currentDaysOfWork}
+                      </CardDescription>
+                    ) : null}
                     {goal.__typename === "GoalPerformExerciseType" ? (
                       <CardDescription>
                         Denna period: {goal.currentDayCount}
