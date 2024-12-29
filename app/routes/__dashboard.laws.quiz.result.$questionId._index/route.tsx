@@ -17,9 +17,13 @@ export default function Question() {
   return (
     <Container py={5}>
       <Stack spacing={5}>
-        <H1>{success ? "Rätt" : "Fel"}</H1>
+        <H1 className={success ? "text-green-700" : "text-red-600"}>
+          {success ? "Rätt" : "Fel"}
+        </H1>
         <div>
-          <ButtonLink to="/laws/quiz">Nästa fråga</ButtonLink>
+          <ButtonLink variant="outline" to="/laws/quiz">
+            Nästa fråga
+          </ButtonLink>
         </div>
       </Stack>
     </Container>

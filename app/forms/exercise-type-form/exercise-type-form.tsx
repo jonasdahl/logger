@@ -1,15 +1,3 @@
-import {
-  Input as ChakraInput,
-  FormControl,
-  FormLabel,
-  HStack,
-  IconButton,
-  Stack,
-  Table,
-  Tbody,
-  Td,
-  Tr,
-} from "@chakra-ui/react";
 import { faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
@@ -17,8 +5,13 @@ import { ValidatedForm } from "remix-validated-form";
 import { v4 } from "uuid";
 import { ValidatedSelectField } from "~/components/form/select";
 import { SubmitButton } from "~/components/form/submit-button";
-import { Textarea } from "~/components/form/textarea";
+import { ValidatedTextareaField } from "~/components/form/textarea";
 import { ValidatedInputField } from "~/components/form/validated-input-field";
+import { Button } from "~/components/ui/button";
+import { FormControl } from "~/components/ui/form-control";
+import { FormLabel } from "~/components/ui/form-label";
+import { FormStack } from "~/components/ui/form-stack";
+import { Input } from "~/components/ui/input";
 import { HiddenReturnToInput } from "~/services/return-to";
 import { exerciseTypeValidator } from "./schema";
 
@@ -29,78 +22,72 @@ export function ExerciseTypeForm() {
   return (
     <ValidatedForm method="post" validator={exerciseTypeValidator}>
       <HiddenReturnToInput />
-      <Stack spacing={5}>
-        <Stack>
-          <ValidatedInputField name="name" label="Namn" />
-          <ValidatedSelectField
-            name="defaultAmountType"
-            label="Mängdtyp"
-            value={defaultAmountType}
-            onChangeValue={(value) => setDefaultAmountType(value)}
-            options={[
-              { value: "null", label: "- Välj -" },
-              { value: "time", label: "Tid" },
-              { value: "repetitions", label: "Repetitioner" },
-              { value: "levels", label: "Nivåer" },
-            ]}
-          />
-          {defaultAmountType === "levels" ? (
-            <Textarea name="levels" label="Nivåer (en per rad)" />
-          ) : (
-            <FormControl>
-              <HStack>
-                <FormLabel>Variabel belastning</FormLabel>
-              </HStack>
-              <Table>
-                <Tbody>
-                  {loads.map((id, i) => (
-                    <Tr key={id}>
-                      <Td p={0}>
-                        <ChakraInput
-                          type="text"
-                          name={`loads[${i}].name`}
-                          placeholder={`Namn, tex "Vikt"`}
-                        />
-                      </Td>
-                      <Td p={0}>
-                        <ChakraInput
-                          type="text"
-                          name={`loads[${i}].unit`}
-                          placeholder={`Enhet, tex "kg"`}
-                        />
-                      </Td>
-                      <Td p={0} w={1}>
-                        <IconButton
-                          onClick={() =>
-                            setLoads((ids) => ids.filter((v) => v !== id))
-                          }
-                          icon={<FontAwesomeIcon icon={faTrash} />}
-                          aria-label="Ta bort"
-                          colorScheme="red"
-                          variant="outline"
-                        />
-                      </Td>
-                    </Tr>
-                  ))}
-                </Tbody>
-              </Table>
 
-              <div>
-                <IconButton
-                  onClick={() => setLoads((ids) => [...ids, v4()])}
-                  icon={<FontAwesomeIcon icon={faPlus} />}
-                  aria-label="Lägg till"
-                  colorScheme="green"
-                  variant="outline"
-                />
-              </div>
-            </FormControl>
-          )}
-        </Stack>
+      <FormStack>
+        <ValidatedInputField name="name" label="Namn" />
+        <ValidatedSelectField
+          name="defaultAmountType"
+          label="Mängdtyp"
+          value={defaultAmountType}
+          onChangeValue={(value) => setDefaultAmountType(value)}
+          options={[
+            { value: "null", label: "- Välj -" },
+            { value: "time", label: "Tid" },
+            { value: "repetitions", label: "Repetitioner" },
+            { value: "levels", label: "Nivåer" },
+          ]}
+        />
+        {defaultAmountType === "levels" ? (
+          <ValidatedTextareaField name="levels" label="Nivåer (en per rad)" />
+        ) : (
+          <FormControl>
+            <FormLabel>Variabel belastning</FormLabel>
+            <div className="flex flex-col gap-1">
+              {loads.map((id, i) => (
+                <div key={id} className="flex flex-row gap-1">
+                  <div className="flex flex-1">
+                    <Input
+                      type="text"
+                      name={`loads[${i}].name`}
+                      placeholder={`Namn, tex "Vikt"`}
+                    />
+                  </div>
+                  <div className="flex flex-1">
+                    <Input
+                      type="text"
+                      name={`loads[${i}].unit`}
+                      placeholder={`Enhet, tex "kg"`}
+                    />
+                  </div>
+                  <div className="flex flex-0">
+                    <Button
+                      onClick={() =>
+                        setLoads((ids) => ids.filter((v) => v !== id))
+                      }
+                      variant="destructive"
+                    >
+                      <FontAwesomeIcon icon={faTrash} />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div>
+              <Button
+                onClick={() => setLoads((ids) => [...ids, v4()])}
+                variant="outline"
+                type="button"
+              >
+                <FontAwesomeIcon icon={faPlus} /> Lägg till mängdtyp
+              </Button>
+            </div>
+          </FormControl>
+        )}
         <div>
           <SubmitButton>Spara</SubmitButton>
         </div>
-      </Stack>
+      </FormStack>
     </ValidatedForm>
   );
 }

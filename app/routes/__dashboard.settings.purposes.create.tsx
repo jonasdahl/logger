@@ -6,7 +6,7 @@ import { ValidatedForm } from "remix-validated-form";
 import { z } from "zod";
 import { assertIsAdmin, authenticator } from "~/.server/auth.server";
 import { SubmitButton } from "~/components/form/submit-button";
-import { Textarea } from "~/components/form/textarea";
+import { ValidatedTextareaField } from "~/components/form/textarea";
 import { validate } from "~/components/form/validate.server";
 import { db } from "~/db.server";
 
@@ -53,7 +53,7 @@ export default function SettingsIndex() {
         <div>Lägg till en per rad nedan</div>
         <ValidatedForm validator={validator} method="post">
           <Stack>
-            <Textarea
+            <ValidatedTextareaField
               label="Träningssyften (en per rad kommer skapas)"
               name="entries"
             />

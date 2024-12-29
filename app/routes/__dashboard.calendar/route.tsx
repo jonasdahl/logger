@@ -1,10 +1,11 @@
-import { Container, HStack, SimpleGrid, Stack } from "@chakra-ui/react";
+import { HStack, SimpleGrid, Stack } from "@chakra-ui/react";
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { DateTime } from "luxon";
 import { authenticator } from "~/.server/auth.server";
 import { ButtonLink } from "~/components/button-link";
+import { Container } from "~/components/ui/container";
 import { db } from "~/db.server";
 import { CalendarDocument } from "~/graphql/generated/documents";
 import { gql } from "~/graphql/graphql.server";
@@ -56,7 +57,7 @@ export default function DashboardIndex() {
   const now = DateTime.now().setZone(timeZone);
 
   return (
-    <Container maxW="container.lg" py={5}>
+    <Container>
       <Stack spacing={5}>
         {showOnboarding ? <OnboardingAlert /> : null}
 

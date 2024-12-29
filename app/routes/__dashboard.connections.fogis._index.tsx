@@ -1,7 +1,6 @@
 import {
   Button,
   Checkbox,
-  Container,
   Heading,
   Stack,
   Table,
@@ -11,7 +10,6 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { json } from "@remix-run/node";
 import {
   Form,
   useActionData,
@@ -26,6 +24,7 @@ import { authenticator } from "~/.server/auth.server";
 import { SubmitButton } from "~/components/form/submit-button";
 import { validate } from "~/components/form/validate.server";
 import { ValidatedInputField } from "~/components/form/validated-input-field";
+import { Container } from "~/components/ui/container";
 import { db } from "~/db.server";
 import { FogisClient } from "~/fogis/client.server";
 import { getTimeZoneFromRequest } from "~/time";
@@ -46,7 +45,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     where: { id: userSession.id, deletedAt: null },
   });
 
-  return json({ fogisUsername: user.fogisUsername });
+  return { fogisUsername: user.fogisUsername };
 }
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -93,7 +92,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
   // TODO Update
 
-  return json({ foundGames, toDelete, toAdd, toUpdate: [] });
+  return { foundGames, toDelete, toAdd, toUpdate: [] };
 }
 
 export default function Fogis() {
@@ -104,7 +103,7 @@ export default function Fogis() {
 
   if (actionData) {
     return (
-      <Container py={5} maxW="container.lg">
+      <Container>
         <Form method="post" action="/connections/fogis/save">
           <Stack spacing={6}>
             <Heading>Granska import</Heading>
@@ -193,7 +192,7 @@ export default function Fogis() {
   }
 
   return (
-    <Container py={6}>
+    <Container>
       <Stack spacing={5}>
         <Heading>Importera från Fogis</Heading>
         <div>

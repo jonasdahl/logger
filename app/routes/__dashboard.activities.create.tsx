@@ -1,4 +1,3 @@
-import { Alert, Container, Heading, Stack } from "@chakra-ui/react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useLoaderData, useSearchParams } from "@remix-run/react";
@@ -9,9 +8,12 @@ import { z } from "zod";
 import { authenticator } from "~/.server/auth.server";
 import { ValidatedSelectField } from "~/components/form/select";
 import { SubmitButton } from "~/components/form/submit-button";
-import { Textarea } from "~/components/form/textarea";
+import { ValidatedTextareaField } from "~/components/form/textarea";
 import { validate } from "~/components/form/validate.server";
 import { ValidatedInputField } from "~/components/form/validated-input-field";
+import { H1 } from "~/components/headings";
+import { Alert, AlertDescription } from "~/components/ui/alert";
+import { FormStack } from "~/components/ui/form-stack";
 import { db } from "~/db.server";
 import { HiddenReturnToInput } from "~/services/return-to";
 import { getTimeZoneFromRequest } from "~/time";
@@ -119,11 +121,11 @@ export default function DashboardIndex() {
   const dateFromParams = searchParams.get("date");
 
   return (
-    <Container py={5}>
+    <div className="container mx-auto px-4 py-5 max-w-screen-sm">
       <ValidatedForm validator={validator} method="post">
         <HiddenReturnToInput />
-        <Stack spacing={5}>
-          <Heading>Skapa aktivitet</Heading>
+        <FormStack>
+          <H1>Skapa aktivitet</H1>
           {plannedActivity ? (
             <div>
               <input
@@ -131,8 +133,10 @@ export default function DashboardIndex() {
                 name="fromPlannedActivityId"
                 value={plannedActivity.id}
               />
-              <Alert>
-                Denna aktivitet kommer att kopplas till en planerad aktivitet.
+              <Alert variant="info">
+                <AlertDescription>
+                  Denna aktivitet kommer att kopplas till en planerad aktivitet.
+                </AlertDescription>
               </Alert>
             </div>
           ) : null}
@@ -178,12 +182,12 @@ export default function DashboardIndex() {
               })),
             ]}
           />
-          <Textarea
+          <ValidatedTextareaField
             label="Beskrivning/innehåll"
             name="description"
             defaultValue={plannedActivity?.description ?? undefined}
           />
-          <Textarea
+          <ValidatedTextareaField
             label="Övriga kommentarer"
             name="comment"
             defaultValue={plannedActivity?.comment ?? undefined}
@@ -191,8 +195,8 @@ export default function DashboardIndex() {
           <div>
             <SubmitButton>Skapa</SubmitButton>
           </div>
-        </Stack>
+        </FormStack>
       </ValidatedForm>
-    </Container>
+    </div>
   );
 }

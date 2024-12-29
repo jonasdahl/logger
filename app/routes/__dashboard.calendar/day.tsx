@@ -28,7 +28,7 @@ import { ValidatedForm } from "remix-validated-form";
 import { ButtonLink } from "~/components/button-link";
 import { ValidatedSelectField } from "~/components/form/select";
 import { SubmitButton } from "~/components/form/submit-button";
-import { Textarea } from "~/components/form/textarea";
+import { ValidatedTextareaField } from "~/components/form/textarea";
 import { InlineLink } from "~/components/ui/inline-link";
 import type { CalendarDayFragment } from "~/graphql/generated/documents";
 import { useToggle } from "~/hooks/use-toggle";
@@ -296,8 +296,14 @@ function PlanButton({
                       })),
                     ]}
                   />
-                  <Textarea label="Beskrivning/innehåll" name="description" />
-                  <Textarea label="Övriga kommentarer" name="comment" />
+                  <ValidatedTextareaField
+                    label="Beskrivning/innehåll"
+                    name="description"
+                  />
+                  <ValidatedTextareaField
+                    label="Övriga kommentarer"
+                    name="comment"
+                  />
                 </Stack>
               </ModalBody>
               <ModalFooter>

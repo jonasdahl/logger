@@ -1,9 +1,10 @@
-import { Button, Container, Heading, Stack } from "@chakra-ui/react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Form } from "@remix-run/react";
 import { DateTime } from "luxon";
 import { authenticator } from "~/.server/auth.server";
+import { H1 } from "~/components/headings";
+import { Button } from "~/components/ui/button";
 import { db } from "~/db.server";
 import { getTimeZoneFromRequest } from "~/time";
 
@@ -46,17 +47,17 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
 export default function DashboardIndex() {
   return (
-    <Container py={5}>
+    <div className="container mx-auto max-w-screen-md px-4 py-5">
       <Form method="post">
-        <Stack spacing={5}>
-          <Heading>Radera registrerad aktivitet?</Heading>
+        <div className="flex flex-col gap-5">
+          <H1>Radera registrerad aktivitet?</H1>
           <div>
-            <Button type="submit" colorScheme="red">
+            <Button type="submit" variant="destructive">
               Radera
             </Button>
           </div>
-        </Stack>
+        </div>
       </Form>
-    </Container>
+    </div>
   );
 }

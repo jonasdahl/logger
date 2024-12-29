@@ -1,12 +1,10 @@
-import {
-  Textarea as ChakraTextarea,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-} from "@chakra-ui/react";
 import { useField } from "remix-validated-form";
+import { FormControl } from "../ui/form-control";
+import { FormErrorMessage } from "../ui/form-error-message";
+import { FormLabel } from "../ui/form-label";
+import { Textarea } from "../ui/textarea";
 
-export function Textarea({
+export function ValidatedTextareaField({
   name,
   label,
   defaultValue,
@@ -17,16 +15,13 @@ export function Textarea({
 }) {
   const { error, getInputProps } = useField(name);
   return (
-    <FormControl isInvalid={!!error}>
+    <FormControl>
       <FormLabel htmlFor={name}>{label}</FormLabel>
-      <ChakraTextarea
-        bg="white"
+      <Textarea
         {...getInputProps({ id: name } as any)}
         defaultValue={defaultValue}
       />
-      {error && (
-        <FormErrorMessage className="my-error-class">{error}</FormErrorMessage>
-      )}
+      {error ? <FormErrorMessage>{error}</FormErrorMessage> : null}
     </FormControl>
   );
 }

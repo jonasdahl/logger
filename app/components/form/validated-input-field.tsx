@@ -1,4 +1,4 @@
-import type { InputProps } from "@chakra-ui/react";
+import type { ComponentProps } from "react";
 import { useField } from "remix-validated-form";
 import { FormControl } from "../ui/form-control";
 import { FormErrorMessage } from "../ui/form-error-message";
@@ -16,7 +16,7 @@ export function ValidatedInputField({
   name: string;
   defaultValue?: string;
   label: string;
-  type?: InputProps["type"];
+  type?: ComponentProps<"input">["type"];
   autoComplete?: string;
   autoFocus?: boolean;
 }) {

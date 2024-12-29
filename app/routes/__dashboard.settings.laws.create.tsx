@@ -22,7 +22,7 @@ import { z } from "zod";
 import { assertIsAdmin, authenticator } from "~/.server/auth.server";
 import { SubmitButton } from "~/components/form/submit-button";
 
-import { Textarea } from "~/components/form/textarea";
+import { ValidatedTextareaField } from "~/components/form/textarea";
 import { validate } from "~/components/form/validate.server";
 import { db } from "~/db.server";
 
@@ -87,7 +87,7 @@ export default function SettingsLawsCreate() {
 
         <ValidatedForm validator={validator} method="post">
           <Stack spacing={5}>
-            <Textarea label="Fråga" name="question" />
+            <ValidatedTextareaField label="Fråga" name="question" />
             <Table size="sm">
               <Tbody>
                 {alternativeIds.map((id, i) => (

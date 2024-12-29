@@ -9,7 +9,7 @@ import { z } from "zod";
 import { authenticator } from "~/.server/auth.server";
 import { ValidatedSelectField } from "~/components/form/select";
 import { SubmitButton } from "~/components/form/submit-button";
-import { Textarea } from "~/components/form/textarea";
+import { ValidatedTextareaField } from "~/components/form/textarea";
 import { validate } from "~/components/form/validate.server";
 import { ValidatedInputField } from "~/components/form/validated-input-field";
 import { db } from "~/db.server";
@@ -110,8 +110,11 @@ export default function CreatePlannedActivity() {
               })),
             ]}
           />
-          <Textarea label="Beskrivning/innehåll" name="description" />
-          <Textarea label="Övriga kommentarer" name="comment" />
+          <ValidatedTextareaField
+            label="Beskrivning/innehåll"
+            name="description"
+          />
+          <ValidatedTextareaField label="Övriga kommentarer" name="comment" />
           <div>
             <SubmitButton>Skapa</SubmitButton>
           </div>

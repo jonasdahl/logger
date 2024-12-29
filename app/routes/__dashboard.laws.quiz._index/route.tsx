@@ -1,12 +1,13 @@
 import { Container, RadioGroup, Stack } from "@chakra-ui/react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { json, redirect } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { json } from "@remix-run/node";
+import { useActionData, useLoaderData } from "@remix-run/react";
 import { withZod } from "@remix-validated-form/with-zod";
 import type { ReactNode } from "react";
 import { ValidatedForm } from "remix-validated-form";
 import { z } from "zod";
 import { authenticator } from "~/.server/auth.server";
+import { ButtonLink } from "~/components/button-link";
 import { ErrorText } from "~/components/form/error-text";
 import { SubmitButton } from "~/components/form/submit-button";
 import { validate } from "~/components/form/validate.server";
@@ -15,6 +16,7 @@ import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
 import { FormLabel } from "~/components/ui/form-label";
 import { db } from "~/db.server";
+import { cn } from "~/lib/utils";
 import { HiddenReturnToInput } from "~/services/return-to";
 
 const validator = withZod(
@@ -51,24 +53,26 @@ export async function action({ request }: ActionFunctionArgs) {
       question.answerAlternatives.map((x) => x.id).includes(x)
     );
 
-  return redirect(
-    `/laws/quiz/result/${questionId}?success=${success ? "yes" : "no"}`
-  );
+  return { success, alternatives: question.answerAlternatives };
 }
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const count = await db.lawsQuestion.count({ where: { isEnabled: true } });
-  const question = await db.lawsQuestion.findFirstOrThrow({
-    where: { isEnabled: true },
-    orderBy: {
-      id: "asc",
-    },
-    skip: Math.floor(Math.random() * count),
-    take: 1,
-    include: {
-      answerAlternatives: true,
-    },
-  });
+  const url = new URL(request.url);
+  const idFromUrl = url.searchParams.get("questionId");
+
+  const question = idFromUrl
+    ? await db.lawsQuestion.findFirstOrThrow({
+        where: { id: idFromUrl },
+        include: { answerAlternatives: true },
+      })
+    : await db.lawsQuestion.findFirstOrThrow({
+        where: { isEnabled: true },
+        orderBy: { id: "asc" },
+        skip: Math.floor(Math.random() * count),
+        take: 1,
+        include: { answerAlternatives: true },
+      });
 
   return json({
     question: { id: question.id, question: question.question },
@@ -83,11 +87,16 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 }
 
 export default function Question() {
+  const actionData = useActionData<typeof action>();
   const { alternatives, question, multiple } = useLoaderData<typeof loader>();
 
   return (
     <Container py={5}>
-      <ValidatedForm validator={validator} method="post">
+      <ValidatedForm
+        validator={validator}
+        method="post"
+        action={`?questionId=${question.id}`}
+      >
         <HiddenReturnToInput />
         <ErrorText />
         <input type="hidden" name="questionId" value={question.id} />
@@ -98,6 +107,10 @@ export default function Question() {
           <Wrapper multiple={multiple}>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               {alternatives.map((alternative) => {
+                const actionAlternative = actionData?.alternatives.find(
+                  (x) => x.id === alternative.id
+                );
+
                 if (multiple) {
                   return (
                     <div
@@ -113,12 +126,19 @@ export default function Question() {
                     </div>
                   );
                 }
+
                 return (
                   <Button
                     variant="outline"
+                    name="answer"
                     value={alternative.id}
                     key={alternative.id}
-                    className="truncate"
+                    className={cn(
+                      "truncate",
+                      actionData?.success && actionAlternative?.isCorrect
+                        ? "bg-green-200 text-green-600 hover:bg-green-300 hover:text-green-700"
+                        : ""
+                    )}
                   >
                     {alternative.text}
                   </Button>
@@ -127,9 +147,13 @@ export default function Question() {
             </div>
           </Wrapper>
 
-          <div>
-            <SubmitButton>Svara</SubmitButton>
-          </div>
+          {actionData ? (
+            <ButtonLink to="/laws/quiz">Slumpa ny</ButtonLink>
+          ) : multiple ? (
+            <div>
+              <SubmitButton>Svara</SubmitButton>
+            </div>
+          ) : null}
         </Stack>
       </ValidatedForm>
     </Container>

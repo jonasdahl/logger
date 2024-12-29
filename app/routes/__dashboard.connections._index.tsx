@@ -1,19 +1,13 @@
-import {
-  Box,
-  Button,
-  Container,
-  Heading,
-  HStack,
-  Spacer,
-  Stack,
-} from "@chakra-ui/react";
 import type { LoaderFunctionArgs } from "@remix-run/node";
-import { json } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
 
 import type { ReactNode } from "react";
 import { authenticator } from "~/.server/auth.server";
 import { ButtonLink } from "~/components/button-link";
+import { H1, H2 } from "~/components/headings";
+import { Button } from "~/components/ui/button";
+import { Card, CardHeader, CardTitle } from "~/components/ui/card";
+import { Container } from "~/components/ui/container";
 import { db } from "~/db.server";
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -29,31 +23,34 @@ export async function loader({ request }: LoaderFunctionArgs) {
       data: { onboardedAt: new Date() },
     });
   }
-  return json({ user: { polarUserId: user.polarUserId } });
+  return { user: { polarUserId: user.polarUserId } };
 }
 
 export default function Connections() {
   const { user } = useLoaderData<typeof loader>();
 
   return (
-    <Container py={5}>
-      <Stack spacing={5}>
-        <Heading>Anslutningar</Heading>
-        <Heading size="md">Engångsanslutningar</Heading>
-        <Stack>
+    <Container className="flex flex-col gap-5">
+      <H1>Anslutningar</H1>
+
+      <div className="flex flex-col gap-3">
+        <H2>Importera</H2>
+        <div className="flex flex-col gap-2">
           <AvailableConnection
             name="Fogis"
             callToActionText="Synka nu"
             action="/connections/fogis"
           />
-        </Stack>
+        </div>
+      </div>
 
-        <Heading size="md">Permanenta</Heading>
-        <Stack>
+      <div className="flex flex-col gap-3">
+        <H2>Synkronisera</H2>
+        <div className="flex flex-col gap-2">
           {user.polarUserId ? (
             <WorkingConnection name="Polar">
               <Form action="/connections/polar/sync" method="post">
-                <Button type="submit" size="sm" colorScheme="green">
+                <Button type="submit" size="sm" variant="secondary">
                   Synka
                 </Button>
               </Form>
@@ -72,8 +69,8 @@ export default function Connections() {
               action="/connections/polar"
             />
           )}
-        </Stack>
-      </Stack>
+        </div>
+      </div>
     </Container>
   );
 }
@@ -88,13 +85,14 @@ function AvailableConnection({
   action: string;
 }) {
   return (
-    <HStack p={3} bg="blue.200" borderRadius="md">
-      <Box fontWeight="bold">{name}</Box>
-      <Spacer />
-      <ButtonLink to={action} size="sm" variant="outline">
+    <Card className="flex flex-row justify-between gap-3 items-center p-3 pl-5">
+      <CardHeader>
+        <CardTitle>{name}</CardTitle>
+      </CardHeader>
+      <ButtonLink to={action} size="sm" variant="secondary">
         {callToActionText}
       </ButtonLink>
-    </HStack>
+    </Card>
   );
 }
 
@@ -106,10 +104,11 @@ function WorkingConnection({
   children: ReactNode;
 }) {
   return (
-    <HStack p={3} bg="blue.200" borderRadius="md">
-      <Box fontWeight="bold">{name}</Box>
-      <Spacer />
-      {children}
-    </HStack>
+    <Card className="flex flex-row justify-between gap-3 items-center p-3 pl-5">
+      <CardHeader>
+        <CardTitle>{name}</CardTitle>
+      </CardHeader>
+      <div className="flex flex-row gap-3 items-center">{children}</div>
+    </Card>
   );
 }
