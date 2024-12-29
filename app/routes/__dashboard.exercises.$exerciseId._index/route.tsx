@@ -1,7 +1,6 @@
 import {
   Button,
   Checkbox,
-  Container,
   HStack,
   Heading,
   IconButton,
@@ -33,6 +32,7 @@ import { DateTime, Duration } from "luxon";
 import { useState } from "react";
 import { z } from "zod";
 import { ButtonLink } from "~/components/button-link";
+import { Container } from "~/components/ui/container";
 import { db } from "~/db.server";
 import { ExerciseDetailsDocument } from "~/graphql/generated/documents";
 import { gql } from "~/graphql/graphql.server";
@@ -243,7 +243,7 @@ export default function Activity() {
   };
 
   return (
-    <Container py={5} maxW="container.md">
+    <Container>
       <HiddenReturnToInput />
       <Stack spacing={5}>
         <Wrap align="center">

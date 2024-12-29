@@ -1,4 +1,4 @@
-import { Box, Card, Container, Stack } from "@chakra-ui/react";
+import { Box, Card, Stack } from "@chakra-ui/react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { withZod } from "@remix-validated-form/with-zod";
@@ -8,6 +8,7 @@ import { authenticator, signUp } from "~/.server/auth.server";
 import { SubmitButton } from "~/components/form/submit-button";
 import { validate } from "~/components/form/validate.server";
 import { ValidatedInputField } from "~/components/form/validated-input-field";
+import { Container } from "~/components/ui/container";
 import { commitSession, getSessionFromRequest } from "~/session.server";
 
 const validator = withZod(
@@ -54,7 +55,7 @@ export default function Register() {
       alignItems="center"
       justifyContent="center"
     >
-      <Container maxW="30rem" py={5}>
+      <Container className="max-w-[30rem] pb-8">
         <Card p={4}>
           <ValidatedForm validator={validator} method="post">
             <Stack spacing={5}>

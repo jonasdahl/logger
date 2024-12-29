@@ -1,4 +1,4 @@
-import { Container, Heading, Stack } from "@chakra-ui/react";
+import { Heading } from "@chakra-ui/react";
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { useSearchParams } from "@remix-run/react";
@@ -10,6 +10,8 @@ import { authenticator } from "~/.server/auth.server";
 import { SubmitButton } from "~/components/form/submit-button";
 import { validate } from "~/components/form/validate.server";
 import { ValidatedInputField } from "~/components/form/validated-input-field";
+import { Container } from "~/components/ui/container";
+import { FormStack } from "~/components/ui/form-stack";
 import { db } from "~/db.server";
 import { getTimeZoneFromRequest } from "~/time";
 
@@ -36,25 +38,23 @@ export default function CreateTest() {
   const dateFromParams = searchParams.get("date");
 
   return (
-    <Container py={7}>
-      <Stack spacing={5}>
-        <Heading>Skapa match</Heading>
-        <ValidatedForm validator={validator} method="post">
-          <Stack spacing={5}>
-            <ValidatedInputField
-              label="Datum"
-              type="datetime-local"
-              name="date"
-              defaultValue={
-                dateFromParams ? `${dateFromParams}T12:00` : undefined
-              }
-            />
-            <div>
-              <SubmitButton>Skapa</SubmitButton>
-            </div>
-          </Stack>
-        </ValidatedForm>
-      </Stack>
+    <Container className="flex flex-col gap-5">
+      <Heading>Skapa match</Heading>
+      <ValidatedForm validator={validator} method="post">
+        <FormStack>
+          <ValidatedInputField
+            label="Datum"
+            type="datetime-local"
+            name="date"
+            defaultValue={
+              dateFromParams ? `${dateFromParams}T12:00` : undefined
+            }
+          />
+          <div>
+            <SubmitButton>Skapa</SubmitButton>
+          </div>
+        </FormStack>
+      </ValidatedForm>
     </Container>
   );
 }

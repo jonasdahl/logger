@@ -3,7 +3,6 @@ import {
   Button,
   Card,
   Center,
-  Container,
   FormControl,
   FormErrorMessage,
   FormLabel,
@@ -14,6 +13,7 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
 import { authenticator } from "~/.server/auth.server";
+import { Container } from "~/components/ui/container";
 import { InlineLink } from "~/components/ui/inline-link";
 import { commitSession, getSessionFromRequest } from "~/session.server";
 
@@ -47,7 +47,7 @@ export default function Login() {
       alignItems="center"
       justifyContent="center"
     >
-      <Container maxW="30rem" pb={8}>
+      <Container className="max-w-[30rem] pb-8">
         <Card p={5}>
           <Form method="post">
             <Stack spacing={6}>

@@ -1,8 +1,9 @@
-import { Button, Container, Heading, Stack } from "@chakra-ui/react";
+import { Button, Heading, Stack } from "@chakra-ui/react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
 import { assertIsAdmin, authenticator } from "~/.server/auth.server";
+import { Container } from "~/components/ui/container";
 import { db } from "~/db.server";
 import { notify } from "~/push/notifications.server";
 
@@ -41,7 +42,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export default function Notifications() {
   const { count } = useLoaderData<typeof loader>();
   return (
-    <Container py={5} maxW="container.xl">
+    <Container>
       <Stack spacing={5}>
         <Heading>Aviseringsprenumerationer</Heading>
         <div>{count}</div>

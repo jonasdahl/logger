@@ -1,6 +1,5 @@
 import {
   Box,
-  Container,
   Heading,
   Spacer,
   Stack,
@@ -32,6 +31,7 @@ import {
   XYChart,
 } from "~/components/charts/xy-chart.client";
 import { ClientOnly } from "~/components/client-only";
+import { Container } from "~/components/ui/container";
 import { GameDocument } from "~/graphql/generated/documents";
 import { gql } from "~/graphql/graphql.server";
 
@@ -55,7 +55,7 @@ export default function Game() {
   const isStarted = start ? DateTime.fromISO(start) < now : false;
 
   return (
-    <Container py={5} maxW="container.md">
+    <Container>
       <HiddenReturnToInput />
       <Stack spacing={5}>
         <Wrap align="center">

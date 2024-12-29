@@ -2,7 +2,6 @@ import {
   Alert,
   AlertDescription,
   AlertTitle,
-  Container,
   Heading,
   Stack,
 } from "@chakra-ui/react";
@@ -16,6 +15,7 @@ import { assertIsAdmin, authenticator } from "~/.server/auth.server";
 import { SubmitButton } from "~/components/form/submit-button";
 import { validate } from "~/components/form/validate.server";
 import { ValidatedInputField } from "~/components/form/validated-input-field";
+import { Container } from "~/components/ui/container";
 import { db } from "~/db.server";
 
 const validator = withZod(
@@ -58,7 +58,7 @@ export default function PurposeEdit() {
   const { activityPurpose } = useLoaderData<typeof loader>();
 
   return (
-    <Container py={5}>
+    <Container>
       <Stack spacing={5}>
         <Heading>Ändra "{activityPurpose.label}"</Heading>
         <ValidatedForm validator={validator} method="post">

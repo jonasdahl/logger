@@ -1,6 +1,5 @@
 import {
   Box,
-  Container,
   GridItem,
   LinkBox,
   LinkOverlay,
@@ -17,9 +16,9 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { LoaderFunctionArgs } from "@remix-run/node";
-import { json } from "@remix-run/node";
 import type { ReactNode } from "react";
 import { assertIsAdmin, authenticator } from "~/.server/auth.server";
+import { Container } from "~/components/ui/container";
 import { InlineLink } from "~/components/ui/inline-link";
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -27,12 +26,12 @@ export async function loader({ request }: LoaderFunctionArgs) {
     failureRedirect: "/login",
   });
   await assertIsAdmin(sessionUser.id);
-  return json({});
+  return {};
 }
 
 export default function SettingsIndex() {
   return (
-    <Container maxW="container.lg" py={5}>
+    <Container>
       <SimpleGrid minChildWidth={200} gap={5}>
         <Item
           to="/settings/purposes"

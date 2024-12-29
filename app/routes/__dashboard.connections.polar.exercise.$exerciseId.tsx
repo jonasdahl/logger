@@ -1,8 +1,6 @@
 import {
   Alert,
   AlertDescription,
-  Container,
-  Stack,
   Tab,
   TabList,
   TabPanel,
@@ -33,6 +31,7 @@ import {
 } from "~/components/charts/xy-chart.client";
 import { ClientOnly } from "~/components/client-only";
 import { H1, H2 } from "~/components/headings";
+import { Container } from "~/components/ui/container";
 import { InlineLink } from "~/components/ui/inline-link";
 import { db } from "~/db.server";
 
@@ -117,131 +116,129 @@ export default function PolarExercise() {
   const tMin = Math.min(...timestamps);
 
   return (
-    <Container py={5} maxW="container.xl">
-      <Stack spacing={5}>
-        <H1>Träning från Polar</H1>
-        <H2>Puls</H2>
-        {!maxHeartRate ? (
-          <Alert status="warning">
-            <AlertDescription>
-              <InlineLink to={`/user?returnTo=${location.pathname}`}>
-                Lägg in din maxpuls
-              </InlineLink>{" "}
-              för att visa pulszoner.
-            </AlertDescription>
-          </Alert>
-        ) : (
-          <Tabs>
-            <TabList>
-              <Tab>Tid i zon</Tab>
-              <Tab>Graf</Tab>
-            </TabList>
-            <TabPanels px={0}>
-              <TabPanel px={0}>
-                <TableContainer>
-                  <Table size="sm">
-                    <Thead>
-                      <Tr>
-                        <Th>Zon</Th>
-                        <Th>Relativ</Th>
-                        <Th>Absolut</Th>
-                        <Th>Tid i zon</Th>
+    <Container className="flex flex-col gap-5">
+      <H1>Träning från Polar</H1>
+      <H2>Puls</H2>
+      {!maxHeartRate ? (
+        <Alert status="warning">
+          <AlertDescription>
+            <InlineLink to={`/user?returnTo=${location.pathname}`}>
+              Lägg in din maxpuls
+            </InlineLink>{" "}
+            för att visa pulszoner.
+          </AlertDescription>
+        </Alert>
+      ) : (
+        <Tabs>
+          <TabList>
+            <Tab>Tid i zon</Tab>
+            <Tab>Graf</Tab>
+          </TabList>
+          <TabPanels px={0}>
+            <TabPanel px={0}>
+              <TableContainer>
+                <Table size="sm">
+                  <Thead>
+                    <Tr>
+                      <Th>Zon</Th>
+                      <Th>Relativ</Th>
+                      <Th>Absolut</Th>
+                      <Th>Tid i zon</Th>
+                    </Tr>
+                  </Thead>
+                  <Tbody>
+                    {heartRateZones.map(({ zone, samples }) => (
+                      <Tr key={zone.name}>
+                        <Td w={1} whiteSpace="nowrap">
+                          {zone.name}
+                        </Td>
+                        <Td w={1} whiteSpace="nowrap">
+                          {zone.minRelative.toFixed(0)}% -{" "}
+                          {zone.maxRelative.toFixed(0)}%
+                        </Td>
+                        <Td w={1} whiteSpace="nowrap">
+                          {zone.minAbsolute?.toFixed(0)} -{" "}
+                          {zone.maxAbsolute?.toFixed(0)}
+                        </Td>
+                        <Td>
+                          {Duration.fromMillis(
+                            sum(samples.map((s) => s.duration)) * 1000
+                          )
+                            .shiftTo("minutes", "seconds")
+                            .toFormat("m'min' ss's'")}
+                        </Td>
                       </Tr>
-                    </Thead>
-                    <Tbody>
-                      {heartRateZones.map(({ zone, samples }) => (
-                        <Tr key={zone.name}>
-                          <Td w={1} whiteSpace="nowrap">
-                            {zone.name}
-                          </Td>
-                          <Td w={1} whiteSpace="nowrap">
-                            {zone.minRelative.toFixed(0)}% -{" "}
-                            {zone.maxRelative.toFixed(0)}%
-                          </Td>
-                          <Td w={1} whiteSpace="nowrap">
-                            {zone.minAbsolute?.toFixed(0)} -{" "}
-                            {zone.maxAbsolute?.toFixed(0)}
-                          </Td>
-                          <Td>
-                            {Duration.fromMillis(
-                              sum(samples.map((s) => s.duration)) * 1000
-                            )
-                              .shiftTo("minutes", "seconds")
-                              .toFormat("m'min' ss's'")}
-                          </Td>
-                        </Tr>
-                      ))}
-                    </Tbody>
-                  </Table>
-                </TableContainer>
-              </TabPanel>
-              <TabPanel px={0}>
-                <div>
-                  <ClientOnly>
-                    {() => (
-                      <XYChart
-                        margin={{ top: 0, right: 0, bottom: 20, left: 30 }}
-                        height={400}
-                        xScale={{ type: "linear" }}
-                        yScale={{ type: "linear" }}
-                      >
-                        <AnimatedAxis
-                          orientation="bottom"
-                          tickFormat={(v) =>
-                            (Number(v) / 60).toLocaleString("sv-SE", {
-                              maximumFractionDigits: 1,
-                            })
-                          }
-                        />
-                        <AnimatedAxis orientation="left" />
-                        <AnimatedGrid />
+                    ))}
+                  </Tbody>
+                </Table>
+              </TableContainer>
+            </TabPanel>
+            <TabPanel px={0}>
+              <div>
+                <ClientOnly>
+                  {() => (
+                    <XYChart
+                      margin={{ top: 0, right: 0, bottom: 20, left: 30 }}
+                      height={400}
+                      xScale={{ type: "linear" }}
+                      yScale={{ type: "linear" }}
+                    >
+                      <AnimatedAxis
+                        orientation="bottom"
+                        tickFormat={(v) =>
+                          (Number(v) / 60).toLocaleString("sv-SE", {
+                            maximumFractionDigits: 1,
+                          })
+                        }
+                      />
+                      <AnimatedAxis orientation="left" />
+                      <AnimatedGrid />
 
-                        {zones.map((z) => (
-                          <AnimatedAreaSeries
-                            dataKey={z.name}
-                            key={z.name}
-                            fill={z.color}
-                            strokeWidth={0}
-                            renderLine={false}
-                            data={[
-                              {
-                                x: tMin,
-                                y: z.maxAbsolute,
-                                y0: z.minAbsolute,
-                              },
-                              {
-                                x: tMax,
-                                y: z.maxAbsolute,
-                                y0: z.minAbsolute,
-                              },
-                            ]}
-                            xAccessor={(p) => p.x}
-                            yAccessor={(p) => p.y}
-                            y0Accessor={(p) => p.y0}
-                            opacity={0.5}
-                          />
-                        ))}
-
-                        <AnimatedLineSeries
-                          dataKey="Puls"
-                          data={heartRateSamples.map((s) => ({
-                            x: s.tStart ?? null,
-                            y: s.value ?? null,
-                          }))}
-                          xAccessor={(p) => p.x ?? 0}
+                      {zones.map((z) => (
+                        <AnimatedAreaSeries
+                          dataKey={z.name}
+                          key={z.name}
+                          fill={z.color}
+                          strokeWidth={0}
+                          renderLine={false}
+                          data={[
+                            {
+                              x: tMin,
+                              y: z.maxAbsolute,
+                              y0: z.minAbsolute,
+                            },
+                            {
+                              x: tMax,
+                              y: z.maxAbsolute,
+                              y0: z.minAbsolute,
+                            },
+                          ]}
+                          xAccessor={(p) => p.x}
                           yAccessor={(p) => p.y}
-                          stroke="var(--chakra-colors-blue-800)"
-                          strokeWidth={1}
+                          y0Accessor={(p) => p.y0}
+                          opacity={0.5}
                         />
-                      </XYChart>
-                    )}
-                  </ClientOnly>
-                </div>
-              </TabPanel>
-            </TabPanels>
-          </Tabs>
-        )}
-      </Stack>
+                      ))}
+
+                      <AnimatedLineSeries
+                        dataKey="Puls"
+                        data={heartRateSamples.map((s) => ({
+                          x: s.tStart ?? null,
+                          y: s.value ?? null,
+                        }))}
+                        xAccessor={(p) => p.x ?? 0}
+                        yAccessor={(p) => p.y}
+                        stroke="var(--chakra-colors-blue-800)"
+                        strokeWidth={1}
+                      />
+                    </XYChart>
+                  )}
+                </ClientOnly>
+              </div>
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
+      )}
     </Container>
   );
 }

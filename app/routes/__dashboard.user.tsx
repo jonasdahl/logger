@@ -1,4 +1,4 @@
-import { Button, Container, Heading, Stack } from "@chakra-ui/react";
+import { Button, Heading, Stack } from "@chakra-ui/react";
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
@@ -10,6 +10,7 @@ import { authenticator } from "~/.server/auth.server";
 import { SubmitButton } from "~/components/form/submit-button";
 import { validate } from "~/components/form/validate.server";
 import { ValidatedInputField } from "~/components/form/validated-input-field";
+import { Container } from "~/components/ui/container";
 import { db } from "~/db.server";
 import { notify } from "~/push/notifications.server";
 import { vapidKeys } from "~/secrets.server";
@@ -93,7 +94,7 @@ export default function User() {
   }, [publicKey]);
 
   return (
-    <Container py={5}>
+    <Container>
       <Stack spacing={5}>
         <ValidatedForm validator={validator} method="post">
           <input type="hidden" name="_action" value="saveSettings" />

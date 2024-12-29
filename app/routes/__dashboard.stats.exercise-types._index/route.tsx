@@ -1,24 +1,16 @@
-import {
-  Box,
-  Link as ChakraLink,
-  Container,
-  Heading,
-  Stack,
-} from "@chakra-ui/react";
 import type { LoaderFunctionArgs } from "@remix-run/node";
-import { json } from "@remix-run/node";
-import { Link, useLoaderData } from "@remix-run/react";
+import { useLoaderData } from "@remix-run/react";
 import { authenticator } from "~/.server/auth.server";
+import { ButtonLink } from "~/components/button-link";
+import { H1 } from "~/components/headings";
+import { Container } from "~/components/ui/container";
 import { StatsExercisesDocument } from "~/graphql/generated/documents";
 import { gql } from "~/graphql/graphql.server";
-import { getTimeZoneFromRequest } from "~/time";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   await authenticator.isAuthenticated(request, {
     failureRedirect: "/login",
   });
-
-  const timeZone = getTimeZoneFromRequest(request);
 
   const res = await gql({
     document: StatsExercisesDocument,
@@ -26,29 +18,26 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     variables: {},
   });
 
-  return json(res.data);
+  return res.data;
 }
 
 export default function DashboardIndex() {
   const data = useLoaderData<typeof loader>();
 
   return (
-    <Container py={5} maxW="container.md">
-      <Stack spacing={5}>
-        <Heading>Statistik</Heading>
-        <Stack>
-          {data?.exerciseTypes?.edges?.map((type) => (
-            <Box key={type.cursor}>
-              <ChakraLink
-                as={Link}
-                to={`/stats/exercise-types/${type.node?.id}`}
-              >
-                {type.node?.name}
-              </ChakraLink>
-            </Box>
-          ))}
-        </Stack>
-      </Stack>
+    <Container className="flex flex-col gap-3">
+      <H1>Statistik</H1>
+      <div className="grid gap-2 grid-cols-2 md:grid-cols-4">
+        {data?.exerciseTypes?.edges?.map((type) => (
+          <ButtonLink
+            to={`/stats/exercise-types/${type.node?.id}`}
+            key={type.cursor}
+            variant="outline"
+          >
+            {type.node?.name}
+          </ButtonLink>
+        ))}
+      </div>
     </Container>
   );
 }

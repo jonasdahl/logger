@@ -1,4 +1,4 @@
-import { Container, RadioGroup, Stack } from "@chakra-ui/react";
+import { RadioGroup, Stack } from "@chakra-ui/react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useActionData, useLoaderData } from "@remix-run/react";
@@ -14,6 +14,7 @@ import { validate } from "~/components/form/validate.server";
 import { H1 } from "~/components/headings";
 import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
+import { Container } from "~/components/ui/container";
 import { FormLabel } from "~/components/ui/form-label";
 import { db } from "~/db.server";
 import { cn } from "~/lib/utils";
@@ -91,7 +92,7 @@ export default function Question() {
   const { alternatives, question, multiple } = useLoaderData<typeof loader>();
 
   return (
-    <Container py={5}>
+    <Container>
       <ValidatedForm
         validator={validator}
         method="post"

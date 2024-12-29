@@ -1,4 +1,4 @@
-import { Container, HStack, Heading, Stack } from "@chakra-ui/react";
+import { HStack, Heading, Stack } from "@chakra-ui/react";
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { withZod } from "@remix-validated-form/with-zod";
@@ -8,6 +8,7 @@ import { assertIsAdmin, authenticator } from "~/.server/auth.server";
 import { SubmitButton } from "~/components/form/submit-button";
 import { ValidatedTextareaField } from "~/components/form/textarea";
 import { validate } from "~/components/form/validate.server";
+import { Container } from "~/components/ui/container";
 import { db } from "~/db.server";
 
 const validator = withZod(
@@ -45,7 +46,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export default function SettingsIndex() {
   return (
-    <Container maxW="container.lg" py={5}>
+    <Container>
       <Stack>
         <HStack>
           <Heading>Skapa träningssyften</Heading>

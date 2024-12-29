@@ -1,10 +1,6 @@
 import {
   Box,
-  Container,
-  HStack,
-  Heading,
   IconButton,
-  Spacer,
   Stack,
   Table,
   TableContainer,
@@ -24,6 +20,9 @@ import { Form, useLoaderData } from "@remix-run/react";
 import { z } from "zod";
 import { assertIsAdmin, authenticator } from "~/.server/auth.server";
 import { ButtonLink } from "~/components/button-link";
+import { H1 } from "~/components/headings";
+import { Container } from "~/components/ui/container";
+import { TitleRow } from "~/components/ui/title-row";
 import { db } from "~/db.server";
 
 export async function action({ request, params }: ActionFunctionArgs) {
@@ -66,75 +65,72 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export default function SettingsLawsIndex() {
   const { questions } = useLoaderData<typeof loader>();
   return (
-    <Container maxW="container.lg" py={5}>
-      <Stack spacing={5} maxW="100%">
-        <HStack>
-          <Heading>Regelfrågor</Heading>
-          <Spacer />
-          <div>
-            <ButtonLink to="/settings/laws/create" variant="secondary">
-              Skapa
-            </ButtonLink>
-          </div>
-        </HStack>
+    <Container className="flex flex-col gap-5">
+      <TitleRow
+        actions={
+          <ButtonLink to="/settings/laws/create" variant="secondary">
+            Skapa
+          </ButtonLink>
+        }
+      >
+        <H1>Regelfrågor</H1>
+      </TitleRow>
 
-        <TableContainer>
-          <Table size="sm">
-            <Thead>
-              <Tr>
-                <Th>Fråga</Th>
-                <Th>Alternativ (rätt)</Th>
-                <Th />
-              </Tr>
-            </Thead>
-            <Tbody maxW="100%">
-              {questions.map(
-                ({ id, question, isEnabled, answerAlternatives }) => (
-                  <Tr key={id} opacity={!isEnabled ? 0.5 : undefined}>
-                    <Td>
-                      <Text isTruncated>
-                        {question.slice(0, 70) +
-                          (question.length > 70 ? "..." : "")}
-                      </Text>
-                    </Td>
-                    <Td w={1}>
-                      <Tooltip
-                        label={
-                          <Stack spacing={1}>
-                            {answerAlternatives.map((a) => (
-                              <Box key={a.id}>
-                                {a.text} {a.isCorrect ? "(rätt)" : "(fel)"}
-                              </Box>
-                            ))}
-                          </Stack>
-                        }
-                      >
-                        <span>
-                          {answerAlternatives.length} (
-                          {answerAlternatives.filter((a) => a.isCorrect).length}
-                          )
-                        </span>
-                      </Tooltip>
-                    </Td>
-                    <Td p={0} w={1}>
-                      <Form method="post">
-                        <input type="hidden" name="questionId" value={id} />
-                        <IconButton
-                          aria-label="Inaktivera"
-                          size="sm"
-                          type="submit"
-                          variant="ghost"
-                          icon={<FontAwesomeIcon icon={faEyeSlash} />}
-                        />
-                      </Form>
-                    </Td>
-                  </Tr>
-                )
-              )}
-            </Tbody>
-          </Table>
-        </TableContainer>
-      </Stack>
+      <TableContainer>
+        <Table size="sm">
+          <Thead>
+            <Tr>
+              <Th>Fråga</Th>
+              <Th>Alternativ (rätt)</Th>
+              <Th />
+            </Tr>
+          </Thead>
+          <Tbody maxW="100%">
+            {questions.map(
+              ({ id, question, isEnabled, answerAlternatives }) => (
+                <Tr key={id} opacity={!isEnabled ? 0.5 : undefined}>
+                  <Td>
+                    <Text isTruncated>
+                      {question.slice(0, 70) +
+                        (question.length > 70 ? "..." : "")}
+                    </Text>
+                  </Td>
+                  <Td w={1}>
+                    <Tooltip
+                      label={
+                        <Stack spacing={1}>
+                          {answerAlternatives.map((a) => (
+                            <Box key={a.id}>
+                              {a.text} {a.isCorrect ? "(rätt)" : "(fel)"}
+                            </Box>
+                          ))}
+                        </Stack>
+                      }
+                    >
+                      <span>
+                        {answerAlternatives.length} (
+                        {answerAlternatives.filter((a) => a.isCorrect).length})
+                      </span>
+                    </Tooltip>
+                  </Td>
+                  <Td p={0} w={1}>
+                    <Form method="post">
+                      <input type="hidden" name="questionId" value={id} />
+                      <IconButton
+                        aria-label="Inaktivera"
+                        size="sm"
+                        type="submit"
+                        variant="ghost"
+                        icon={<FontAwesomeIcon icon={faEyeSlash} />}
+                      />
+                    </Form>
+                  </Td>
+                </Tr>
+              )
+            )}
+          </Tbody>
+        </Table>
+      </TableContainer>
     </Container>
   );
 }

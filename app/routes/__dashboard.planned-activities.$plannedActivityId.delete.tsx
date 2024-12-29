@@ -1,9 +1,11 @@
-import { Button, Container, Heading, Stack } from "@chakra-ui/react";
+import { Button, Heading } from "@chakra-ui/react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { json, redirect } from "@remix-run/node";
+import { redirect } from "@remix-run/node";
 import { Form } from "@remix-run/react";
 import { DateTime } from "luxon";
 import { authenticator } from "~/.server/auth.server";
+import { Container } from "~/components/ui/container";
+import { FormStack } from "~/components/ui/form-stack";
 import { db } from "~/db.server";
 import { getTimeZoneFromRequest } from "~/time";
 
@@ -41,21 +43,21 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     where: { id: plannedActivityId, userId },
   });
 
-  return json({ activity });
+  return { activity };
 }
 
 export default function DashboardIndex() {
   return (
-    <Container py={5}>
+    <Container>
       <Form method="post">
-        <Stack spacing={5}>
+        <FormStack>
           <Heading>Radera planerad aktivitet?</Heading>
           <div>
             <Button type="submit" colorScheme="red">
               Radera
             </Button>
           </div>
-        </Stack>
+        </FormStack>
       </Form>
     </Container>
   );

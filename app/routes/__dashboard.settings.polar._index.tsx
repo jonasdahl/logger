@@ -1,7 +1,6 @@
 import {
   Alert,
   Button,
-  Container,
   Heading,
   Stack,
   Table,
@@ -20,6 +19,7 @@ import { assertIsAdmin, authenticator } from "~/.server/auth.server";
 import { SubmitButton } from "~/components/form/submit-button";
 import { validate } from "~/components/form/validate.server";
 import { ValidatedInputField } from "~/components/form/validated-input-field";
+import { Container } from "~/components/ui/container";
 import { db } from "~/db.server";
 import { createdWebhook } from "~/polar/schemas/created-webhook";
 import { webhookInfo } from "~/polar/schemas/webhook-info";
@@ -114,7 +114,7 @@ export default function SettingsIndex() {
   const { webhook, webhooks, defaultUrl } = useLoaderData<typeof loader>();
 
   return (
-    <Container maxW="container.lg" py={5}>
+    <Container>
       <Stack spacing={5}>
         <Heading>Polar settings</Heading>
 

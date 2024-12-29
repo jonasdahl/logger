@@ -1,10 +1,7 @@
 import {
   Input as ChakraInput,
   Checkbox,
-  Container,
-  Heading,
   IconButton,
-  Stack,
   Table,
   Tbody,
   Td,
@@ -24,6 +21,9 @@ import { SubmitButton } from "~/components/form/submit-button";
 
 import { ValidatedTextareaField } from "~/components/form/textarea";
 import { validate } from "~/components/form/validate.server";
+import { H1 } from "~/components/headings";
+import { Container } from "~/components/ui/container";
+import { FormStack } from "~/components/ui/form-stack";
 import { db } from "~/db.server";
 
 const baseSchema = z.object({
@@ -81,64 +81,60 @@ export default function SettingsLawsCreate() {
   ]);
 
   return (
-    <Container maxW="container.lg" py={5}>
-      <Stack spacing={5}>
-        <Heading>Skapa fråga</Heading>
+    <Container className="flex flex-col gap-5">
+      <H1>Skapa fråga</H1>
 
-        <ValidatedForm validator={validator} method="post">
-          <Stack spacing={5}>
-            <ValidatedTextareaField label="Fråga" name="question" />
-            <Table size="sm">
-              <Tbody>
-                {alternativeIds.map((id, i) => (
-                  <Tr key={id}>
-                    <Td w={1} pr={0}>
-                      <Checkbox
-                        name={`alternatives[${id}].correct`}
-                        value="yes"
-                      />
-                    </Td>
-                    <Td>
-                      <ChakraInput
-                        placeholder={`Alternativ ${i + 1}`}
-                        name={`alternatives[${id}].text`}
-                      />
-                    </Td>
-                    <Td w={1} pl={0}>
-                      <IconButton
-                        aria-label="Ta bort"
-                        icon={<FontAwesomeIcon icon={faTrash} />}
-                        colorScheme="red"
-                        variant="ghost"
-                        onClick={() =>
-                          setAlternativeIds((ids) =>
-                            ids.filter((x) => x !== id)
-                          )
-                        }
-                      />
-                    </Td>
-                  </Tr>
-                ))}
-                <Tr>
-                  <Td colSpan={2} />
+      <ValidatedForm validator={validator} method="post">
+        <FormStack>
+          <ValidatedTextareaField label="Fråga" name="question" />
+          <Table size="sm">
+            <Tbody>
+              {alternativeIds.map((id, i) => (
+                <Tr key={id}>
+                  <Td w={1} pr={0}>
+                    <Checkbox
+                      name={`alternatives[${id}].correct`}
+                      value="yes"
+                    />
+                  </Td>
+                  <Td>
+                    <ChakraInput
+                      placeholder={`Alternativ ${i + 1}`}
+                      name={`alternatives[${id}].text`}
+                    />
+                  </Td>
                   <Td w={1} pl={0}>
                     <IconButton
-                      aria-label="Lägg till"
-                      icon={<FontAwesomeIcon icon={faPlus} />}
-                      colorScheme="green"
+                      aria-label="Ta bort"
+                      icon={<FontAwesomeIcon icon={faTrash} />}
+                      colorScheme="red"
                       variant="ghost"
-                      onClick={() => setAlternativeIds((ids) => [...ids, v4()])}
+                      onClick={() =>
+                        setAlternativeIds((ids) => ids.filter((x) => x !== id))
+                      }
                     />
                   </Td>
                 </Tr>
-              </Tbody>
-            </Table>
-            <div>
-              <SubmitButton>Skapa</SubmitButton>
-            </div>
-          </Stack>
-        </ValidatedForm>
-      </Stack>
+              ))}
+              <Tr>
+                <Td colSpan={2} />
+                <Td w={1} pl={0}>
+                  <IconButton
+                    aria-label="Lägg till"
+                    icon={<FontAwesomeIcon icon={faPlus} />}
+                    colorScheme="green"
+                    variant="ghost"
+                    onClick={() => setAlternativeIds((ids) => [...ids, v4()])}
+                  />
+                </Td>
+              </Tr>
+            </Tbody>
+          </Table>
+          <div>
+            <SubmitButton>Skapa</SubmitButton>
+          </div>
+        </FormStack>
+      </ValidatedForm>
     </Container>
   );
 }

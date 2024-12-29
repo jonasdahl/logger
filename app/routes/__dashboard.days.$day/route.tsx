@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  Container,
   HStack,
   Heading,
   LinkBox,
@@ -18,7 +17,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { LoaderFunctionArgs } from "@remix-run/node";
-import { json } from "@remix-run/node";
 import {
   Form,
   Link as RemixLink,
@@ -29,6 +27,7 @@ import { DateTime } from "luxon";
 import { authenticator } from "~/.server/auth.server";
 import { ButtonLink } from "~/components/button-link";
 import { IconButtonLink } from "~/components/icon-button-link";
+import { Container } from "~/components/ui/container";
 import { InlineLink } from "~/components/ui/inline-link";
 import { db } from "~/db.server";
 import { ShowDayDocument } from "~/graphql/generated/documents";
@@ -67,13 +66,13 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     variables: { date: params.day },
   });
 
-  return json({
+  return {
     dayStart: dayStart.toISO(),
     dayEnd: dayEnd.toISO(),
     timeZone,
     polarEntries: user.polarExercises,
     data: res.data,
-  });
+  };
 }
 
 export default function DashboardIndex() {
@@ -89,7 +88,7 @@ export default function DashboardIndex() {
   const isSmallScreen = useBreakpointValue([true, true, false]);
 
   return (
-    <Container py={5} maxW="container.md">
+    <Container>
       <Stack spacing={5}>
         <HStack>
           <ButtonLink

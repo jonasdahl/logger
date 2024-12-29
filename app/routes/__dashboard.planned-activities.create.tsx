@@ -1,4 +1,4 @@
-import { Container, Heading, Stack } from "@chakra-ui/react";
+import { Heading, Stack } from "@chakra-ui/react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { useLoaderData, useSearchParams } from "@remix-run/react";
@@ -12,6 +12,7 @@ import { SubmitButton } from "~/components/form/submit-button";
 import { ValidatedTextareaField } from "~/components/form/textarea";
 import { validate } from "~/components/form/validate.server";
 import { ValidatedInputField } from "~/components/form/validated-input-field";
+import { Container } from "~/components/ui/container";
 import { db } from "~/db.server";
 import { getTimeZoneFromRequest } from "~/time";
 
@@ -76,7 +77,7 @@ export default function CreatePlannedActivity() {
   const dateFromParams = searchParams.get("date");
 
   return (
-    <Container py={5}>
+    <Container>
       <ValidatedForm validator={createPlannedActivityValidator} method="post">
         <Stack spacing={5}>
           <Heading>Skapa planerad aktivitet</Heading>

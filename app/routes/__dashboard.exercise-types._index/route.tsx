@@ -1,6 +1,5 @@
 import {
   Button,
-  Container,
   HStack,
   Heading,
   Spacer,
@@ -28,6 +27,7 @@ import { gql } from "~/graphql/graphql.server";
 
 import { DateTime } from "luxon";
 import { ButtonLink } from "~/components/button-link";
+import { Container } from "~/components/ui/container";
 import { db } from "~/db.server";
 
 const schema = z.object({ id: z.string() });
@@ -68,7 +68,7 @@ export default function Activity() {
   const data = useLoaderData<typeof loader>();
 
   return (
-    <Container py={5} maxW="container.xl">
+    <Container>
       <Stack spacing={5}>
         <HStack>
           <Heading as="h1">Övningstyper</Heading>

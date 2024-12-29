@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  Container,
   FormControl,
   FormLabel,
   HStack,
@@ -25,6 +24,7 @@ import { ButtonLink } from "~/components/button-link";
 import { ValidatedSelectField } from "~/components/form/select";
 import { SubmitButton } from "~/components/form/submit-button";
 import { validate } from "~/components/form/validate.server";
+import { Container } from "~/components/ui/container";
 import { InlineLink } from "~/components/ui/inline-link";
 import { db } from "~/db.server";
 import {
@@ -160,7 +160,7 @@ export default function Activity() {
   const formRef = useRef<HTMLFormElement>(null);
 
   return (
-    <Container py={5} maxW="container.md">
+    <Container>
       <HiddenReturnToInput />
       <ValidatedForm formRef={formRef} method="post" validator={validator}>
         <Stack spacing={5}>
