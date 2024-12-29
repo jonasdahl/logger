@@ -34,7 +34,7 @@ export default function DashboardIndex() {
             key={type.cursor}
             variant="outline"
           >
-            {type.node?.name}
+            <span className="truncate">{type.node?.name}</span>
           </ButtonLink>
         ))}
       </div>
