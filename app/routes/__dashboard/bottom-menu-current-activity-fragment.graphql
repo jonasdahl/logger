@@ -1,0 +1,6 @@
+fragment BottomMenuCurrentActivity on Activity {
+  __typename
+  ... on Exercise {
+    id
+  }
+}

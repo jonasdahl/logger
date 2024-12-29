@@ -3,12 +3,16 @@ import { config } from "@fortawesome/fontawesome-svg-core";
 import faStyles from "@fortawesome/fontawesome-svg-core/styles.css?url";
 import type { LinksFunction, MetaFunction } from "@remix-run/node";
 import {
+  isRouteErrorResponse,
   Links,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
+  useRouteError,
 } from "@remix-run/react";
+import { H1 } from "./components/headings";
+import { BottomMenu } from "./routes/__dashboard/bottom-menu";
 import styles from "./tailwind.css?url";
 
 config.autoAddCss = false;
@@ -38,6 +42,35 @@ export default function App() {
           <Outlet />
           <ColorModeScript />
         </ChakraProvider>
+        <ScrollRestoration />
+        <Scripts />
+      </body>
+    </html>
+  );
+}
+
+export function ErrorBoundary() {
+  const error = useRouteError();
+  return (
+    <html lang="en" style={{ height: "100%", minHeight: "100%" }}>
+      <head>
+        <Meta />
+        <Links />
+      </head>
+      <body style={{ height: "100%", minHeight: "100%" }}>
+        <div className="container mx-auto py-6 px-4 max-w-screen-md flex flex-col gap-5">
+          <H1 className="text-2xl font-bold">Ett fel uppstod</H1>
+          <p>
+            Den här sidan verkar inte vara tillgänglig just nu. Försök igen
+            senare.
+          </p>
+          {isRouteErrorResponse(error) ? (
+            <p>
+              Felkod: {error.status || -1} - {error.statusText || "Okänt fel"}
+            </p>
+          ) : null}
+        </div>
+        <BottomMenu />
         <ScrollRestoration />
         <Scripts />
       </body>

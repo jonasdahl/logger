@@ -4,9 +4,6 @@ query Dashboard {
   }
 
   currentActivity {
-    __typename
-    ... on Exercise {
-      id
-    }
+    ...BottomMenuCurrentActivity
   }
 }
