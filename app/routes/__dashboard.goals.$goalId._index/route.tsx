@@ -113,6 +113,10 @@ export default function CreateTest() {
           <div>
             <span className="font-bold">Antal vilodagar hittills:</span>{" "}
             {goal.currentDaysOfRest}
+            <br />
+            <span className="font-bold">Mål:</span> minst{" "}
+            {goal.targetDaysOfRest}{" "}
+            {goal.targetDaysOfRest === 1 ? "dag" : "dagar"}
           </div>
         ) : null}
 
@@ -120,6 +124,20 @@ export default function CreateTest() {
           <div>
             <span className="font-bold">Antal träningsdagar hittills:</span>{" "}
             {goal.currentDaysOfWork}
+            <br />
+            <span className="font-bold">Mål:</span> minst{" "}
+            {goal.targetDaysOfWork}{" "}
+            {goal.targetDaysOfWork === 1 ? "dag" : "dagar"}
+          </div>
+        ) : null}
+
+        {goal.__typename === "GoalPerformExerciseType" ? (
+          <div>
+            <span className="font-bold">Antal dagar hittills:</span>{" "}
+            {goal.currentDayCount}
+            <br />
+            <span className="font-bold">Mål:</span> minst {goal.targetDayCount}{" "}
+            {goal.targetDayCount === 1 ? "dag" : "dagar"}
           </div>
         ) : null}
       </div>

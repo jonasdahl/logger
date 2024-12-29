@@ -11,9 +11,15 @@ query GoalDetails($goalId: ID!) {
     }
     ... on GoalDayOfRest {
       currentDaysOfRest
+      targetDaysOfRest
     }
     ... on GoalDayOfWork {
       currentDaysOfWork
+      targetDaysOfWork
+    }
+    ... on GoalPerformExerciseType {
+      targetDayCount
+      currentDayCount
     }
   }
 }
