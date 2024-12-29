@@ -1,6 +1,6 @@
 import { Container, Heading, Stack } from "@chakra-ui/react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { json, redirect } from "@remix-run/node";
+import { redirect } from "@remix-run/node";
 import { useLoaderData, useSearchParams } from "@remix-run/react";
 import { withZod } from "@remix-validated-form/with-zod";
 import { DateTime } from "luxon";
@@ -22,12 +22,12 @@ export const createPlannedActivityValidator = withZod(
     comment: z.string(),
     primaryPurposeId: z
       .string()
-      .transform((s) => (s === "null" ? undefined : s))
-      .optional(),
+      .optional()
+      .transform((s) => (s === "null" ? undefined : s || undefined)),
     secondaryPurposeId: z
       .string()
-      .transform((s) => (s === "null" ? undefined : s))
-      .optional(),
+      .optional()
+      .transform((s) => (s === "null" ? undefined : s || undefined)),
   })
 );
 
@@ -67,7 +67,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const purposes = await db.activityPurpose.findMany({});
-  return json({ purposes });
+  return { purposes };
 }
 
 export default function CreatePlannedActivity() {

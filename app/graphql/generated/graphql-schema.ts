@@ -293,6 +293,7 @@ type Query {
   me: User
   timeZone: String!
   today: Day!
+  upcomingPlannedExercise: PlannedExercise
 }
 
 type Travel implements ActivityBase {

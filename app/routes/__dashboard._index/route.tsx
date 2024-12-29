@@ -2,16 +2,18 @@ import { H1, H2 } from "~/components/headings";
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 import { InlineLink } from "~/components/ui/inline-link";
 
-import { faCheck } from "@fortawesome/free-solid-svg-icons";
+import { faCheck, faRunning } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
+import { DateTime } from "luxon";
 import { authenticator } from "~/.server/auth.server";
 import { ButtonLink } from "~/components/button-link";
 import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
@@ -37,6 +39,59 @@ export default function Index() {
     <div className="container mx-auto py-6 px-4 max-w-screen-md flex flex-col gap-5">
       <div className="flex flex-col gap-3">
         <H1>Översikt</H1>
+      </div>
+
+      <div>
+        {!data?.upcomingPlannedExercise ? (
+          <Alert>
+            <AlertTitle>Du har inga planerade pass</AlertTitle>
+            <AlertDescription>
+              <InlineLink
+                to={`/planned-activities/create?date=${DateTime.now().toFormat(
+                  "yyyy-MM-dd"
+                )}`}
+              >
+                Skapa ett nytt
+              </InlineLink>{" "}
+              för att planera ditt nästa träningspass.
+            </AlertDescription>
+          </Alert>
+        ) : (
+          <Card className="p-4">
+            <CardHeader>
+              <CardTitle>
+                {[
+                  data.upcomingPlannedExercise.primaryPurpose?.label,
+                  data.upcomingPlannedExercise.secondaryPurpose?.label,
+                ]
+                  .filter(Boolean)
+                  .join(" och ")}
+              </CardTitle>
+              <CardDescription>
+                Planerat pass{" "}
+                {DateTime.fromISO(data.upcomingPlannedExercise.start) <
+                DateTime.now()
+                  ? "idag"
+                  : DateTime.fromISO(
+                      data.upcomingPlannedExercise.start
+                    ).toRelative({ locale: "sv-SE", style: "long" })}
+              </CardDescription>
+            </CardHeader>
+            <CardFooter className="flex flex-row gap-3 justify-between">
+              <ButtonLink
+                to={`/planned-activities/${data.upcomingPlannedExercise.id}`}
+                variant="outline"
+              >
+                Visa
+              </ButtonLink>
+              <ButtonLink
+                to={`/planned-activities/${data.upcomingPlannedExercise.id}`}
+              >
+                Starta
+              </ButtonLink>
+            </CardFooter>
+          </Card>
+        )}
       </div>
 
       <div className="flex flex-col gap-3">
@@ -76,27 +131,31 @@ export default function Index() {
                     </CardTitle>
                     {goal.__typename === "GoalDayOfRest" ? (
                       <CardDescription className="text-nowrap">
-                        {goal.currentDaysOfRest} / {goal.targetDaysOfRest}
+                        {goal.currentDaysOfRest} av {goal.targetDaysOfRest}
                       </CardDescription>
                     ) : null}
                     {goal.__typename === "GoalDayOfWork" ? (
                       <CardDescription className="text-nowrap">
-                        {goal.currentDaysOfWork} / {goal.targetDaysOfWork}
+                        {goal.currentDaysOfWork} av {goal.targetDaysOfWork}
                       </CardDescription>
                     ) : null}
                     {goal.__typename === "GoalPerformExerciseType" ? (
                       <CardDescription className="text-nowrap">
-                        {goal.currentDayCount} / {goal.targetDayCount}
+                        {goal.currentDayCount} av {goal.targetDayCount}
                       </CardDescription>
                     ) : null}
                   </CardHeader>
 
                   <div className="w-6 flex flex-row items-center justify-center">
                     {goal.currentProgress && goal.currentProgress >= 1 ? (
-                      <div className="flex flex-col justify-center items-center self-stretch text-green-600">
+                      <span className="text-green-600">
                         <FontAwesomeIcon icon={faCheck} />
-                      </div>
-                    ) : null}
+                      </span>
+                    ) : (
+                      <span className="text-yellow-600">
+                        <FontAwesomeIcon icon={faRunning} />
+                      </span>
+                    )}
                   </div>
                 </div>
 

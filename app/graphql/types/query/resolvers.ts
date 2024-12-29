@@ -281,4 +281,23 @@ export const queryResolvers: QueryResolvers = {
     }
     return db.goal.findFirstOrThrow({ where: { id, userId } });
   },
+  upcomingPlannedExercise: async (_, __, { userId, timeZone }) => {
+    if (!userId) {
+      return null;
+    }
+    const today = DateTime.now().setZone(timeZone).startOf("day");
+    const plannedActivity = await db.plannedActivity.findFirst({
+      where: {
+        userId,
+        time: { gte: today.toJSDate() },
+        deletedAt: null,
+        generatedActivities: { none: {} },
+      },
+      orderBy: { time: "asc" },
+    });
+    if (!plannedActivity) {
+      return null;
+    }
+    return { type: "PlannedExercise", value: plannedActivity };
+  },
 };

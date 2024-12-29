@@ -3,13 +3,6 @@ import {
   Box,
   Button,
   HStack,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
   Popover,
   PopoverArrow,
   PopoverBody,
@@ -29,6 +22,14 @@ import { ButtonLink } from "~/components/button-link";
 import { ValidatedSelectField } from "~/components/form/select";
 import { SubmitButton } from "~/components/form/submit-button";
 import { ValidatedTextareaField } from "~/components/form/textarea";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "~/components/ui/dialog";
+import { FormStack } from "~/components/ui/form-stack";
 import { InlineLink } from "~/components/ui/inline-link";
 import type { CalendarDayFragment } from "~/graphql/generated/documents";
 import { useToggle } from "~/hooks/use-toggle";
@@ -252,66 +253,61 @@ function PlanButton({
     <>
       <Button {...props} onClick={toggle} />
       {modalOpen ? (
-        <Modal isOpen onClose={close}>
-          <ModalOverlay />
-
-          <ModalContent>
-            <ValidatedForm
-              validator={createPlannedActivityValidator}
-              method="post"
-              action={`/planned-activities/create?returnTo=${location.pathname}`}
-            >
-              <ModalHeader>
-                Planera
-                <ModalCloseButton />
-              </ModalHeader>
-              <ModalBody>
-                <input
-                  type="hidden"
-                  name="date"
-                  value={dayStart
-                    .set({ hour: 12 })
-                    .toFormat("yyyy-MM-dd'T'HH:mm")}
-                />
-                <Stack>
-                  <ValidatedSelectField
-                    label="Primärt syfte"
-                    name="primaryPurposeId"
-                    options={[
-                      { value: "null", label: "Ej valt" },
-                      ...purposes.map((purpose) => ({
-                        value: purpose.id,
-                        label: purpose.label,
-                      })),
-                    ]}
+        <Dialog open onOpenChange={(isOpen) => (!isOpen ? close() : undefined)}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Planera</DialogTitle>
+              <DialogDescription>
+                <ValidatedForm
+                  validator={createPlannedActivityValidator}
+                  method="post"
+                  action={`/planned-activities/create?returnTo=${location.pathname}`}
+                >
+                  <input
+                    type="hidden"
+                    name="date"
+                    value={dayStart
+                      .set({ hour: 12 })
+                      .toFormat("yyyy-MM-dd'T'HH:mm")}
                   />
-                  <ValidatedSelectField
-                    label="Sekundärt syfte"
-                    name="secondaryPurposeId"
-                    options={[
-                      { value: "null", label: "Ej valt" },
-                      ...purposes.map((purpose) => ({
-                        value: purpose.id,
-                        label: purpose.label,
-                      })),
-                    ]}
-                  />
-                  <ValidatedTextareaField
-                    label="Beskrivning/innehåll"
-                    name="description"
-                  />
-                  <ValidatedTextareaField
-                    label="Övriga kommentarer"
-                    name="comment"
-                  />
-                </Stack>
-              </ModalBody>
-              <ModalFooter>
-                <SubmitButton>Skapa</SubmitButton>
-              </ModalFooter>
-            </ValidatedForm>
-          </ModalContent>
-        </Modal>
+                  <FormStack>
+                    <ValidatedSelectField
+                      label="Primärt syfte"
+                      name="primaryPurposeId"
+                      options={[
+                        { value: "null", label: "Ej valt" },
+                        ...purposes.map((purpose) => ({
+                          value: purpose.id,
+                          label: purpose.label,
+                        })),
+                      ]}
+                    />
+                    <ValidatedSelectField
+                      label="Sekundärt syfte"
+                      name="secondaryPurposeId"
+                      options={[
+                        { value: "null", label: "Ej valt" },
+                        ...purposes.map((purpose) => ({
+                          value: purpose.id,
+                          label: purpose.label,
+                        })),
+                      ]}
+                    />
+                    <ValidatedTextareaField
+                      label="Beskrivning/innehåll"
+                      name="description"
+                    />
+                    <ValidatedTextareaField
+                      label="Övriga kommentarer"
+                      name="comment"
+                    />
+                  </FormStack>
+                  <SubmitButton>Skapa</SubmitButton>
+                </ValidatedForm>
+              </DialogDescription>
+            </DialogHeader>
+          </DialogContent>
+        </Dialog>
       ) : null}
     </>
   );

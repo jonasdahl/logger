@@ -19,4 +19,15 @@ query DashboardOverview {
       targetDaysOfWork
     }
   }
+
+  upcomingPlannedExercise {
+    id
+    start
+    primaryPurpose {
+      label
+    }
+    secondaryPurpose {
+      label
+    }
+  }
 }

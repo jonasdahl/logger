@@ -388,6 +388,7 @@ export type Query = {
   me: Maybe<User>;
   timeZone: Scalars['String']['output'];
   today: Day;
+  upcomingPlannedExercise: Maybe<PlannedExercise>;
 };
 
 
@@ -970,6 +971,7 @@ export type QueryResolvers<ContextType = Context, ParentType extends ResolversPa
   me: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   timeZone: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   today: Resolver<ResolversTypes['Day'], ParentType, ContextType>;
+  upcomingPlannedExercise: Resolver<Maybe<ResolversTypes['PlannedExercise']>, ParentType, ContextType>;
 };
 
 export type TravelResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Travel'] = ResolversParentTypes['Travel']> = {

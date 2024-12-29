@@ -9,6 +9,8 @@ type Query {
   game(id: ID!): ActivityGame
   timeZone: String!
 
+  upcomingPlannedExercise: PlannedExercise
+
   activities(
     first: Int
     after: String
