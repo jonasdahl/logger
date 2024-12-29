@@ -1,8 +1,5 @@
 import {
   Button,
-  HStack,
-  Heading,
-  Spacer,
   Stack,
   Table,
   TableContainer,
@@ -27,7 +24,9 @@ import { gql } from "~/graphql/graphql.server";
 
 import { DateTime } from "luxon";
 import { ButtonLink } from "~/components/button-link";
+import { H1 } from "~/components/headings";
 import { Container } from "~/components/ui/container";
+import { TitleRow } from "~/components/ui/title-row";
 import { db } from "~/db.server";
 
 const schema = z.object({ id: z.string() });
@@ -70,13 +69,13 @@ export default function Activity() {
   return (
     <Container>
       <Stack spacing={5}>
-        <HStack>
-          <Heading as="h1">Övningstyper</Heading>
-          <Spacer />
-          <div>
+        <TitleRow
+          actions={
             <ButtonLink to="/exercise-types/create">Skapa ny</ButtonLink>
-          </div>
-        </HStack>
+          }
+        >
+          <H1>Övningstyper</H1>
+        </TitleRow>
         <TableContainer>
           <Table size="sm">
             <Thead>
