@@ -131,17 +131,19 @@ export default function Index() {
                     </CardTitle>
                     {goal.__typename === "GoalDayOfRest" ? (
                       <CardDescription className="text-nowrap">
-                        {goal.currentDaysOfRest} av {goal.targetDaysOfRest}
+                        {goal.currentDaysOfRest} av {goal.targetDaysOfRest}{" "}
+                        dagar
                       </CardDescription>
                     ) : null}
                     {goal.__typename === "GoalDayOfWork" ? (
                       <CardDescription className="text-nowrap">
-                        {goal.currentDaysOfWork} av {goal.targetDaysOfWork}
+                        {goal.currentDaysOfWork} av {goal.targetDaysOfWork}{" "}
+                        dagar
                       </CardDescription>
                     ) : null}
                     {goal.__typename === "GoalPerformExerciseType" ? (
                       <CardDescription className="text-nowrap">
-                        {goal.currentDayCount} av {goal.targetDayCount}
+                        {goal.currentDayCount} av {goal.targetDayCount} dagar
                       </CardDescription>
                     ) : null}
                   </CardHeader>
