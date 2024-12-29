@@ -21,6 +21,7 @@ import {
 import { ClientOnly } from "~/components/client-only";
 import { H1, H2 } from "~/components/headings";
 import { Card } from "~/components/ui/card";
+import { TitleRow } from "~/components/ui/title-row";
 import { StatsExerciseTypeDocument } from "~/graphql/generated/documents";
 import { gql } from "~/graphql/graphql.server";
 import { cn } from "~/lib/utils";
@@ -59,25 +60,28 @@ export default function ExerciseTypeStats() {
   return (
     <div className="container max-w-screen-md px-4 mx-auto py-5">
       <div className="flex flex-col gap-5">
-        <div className="flex flex-row gap-3 justify-between">
-          <H1>{data?.exerciseType?.name}</H1>
-          <div className="border rounded-lg px-1 py-1 gap-1 flex-row flex">
-            {timeGroupOptions.map((option) => {
-              return (
-                <button
-                  key={option}
-                  className={cn(
-                    "bg-transparent hover:bg-gray-100 rounded px-2 py-1 text-sm font-bold",
-                    timeGrouping === option && "bg-gray-200"
-                  )}
-                  onClick={() => setTimeGrouping(option)}
-                >
-                  {timeGroupLabels[option]}
-                </button>
-              );
-            })}
-          </div>
-        </div>
+        <TitleRow
+          actions={
+            <div className="border rounded-lg px-1 py-1 gap-1 flex-row flex">
+              {timeGroupOptions.map((option) => {
+                return (
+                  <button
+                    key={option}
+                    className={cn(
+                      "bg-transparent hover:bg-gray-100 rounded px-2 py-1 text-sm font-bold",
+                      timeGrouping === option && "bg-gray-200"
+                    )}
+                    onClick={() => setTimeGrouping(option)}
+                  >
+                    {timeGroupLabels[option]}
+                  </button>
+                );
+              })}
+            </div>
+          }
+        >
+          <H1 className="truncate">{data?.exerciseType?.name}</H1>
+        </TitleRow>
 
         <ClientOnly>
           {() => <BarLoadChart timeGrouping={timeGrouping} />}

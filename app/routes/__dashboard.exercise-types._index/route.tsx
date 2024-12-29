@@ -95,7 +95,7 @@ export default function Activity() {
                         to={`/exercise-types/${edge.cursor}`}
                         className="font-bold"
                       >
-                        {edge.node?.name}
+                        {edge.node?.name || "-"}
                       </Link>
                     </Td>
                     <Td>
