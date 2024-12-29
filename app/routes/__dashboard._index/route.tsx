@@ -64,38 +64,40 @@ export default function Index() {
           goals.map((goal) => {
             return (
               <Card key={goal.id} className="p-4 gap-2 relative">
-                <div className="flex flex-row gap-5 justify-between">
-                  <CardHeader className="pb-0">
-                    <CardTitle>
+                <div className="flex flex-row gap-2 justify-between">
+                  <CardHeader className="pb-0 flex-1 overflow-x-hidden flex flex-row items-center gap-2 justify-between">
+                    <CardTitle className="truncate">
                       <Link
                         to={`/goals/${goal.id}`}
-                        className="after:absolute after:inset-0"
+                        className="after:absolute after:inset-0 truncate"
                       >
                         {goal.title}
                       </Link>
                     </CardTitle>
                     {goal.__typename === "GoalDayOfRest" ? (
-                      <CardDescription>
-                        Denna period: {goal.currentDaysOfRest}
+                      <CardDescription className="text-nowrap">
+                        {goal.currentDaysOfRest} / {goal.targetDaysOfRest}
                       </CardDescription>
                     ) : null}
                     {goal.__typename === "GoalDayOfWork" ? (
-                      <CardDescription>
-                        Denna period: {goal.currentDaysOfWork}
+                      <CardDescription className="text-nowrap">
+                        {goal.currentDaysOfWork} / {goal.targetDaysOfWork}
                       </CardDescription>
                     ) : null}
                     {goal.__typename === "GoalPerformExerciseType" ? (
-                      <CardDescription>
-                        Denna period: {goal.currentDayCount}
+                      <CardDescription className="text-nowrap">
+                        {goal.currentDayCount} / {goal.targetDayCount}
                       </CardDescription>
                     ) : null}
                   </CardHeader>
 
-                  {goal.currentProgress && goal.currentProgress >= 1 ? (
-                    <div className="flex flex-col justify-center items-center self-stretch text-green-600">
-                      <FontAwesomeIcon icon={faCheck} />
-                    </div>
-                  ) : null}
+                  <div className="w-6 flex flex-row items-center justify-center">
+                    {goal.currentProgress && goal.currentProgress >= 1 ? (
+                      <div className="flex flex-col justify-center items-center self-stretch text-green-600">
+                        <FontAwesomeIcon icon={faCheck} />
+                      </div>
+                    ) : null}
+                  </div>
                 </div>
 
                 {typeof goal.currentProgress === "number" ? (

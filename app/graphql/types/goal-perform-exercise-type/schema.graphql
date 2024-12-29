@@ -3,6 +3,7 @@ type GoalPerformExerciseType implements GoalBase {
   title: String!
   currentProgress: Float!
   currentDayCount: Int!
+  targetDayCount: Int!
   currentPeriodStart: DateTime!
   currentPeriodEnd: DateTime!
 }

@@ -5,4 +5,5 @@ type GoalDayOfWork implements GoalBase {
   currentPeriodStart: DateTime!
   currentPeriodEnd: DateTime!
   currentDaysOfWork: Int!
+  targetDaysOfWork: Int!
 }

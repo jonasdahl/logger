@@ -43,4 +43,5 @@ export const goalDayOfWorkResolvers: GoalDayOfWorkResolvers = {
     }
     return getDayCount(goal, DateTime.now().setZone(timeZone), userId);
   },
+  targetDaysOfWork: (goal) => goal.typeDayOfWorkNumberOfDays || 0,
 };

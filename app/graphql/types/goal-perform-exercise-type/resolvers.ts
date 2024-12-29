@@ -59,4 +59,5 @@ export const goalPerformExerciseTypeResolvers: GoalPerformExerciseTypeResolvers 
       }
       return getDayCount(userId, goal, timeZone);
     },
+    targetDayCount: (goal) => goal.typePerformExerciseTypeNumberOfDays || 0,
   };

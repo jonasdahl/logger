@@ -8,12 +8,15 @@ query DashboardOverview {
     }
     ... on GoalPerformExerciseType {
       currentDayCount
+      targetDayCount
     }
     ... on GoalDayOfRest {
       currentDaysOfRest
+      targetDaysOfRest
     }
     ... on GoalDayOfWork {
       currentDaysOfWork
+      targetDaysOfWork
     }
   }
 }

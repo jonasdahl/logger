@@ -2,7 +2,6 @@ import {
   Alert,
   AlertDescription,
   Container,
-  Heading,
   Stack,
   Tab,
   TabList,
@@ -33,6 +32,7 @@ import {
   XYChart,
 } from "~/components/charts/xy-chart.client";
 import { ClientOnly } from "~/components/client-only";
+import { H1, H2 } from "~/components/headings";
 import { InlineLink } from "~/components/ui/inline-link";
 import { db } from "~/db.server";
 
@@ -119,8 +119,8 @@ export default function PolarExercise() {
   return (
     <Container py={5} maxW="container.xl">
       <Stack spacing={5}>
-        <Heading>Träning från Polar</Heading>
-        <Heading size="md">Puls</Heading>
+        <H1>Träning från Polar</H1>
+        <H2>Puls</H2>
         {!maxHeartRate ? (
           <Alert status="warning">
             <AlertDescription>

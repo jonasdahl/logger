@@ -1,7 +1,6 @@
 import {
   Button,
   Checkbox,
-  Heading,
   Stack,
   Table,
   TableContainer,
@@ -24,6 +23,7 @@ import { authenticator } from "~/.server/auth.server";
 import { SubmitButton } from "~/components/form/submit-button";
 import { validate } from "~/components/form/validate.server";
 import { ValidatedInputField } from "~/components/form/validated-input-field";
+import { H1, H2 } from "~/components/headings";
 import { Container } from "~/components/ui/container";
 import { db } from "~/db.server";
 import { FogisClient } from "~/fogis/client.server";
@@ -106,9 +106,9 @@ export default function Fogis() {
       <Container>
         <Form method="post" action="/connections/fogis/save">
           <Stack spacing={6}>
-            <Heading>Granska import</Heading>
+            <H1>Granska import</H1>
             <Stack>
-              <Heading size="md">Matcher som kommer läggas till</Heading>
+              <H2>Matcher som kommer läggas till</H2>
               {actionData.toAdd.length === 0 ? (
                 <div>Inga nya matcher.</div>
               ) : (
@@ -146,7 +146,7 @@ export default function Fogis() {
             </Stack>
 
             <Stack>
-              <Heading size="md">Matcher som kommer tas bort</Heading>
+              <H2>Matcher som kommer tas bort</H2>
               {actionData.toDelete.length === 0 ? (
                 <div>Inga matcher tas bort.</div>
               ) : (
@@ -194,7 +194,7 @@ export default function Fogis() {
   return (
     <Container>
       <Stack spacing={5}>
-        <Heading>Importera från Fogis</Heading>
+        <H1>Importera från Fogis</H1>
         <div>
           Fyll i dina inloggningsuppgifter till Fogis nedan så importeras dina
           matcher automatiskt.

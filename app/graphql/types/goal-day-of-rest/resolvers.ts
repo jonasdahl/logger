@@ -47,4 +47,5 @@ export const goalDayOfRestResolvers: GoalDayOfRestResolvers = {
     }
     return getDayCount(goal, DateTime.now().setZone(timeZone), userId);
   },
+  targetDaysOfRest: (goal) => goal.typeDayOfRestNumberOfDays || 0,
 };

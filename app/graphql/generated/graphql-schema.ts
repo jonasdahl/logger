@@ -202,6 +202,7 @@ type GoalDayOfRest implements GoalBase {
   currentPeriodStart: DateTime!
   currentProgress: Float!
   id: ID!
+  targetDaysOfRest: Int!
   title: String!
 }
 
@@ -211,6 +212,7 @@ type GoalDayOfWork implements GoalBase {
   currentPeriodStart: DateTime!
   currentProgress: Float!
   id: ID!
+  targetDaysOfWork: Int!
   title: String!
 }
 
@@ -228,6 +230,7 @@ type GoalPerformExerciseType implements GoalBase {
   currentPeriodStart: DateTime!
   currentProgress: Float!
   id: ID!
+  targetDayCount: Int!
   title: String!
 }
 

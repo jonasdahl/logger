@@ -5,4 +5,5 @@ type GoalDayOfRest implements GoalBase {
   currentPeriodStart: DateTime!
   currentPeriodEnd: DateTime!
   currentDaysOfRest: Int!
+  targetDaysOfRest: Int!
 }

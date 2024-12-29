@@ -283,6 +283,7 @@ export type GoalDayOfRest = GoalBase & {
   currentPeriodStart: Scalars['DateTime']['output'];
   currentProgress: Scalars['Float']['output'];
   id: Scalars['ID']['output'];
+  targetDaysOfRest: Scalars['Int']['output'];
   title: Scalars['String']['output'];
 };
 
@@ -293,6 +294,7 @@ export type GoalDayOfWork = GoalBase & {
   currentPeriodStart: Scalars['DateTime']['output'];
   currentProgress: Scalars['Float']['output'];
   id: Scalars['ID']['output'];
+  targetDaysOfWork: Scalars['Int']['output'];
   title: Scalars['String']['output'];
 };
 
@@ -312,6 +314,7 @@ export type GoalPerformExerciseType = GoalBase & {
   currentPeriodStart: Scalars['DateTime']['output'];
   currentProgress: Scalars['Float']['output'];
   id: Scalars['ID']['output'];
+  targetDayCount: Scalars['Int']['output'];
   title: Scalars['String']['output'];
 };
 
@@ -875,6 +878,7 @@ export type GoalDayOfRestResolvers<ContextType = Context, ParentType extends Res
   currentPeriodStart: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   currentProgress: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  targetDaysOfRest: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   title: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -885,6 +889,7 @@ export type GoalDayOfWorkResolvers<ContextType = Context, ParentType extends Res
   currentPeriodStart: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   currentProgress: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  targetDaysOfWork: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   title: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -904,6 +909,7 @@ export type GoalPerformExerciseTypeResolvers<ContextType = Context, ParentType e
   currentPeriodStart: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   currentProgress: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  targetDayCount: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   title: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
