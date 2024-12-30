@@ -8,8 +8,6 @@ import {
   MenuList,
   Spacer,
   Stack,
-  Wrap,
-  WrapItem,
 } from "@chakra-ui/react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
@@ -245,22 +243,20 @@ export default function Activity() {
     <Container>
       <HiddenReturnToInput />
       <Stack spacing={5}>
-        <Wrap align="center">
-          <WrapItem>
-            <H1>Träning</H1>
-          </WrapItem>
-          <Spacer />
-          {start ? (
-            <WrapItem>
+        <TitleRow
+          actions={
+            start ? (
               <ButtonLink
-                variant="link"
+                variant="outline"
                 to={`/days/${DateTime.fromISO(start).toFormat("yyyy-MM-dd")}`}
               >
                 Visa dag
               </ButtonLink>
-            </WrapItem>
-          ) : null}
-        </Wrap>
+            ) : null
+          }
+        >
+          <H1>Träning</H1>
+        </TitleRow>
 
         {data?.exercise?.fromPlannedActivity ? (
           <div className="flex flex-col gap-3">

@@ -1,6 +1,5 @@
 import {
   Box,
-  Spacer,
   Stack,
   Tab,
   TabList,
@@ -12,11 +11,8 @@ import {
   Td,
   Tooltip,
   Tr,
-  Wrap,
-  WrapItem,
 } from "@chakra-ui/react";
 import type { LoaderFunctionArgs, SerializeFrom } from "@remix-run/node";
-import { json } from "@remix-run/node";
 import { authenticator } from "~/.server/auth.server";
 import { HiddenReturnToInput } from "~/services/return-to";
 
@@ -32,6 +28,7 @@ import {
 import { ClientOnly } from "~/components/client-only";
 import { H1 } from "~/components/headings";
 import { Container } from "~/components/ui/container";
+import { TitleRow } from "~/components/ui/title-row";
 import { GameDocument } from "~/graphql/generated/documents";
 import { gql } from "~/graphql/graphql.server";
 
@@ -45,7 +42,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     variables: { gameId },
   });
 
-  return json(res.data);
+  return res.data;
 }
 
 export default function Game() {
@@ -58,22 +55,20 @@ export default function Game() {
     <Container>
       <HiddenReturnToInput />
       <Stack spacing={5}>
-        <Wrap align="center">
-          <WrapItem>
-            <H1>Match</H1>
-          </WrapItem>
-          <Spacer />
-          {start ? (
-            <WrapItem>
+        <TitleRow
+          actions={
+            start ? (
               <ButtonLink
-                variant="link"
+                variant="outline"
                 to={`/days/${DateTime.fromISO(start).toFormat("yyyy-MM-dd")}`}
               >
                 Visa dag
               </ButtonLink>
-            </WrapItem>
-          ) : null}
-        </Wrap>
+            ) : null
+          }
+        >
+          <H1>Match</H1>
+        </TitleRow>
 
         <Tabs>
           <TabList>
