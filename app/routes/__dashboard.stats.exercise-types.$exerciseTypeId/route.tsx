@@ -138,31 +138,39 @@ function OneRepMaxChart({ timeGrouping }: { timeGrouping: TimeGrouping }) {
       return {
         name: typeId,
         colors: [colors[i % colors.length], colors[(2 * i) % colors.length]],
-        data: intervals.map((interval) => {
-          const amountsInInterval = loadAmounts.filter((loadAmount) =>
-            interval.contains(DateTime.fromISO(loadAmount.dayStart))
-          );
-
-          return {
-            interval,
-            max: !amountsInInterval.length
-              ? null
-              : Math.max(...amountsInInterval.map((l) => l.value)),
-            oneRepMax: !amountsInInterval.length
-              ? null
-              : Math.max(
-                  ...amountsInInterval.map(
-                    (l) =>
-                      l.value *
-                      (1 +
-                        (l.duration.__typename === "ExerciseDurationRepetitions"
-                          ? l.duration.repetitions
-                          : 0) /
-                          30)
-                  )
-                ),
-          };
-        }),
+        data: intervals
+          .map((interval) => {
+            const amountsInInterval = loadAmounts.filter((loadAmount) =>
+              interval.contains(DateTime.fromISO(loadAmount.dayStart))
+            );
+            return { interval, amountsInInterval };
+          })
+          .filter(
+            ({ amountsInInterval }, i, arr) =>
+              i === 0 || amountsInInterval.length || i === arr.length - 1
+          )
+          .map(({ interval, amountsInInterval }) => {
+            return {
+              interval,
+              max: !amountsInInterval.length
+                ? null
+                : Math.max(...amountsInInterval.map((l) => l.value)),
+              oneRepMax: !amountsInInterval.length
+                ? null
+                : Math.max(
+                    ...amountsInInterval.map(
+                      (l) =>
+                        l.value *
+                        (1 +
+                          (l.duration.__typename ===
+                          "ExerciseDurationRepetitions"
+                            ? l.duration.repetitions
+                            : 0) /
+                            30)
+                    )
+                  ),
+            };
+          }),
       };
     }
   );
@@ -174,6 +182,10 @@ function OneRepMaxChart({ timeGrouping }: { timeGrouping: TimeGrouping }) {
     tickLength: 0,
     gridColorDark: "",
   });
+
+  if (!allSeries.length) {
+    return null;
+  }
 
   return (
     <div className="flex flex-col gap-3">
@@ -333,6 +345,10 @@ function BarLoadChart({ timeGrouping }: { timeGrouping: TimeGrouping }) {
     tickLength: 0,
     gridColorDark: "",
   });
+
+  if (!series.length) {
+    return null;
+  }
 
   return (
     <div className="flex flex-col gap-3">
