@@ -1,4 +1,4 @@
-import { HStack, Heading, SimpleGrid, Spacer, Wrap } from "@chakra-ui/react";
+import { HStack, SimpleGrid, Spacer, Wrap } from "@chakra-ui/react";
 import {
   faChevronLeft,
   faChevronRight,
@@ -10,6 +10,7 @@ import { DateTime, Interval } from "luxon";
 import { z } from "zod";
 import { authenticator } from "~/.server/auth.server";
 import { ButtonLink } from "~/components/button-link";
+import { H2 } from "~/components/headings";
 import { IconButtonLink } from "~/components/icon-button-link";
 import { Container } from "~/components/ui/container";
 import { db } from "~/db.server";
@@ -97,9 +98,9 @@ export default function DashboardIndex() {
             </IconButtonLink>
           </div>
           <Spacer />
-          <Heading as="h1" size="sm" textTransform="capitalize">
+          <H2 className="capitalize">
             {month.start!.toFormat("LLLL yyyy", { locale: "sv-SE" })}
-          </Heading>
+          </H2>
           <Spacer />
           <div>
             <IconButtonLink

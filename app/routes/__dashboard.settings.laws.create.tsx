@@ -1,20 +1,10 @@
-import {
-  Input as ChakraInput,
-  Checkbox,
-  IconButton,
-  Table,
-  Tbody,
-  Td,
-  Tr,
-} from "@chakra-ui/react";
 import { faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { json, redirect } from "@remix-run/node";
+import { redirect } from "@remix-run/node";
 import { withZod } from "@remix-validated-form/with-zod";
 import { useState } from "react";
 import { ValidatedForm } from "remix-validated-form";
-import { v4 } from "uuid";
 import { z } from "zod";
 import { assertIsAdmin, authenticator } from "~/.server/auth.server";
 import { SubmitButton } from "~/components/form/submit-button";
@@ -22,8 +12,11 @@ import { SubmitButton } from "~/components/form/submit-button";
 import { ValidatedTextareaField } from "~/components/form/textarea";
 import { validate } from "~/components/form/validate.server";
 import { H1 } from "~/components/headings";
+import { Button } from "~/components/ui/button";
+import { Checkbox } from "~/components/ui/checkbox";
 import { Container } from "~/components/ui/container";
 import { FormStack } from "~/components/ui/form-stack";
+import { Input } from "~/components/ui/input";
 import { db } from "~/db.server";
 
 const baseSchema = z.object({
@@ -46,7 +39,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     failureRedirect: "/login",
   });
   await assertIsAdmin(sessionUser.id);
-  return json({});
+  return {};
 }
 
 export async function action({ request, params }: ActionFunctionArgs) {
@@ -74,10 +67,10 @@ export async function action({ request, params }: ActionFunctionArgs) {
 
 export default function SettingsLawsCreate() {
   const [alternativeIds, setAlternativeIds] = useState([
-    v4(),
-    v4(),
-    v4(),
-    v4(),
+    Math.random().toString(),
+    Math.random().toString(),
+    Math.random().toString(),
+    Math.random().toString(),
   ]);
 
   return (
@@ -87,49 +80,50 @@ export default function SettingsLawsCreate() {
       <ValidatedForm validator={validator} method="post">
         <FormStack>
           <ValidatedTextareaField label="Fråga" name="question" />
-          <Table size="sm">
-            <Tbody>
-              {alternativeIds.map((id, i) => (
-                <Tr key={id}>
-                  <Td w={1} pr={0}>
-                    <Checkbox
-                      name={`alternatives[${id}].correct`}
-                      value="yes"
-                    />
-                  </Td>
-                  <Td>
-                    <ChakraInput
-                      placeholder={`Alternativ ${i + 1}`}
-                      name={`alternatives[${id}].text`}
-                    />
-                  </Td>
-                  <Td w={1} pl={0}>
-                    <IconButton
-                      aria-label="Ta bort"
-                      icon={<FontAwesomeIcon icon={faTrash} />}
-                      colorScheme="red"
-                      variant="ghost"
-                      onClick={() =>
-                        setAlternativeIds((ids) => ids.filter((x) => x !== id))
-                      }
-                    />
-                  </Td>
-                </Tr>
-              ))}
-              <Tr>
-                <Td colSpan={2} />
-                <Td w={1} pl={0}>
-                  <IconButton
-                    aria-label="Lägg till"
-                    icon={<FontAwesomeIcon icon={faPlus} />}
-                    colorScheme="green"
-                    variant="ghost"
-                    onClick={() => setAlternativeIds((ids) => [...ids, v4()])}
+          <div className="flex flex-col gap-1">
+            {alternativeIds.map((id, i) => (
+              <div key={id} className="flex flex-row gap-2 items-center">
+                <label className="w-6 flex items-center justify-center">
+                  <Checkbox name={`alternatives[${id}].correct`} value="yes" />
+                </label>
+                <div className="flex-1">
+                  <Input
+                    placeholder={`Alternativ ${i + 1}`}
+                    name={`alternatives[${id}].text`}
                   />
-                </Td>
-              </Tr>
-            </Tbody>
-          </Table>
+                </div>
+                <div>
+                  <Button
+                    aria-label="Ta bort"
+                    variant="destructive-outline"
+                    onClick={() =>
+                      setAlternativeIds((ids) => ids.filter((x) => x !== id))
+                    }
+                  >
+                    <FontAwesomeIcon icon={faTrash} />
+                  </Button>
+                </div>
+              </div>
+            ))}
+            <div className="flex flex-row gap-2 items-center">
+              <div className="w-6" />
+              <div className="flex-1" />
+              <div>
+                <Button
+                  type="button"
+                  aria-label="Lägg till"
+                  onClick={() =>
+                    setAlternativeIds((ids) => [
+                      ...ids,
+                      Math.random().toString(),
+                    ])
+                  }
+                >
+                  <FontAwesomeIcon icon={faPlus} />
+                </Button>
+              </div>
+            </div>
+          </div>
           <div>
             <SubmitButton>Skapa</SubmitButton>
           </div>

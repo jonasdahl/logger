@@ -1,4 +1,3 @@
-import { Box, Card, Stack } from "@chakra-ui/react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { withZod } from "@remix-validated-form/with-zod";
@@ -8,7 +7,10 @@ import { authenticator, signUp } from "~/.server/auth.server";
 import { SubmitButton } from "~/components/form/submit-button";
 import { validate } from "~/components/form/validate.server";
 import { ValidatedInputField } from "~/components/form/validated-input-field";
-import { Container } from "~/components/ui/container";
+import { H1 } from "~/components/headings";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { FormStack } from "~/components/ui/form-stack";
+import { InlineLink } from "~/components/ui/inline-link";
 import { commitSession, getSessionFromRequest } from "~/session.server";
 
 const validator = withZod(
@@ -48,17 +50,16 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export default function Register() {
   return (
-    <Box
-      bg="blue.100"
-      h="100%"
-      display="flex"
-      alignItems="center"
-      justifyContent="center"
-    >
-      <Container className="max-w-[30rem] pb-8">
-        <Card p={4}>
+    <div className="bg-slate-100 h-full flex items-center justify-center">
+      <Card className="w-[22rem]">
+        <CardHeader>
+          <CardTitle>
+            <H1>Registrera konto</H1>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
           <ValidatedForm validator={validator} method="post">
-            <Stack spacing={5}>
+            <FormStack>
               <ValidatedInputField
                 label="E-postadress"
                 name="email"
@@ -77,10 +78,14 @@ export default function Register() {
                 autoComplete="new-password"
               />
               <SubmitButton>Skapa konto</SubmitButton>
-            </Stack>
+            </FormStack>
+            <div className="mt-4 text-center text-sm">
+              Har du redan ett konto?{" "}
+              <InlineLink to="/login">Logga in</InlineLink>
+            </div>
           </ValidatedForm>
-        </Card>
-      </Container>
-    </Box>
+        </CardContent>
+      </Card>
+    </div>
   );
 }

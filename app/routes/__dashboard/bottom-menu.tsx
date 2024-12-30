@@ -24,10 +24,10 @@ export function BottomMenu({
         <Link
           to="/actions"
           className={cn(
-            "py-3 flex flex-col items-center justify-center w-20 h-20 truncate rounded-full text-white -mt-6 -mb-6 transition-colors",
+            "py-3 flex flex-col items-center justify-center w-20 h-20 truncate rounded-lg text-white -mt-6 -mb-6 transition-colors drop-shadow",
             currentActivity?.__typename === "Exercise"
               ? "bg-green-600"
-              : "bg-blue-500"
+              : "bg-black"
           )}
         >
           <div

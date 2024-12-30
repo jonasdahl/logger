@@ -1,6 +1,5 @@
 import {
   Box,
-  Heading,
   Spacer,
   Stack,
   Tab,
@@ -31,6 +30,7 @@ import {
   XYChart,
 } from "~/components/charts/xy-chart.client";
 import { ClientOnly } from "~/components/client-only";
+import { H1 } from "~/components/headings";
 import { Container } from "~/components/ui/container";
 import { GameDocument } from "~/graphql/generated/documents";
 import { gql } from "~/graphql/graphql.server";
@@ -60,7 +60,7 @@ export default function Game() {
       <Stack spacing={5}>
         <Wrap align="center">
           <WrapItem>
-            <Heading as="h1">Match</Heading>
+            <H1>Match</H1>
           </WrapItem>
           <Spacer />
           {start ? (

@@ -1,4 +1,3 @@
-import { Heading } from "@chakra-ui/react";
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { useSearchParams } from "@remix-run/react";
@@ -10,6 +9,7 @@ import { authenticator } from "~/.server/auth.server";
 import { SubmitButton } from "~/components/form/submit-button";
 import { validate } from "~/components/form/validate.server";
 import { ValidatedInputField } from "~/components/form/validated-input-field";
+import { H1 } from "~/components/headings";
 import { Container } from "~/components/ui/container";
 import { FormStack } from "~/components/ui/form-stack";
 import { db } from "~/db.server";
@@ -39,7 +39,7 @@ export default function CreateTest() {
 
   return (
     <Container className="flex flex-col gap-5">
-      <Heading>Skapa match</Heading>
+      <H1>Skapa match</H1>
       <ValidatedForm validator={validator} method="post">
         <FormStack>
           <ValidatedInputField

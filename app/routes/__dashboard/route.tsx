@@ -23,7 +23,7 @@ export default function Dashboard() {
   return (
     <div className="pb-20">
       <div className="relative">
-        {state !== "idle" ? (
+        {state !== "idle" || true ? (
           <Progress
             colorScheme="yellow"
             bg="transparent"

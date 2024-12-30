@@ -4,7 +4,6 @@ import {
   FormControl,
   FormLabel,
   HStack,
-  Heading,
   Input,
   InputGroup,
   InputRightAddon,
@@ -24,6 +23,7 @@ import { ButtonLink } from "~/components/button-link";
 import { ValidatedSelectField } from "~/components/form/select";
 import { SubmitButton } from "~/components/form/submit-button";
 import { validate } from "~/components/form/validate.server";
+import { H1 } from "~/components/headings";
 import { Container } from "~/components/ui/container";
 import { InlineLink } from "~/components/ui/inline-link";
 import { db } from "~/db.server";
@@ -164,7 +164,7 @@ export default function Activity() {
       <HiddenReturnToInput />
       <ValidatedForm formRef={formRef} method="post" validator={validator}>
         <Stack spacing={5}>
-          <Heading as="h1">Ny övning</Heading>
+          <H1>Ny övning</H1>
           <Stack spacing={1}>
             <FormControl>
               <FormLabel>Övningstyp</FormLabel>

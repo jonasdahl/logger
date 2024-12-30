@@ -1,10 +1,7 @@
-import { Stack } from "@chakra-ui/react";
-
-import { z } from "zod";
-
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { Form, Link, useLoaderData } from "@remix-run/react";
+import { z } from "zod";
 import { authenticator } from "~/.server/auth.server";
 import {
   AmountType,
@@ -74,85 +71,79 @@ export default function Activity() {
   const data = useLoaderData<typeof loader>();
 
   return (
-    <Container>
-      <Stack spacing={5}>
-        <TitleRow
-          actions={
-            <ButtonLink to="/exercise-types/create" variant="outline">
-              Skapa ny
-            </ButtonLink>
-          }
-        >
-          <H1>Övningstyper</H1>
-        </TitleRow>
+    <Container className="flex flex-col gap-5">
+      <TitleRow
+        actions={
+          <ButtonLink to="/exercise-types/create" variant="outline">
+            Skapa ny
+          </ButtonLink>
+        }
+      >
+        <H1>Övningstyper</H1>
+      </TitleRow>
 
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="truncate">Övningstyp</TableHead>
-              <TableHead className="truncate">Mängdtyp</TableHead>
-              <TableHead className="truncate">Belastningar</TableHead>
-              <TableHead className="w-1" />
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {data?.exerciseTypes.edges.map((edge) =>
-              edge.node ? (
-                <TableRow key={edge.cursor}>
-                  <TableCell className="truncate max-w-sm">
-                    <Link
-                      to={`/exercise-types/${edge.cursor}`}
-                      className="font-bold truncate"
-                    >
-                      {edge.node?.name || "-"}
-                    </Link>
-                  </TableCell>
-                  <TableCell>
-                    {edge.node?.defaultAmountType === AmountType.Repetitions
-                      ? "Antal"
-                      : edge.node?.defaultAmountType === AmountType.Levels
-                      ? "Nivåer"
-                      : edge.node.defaultAmountType === AmountType.Time
-                      ? "Tid"
-                      : "-"}
-                  </TableCell>
-                  <TableCell>
-                    {edge.node?.loadTypes
-                      .map((load) => `${load.name} (${load.unit ?? "-"})`)
-                      .join(", ")}
-                  </TableCell>
-                  <TableCell>
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <Button variant="destructive-link" size="inline">
-                          Radera
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent>
-                        <DialogHeader>
-                          <DialogTitle>Radera "{edge.node.name}"?</DialogTitle>
-                        </DialogHeader>
-                        <DialogFooter>
-                          <Form method="post">
-                            <input
-                              type="hidden"
-                              name="id"
-                              value={edge.node.id}
-                            />
-                            <Button type="submit" variant="destructive">
-                              Radera
-                            </Button>
-                          </Form>
-                        </DialogFooter>
-                      </DialogContent>
-                    </Dialog>
-                  </TableCell>
-                </TableRow>
-              ) : null
-            )}
-          </TableBody>
-        </Table>
-      </Stack>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="truncate">Övningstyp</TableHead>
+            <TableHead className="truncate">Mängdtyp</TableHead>
+            <TableHead className="truncate">Belastningar</TableHead>
+            <TableHead className="w-1" />
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {data?.exerciseTypes.edges.map((edge) =>
+            edge.node ? (
+              <TableRow key={edge.cursor}>
+                <TableCell className="truncate max-w-sm">
+                  <Link
+                    to={`/exercise-types/${edge.cursor}`}
+                    className="font-bold truncate"
+                  >
+                    {edge.node?.name || "-"}
+                  </Link>
+                </TableCell>
+                <TableCell>
+                  {edge.node?.defaultAmountType === AmountType.Repetitions
+                    ? "Antal"
+                    : edge.node?.defaultAmountType === AmountType.Levels
+                    ? "Nivåer"
+                    : edge.node.defaultAmountType === AmountType.Time
+                    ? "Tid"
+                    : "-"}
+                </TableCell>
+                <TableCell>
+                  {edge.node?.loadTypes
+                    .map((load) => `${load.name} (${load.unit ?? "-"})`)
+                    .join(", ")}
+                </TableCell>
+                <TableCell>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button variant="destructive-link" size="inline">
+                        Radera
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Radera "{edge.node.name}"?</DialogTitle>
+                      </DialogHeader>
+                      <DialogFooter>
+                        <Form method="post">
+                          <input type="hidden" name="id" value={edge.node.id} />
+                          <Button type="submit" variant="destructive">
+                            Radera
+                          </Button>
+                        </Form>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                </TableCell>
+              </TableRow>
+            ) : null
+          )}
+        </TableBody>
+      </Table>
     </Container>
   );
 }

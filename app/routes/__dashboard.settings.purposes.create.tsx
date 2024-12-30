@@ -1,4 +1,3 @@
-import { HStack, Heading, Stack } from "@chakra-ui/react";
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { withZod } from "@remix-validated-form/with-zod";
@@ -8,7 +7,9 @@ import { assertIsAdmin, authenticator } from "~/.server/auth.server";
 import { SubmitButton } from "~/components/form/submit-button";
 import { ValidatedTextareaField } from "~/components/form/textarea";
 import { validate } from "~/components/form/validate.server";
+import { H1 } from "~/components/headings";
 import { Container } from "~/components/ui/container";
+import { FormStack } from "~/components/ui/form-stack";
 import { db } from "~/db.server";
 
 const validator = withZod(
@@ -46,24 +47,22 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export default function SettingsIndex() {
   return (
-    <Container>
-      <Stack>
-        <HStack>
-          <Heading>Skapa träningssyften</Heading>
-        </HStack>
-        <div>Lägg till en per rad nedan</div>
-        <ValidatedForm validator={validator} method="post">
-          <Stack>
-            <ValidatedTextareaField
-              label="Träningssyften (en per rad kommer skapas)"
-              name="entries"
-            />
-            <div>
-              <SubmitButton>Skapa</SubmitButton>
-            </div>
-          </Stack>
-        </ValidatedForm>
-      </Stack>
+    <Container className="flex flex-col gap-5">
+      <H1>Skapa träningssyften</H1>
+
+      <div>Lägg till en per rad nedan</div>
+
+      <ValidatedForm validator={validator} method="post">
+        <FormStack>
+          <ValidatedTextareaField
+            label="Träningssyften (ett per rad)"
+            name="entries"
+          />
+          <div>
+            <SubmitButton>Skapa</SubmitButton>
+          </div>
+        </FormStack>
+      </ValidatedForm>
     </Container>
   );
 }

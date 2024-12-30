@@ -9,7 +9,7 @@ export const InlineLink = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <Link
     ref={ref}
-    className={cn("font-bold hover:underline", className)}
+    className={cn("font-medium hover:underline", className)}
     {...props}
   >
     {props.children}

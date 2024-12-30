@@ -1,4 +1,3 @@
-import { Table, TableContainer, Tbody, Td, Tr } from "@chakra-ui/react";
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
@@ -7,6 +6,7 @@ import { ButtonLink } from "~/components/button-link";
 import { H1 } from "~/components/headings";
 import { Container } from "~/components/ui/container";
 import { InlineLink } from "~/components/ui/inline-link";
+import { Table, TableBody, TableCell, TableRow } from "~/components/ui/table";
 import { TitleRow } from "~/components/ui/title-row";
 import { db } from "~/db.server";
 
@@ -29,31 +29,33 @@ export default function SettingsIndex() {
   return (
     <Container className="flex flex-col gap-5">
       <TitleRow
-        actions={<ButtonLink to="/settings/purposes/create">Skapa</ButtonLink>}
+        actions={
+          <ButtonLink to="/settings/purposes/create" variant="outline">
+            Skapa
+          </ButtonLink>
+        }
       >
         <H1>Träningssyften</H1>
       </TitleRow>
 
-      <TableContainer>
-        <Table size="sm">
-          <Tbody>
-            {purposes.map((purpose) => (
-              <Tr key={purpose.id}>
-                <Td>
-                  <InlineLink to={`/settings/purposes/${purpose.id}`}>
-                    {purpose.label}
-                  </InlineLink>
-                </Td>
-                <Td>
-                  <InlineLink to={`/settings/purposes/${purpose.id}`}>
-                    {purpose.shortLabel}
-                  </InlineLink>
-                </Td>
-              </Tr>
-            ))}
-          </Tbody>
-        </Table>
-      </TableContainer>
+      <Table>
+        <TableBody>
+          {purposes.map((purpose) => (
+            <TableRow key={purpose.id}>
+              <TableCell>
+                <InlineLink to={`/settings/purposes/${purpose.id}`}>
+                  {purpose.label}
+                </InlineLink>
+              </TableCell>
+              <TableCell>
+                <InlineLink to={`/settings/purposes/${purpose.id}`}>
+                  {purpose.shortLabel}
+                </InlineLink>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
     </Container>
   );
 }

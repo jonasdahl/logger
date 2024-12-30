@@ -1,20 +1,16 @@
-import {
-  Box,
-  Button,
-  Card,
-  Center,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Input,
-  Stack,
-} from "@chakra-ui/react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
 import { authenticator } from "~/.server/auth.server";
-import { Container } from "~/components/ui/container";
+import { H1 } from "~/components/headings";
+import { Button } from "~/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { FormControl } from "~/components/ui/form-control";
+import { FormErrorMessage } from "~/components/ui/form-error-message";
+import { FormLabel } from "~/components/ui/form-label";
+import { FormStack } from "~/components/ui/form-stack";
 import { InlineLink } from "~/components/ui/inline-link";
+import { Input } from "~/components/ui/input";
 import { commitSession, getSessionFromRequest } from "~/session.server";
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -39,47 +35,57 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export default function Login() {
   const { error } = useLoaderData<typeof loader>();
+
   return (
-    <Box
-      bg="blue.100"
-      h="100%"
-      display="flex"
-      alignItems="center"
-      justifyContent="center"
-    >
-      <Container className="max-w-[30rem] pb-8">
-        <Card p={5}>
+    <div className="bg-slate-100 h-full flex items-center justify-center">
+      <Card className="w-[22rem]">
+        <CardHeader>
+          <CardTitle>
+            <H1>Logga in</H1>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
           <Form method="post">
-            <Stack spacing={6}>
-              <FormControl isInvalid={!!error}>
-                <FormLabel>E-postadress</FormLabel>
-                <Input autoFocus type="email" name="email" required />
-                <FormErrorMessage>
-                  Vänligen kontrollera e-postadressen.
-                </FormErrorMessage>
-              </FormControl>
-              <FormControl isInvalid={!!error}>
-                <FormLabel>Lösenord</FormLabel>
+            <FormStack>
+              <FormControl>
+                <FormLabel htmlFor="email">E-postadress</FormLabel>
                 <Input
-                  type="password"
-                  name="password"
-                  autoComplete="current-password"
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="jag@exempel.com"
                   required
                 />
-                <FormErrorMessage>
-                  Vänligen kontrollera lösenordet.
-                </FormErrorMessage>
+                {error ? (
+                  <FormErrorMessage>
+                    Kontrollera e-postadressen.
+                  </FormErrorMessage>
+                ) : null}
               </FormControl>
-              <Button type="submit" colorScheme="blue" bg="blue.700">
+              <FormControl>
+                <FormLabel htmlFor="password">Lösenord</FormLabel>
+                <Input
+                  id="password"
+                  type="password"
+                  name="password"
+                  required
+                  autoComplete="current-password"
+                />
+                {error ? (
+                  <FormErrorMessage>Kontrollera lösenordet.</FormErrorMessage>
+                ) : null}
+              </FormControl>
+              <Button type="submit" className="w-full">
                 Logga in
               </Button>
-              <Center>
-                <InlineLink to="/register">Skapa konto</InlineLink>
-              </Center>
-            </Stack>
+            </FormStack>
+            <div className="mt-4 text-center text-sm">
+              Har du inget konto?{" "}
+              <InlineLink to="/register">Registrera dig här</InlineLink>
+            </div>
           </Form>
-        </Card>
-      </Container>
-    </Box>
+        </CardContent>
+      </Card>
+    </div>
   );
 }

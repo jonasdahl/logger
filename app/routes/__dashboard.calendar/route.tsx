@@ -1,4 +1,4 @@
-import { HStack, SimpleGrid, Stack } from "@chakra-ui/react";
+import { SimpleGrid } from "@chakra-ui/react";
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
@@ -57,31 +57,29 @@ export default function DashboardIndex() {
   const now = DateTime.now().setZone(timeZone);
 
   return (
-    <Container>
-      <Stack spacing={5}>
-        {showOnboarding ? <OnboardingAlert /> : null}
+    <Container className="flex flex-col gap-5">
+      {showOnboarding ? <OnboardingAlert /> : null}
 
-        {showFogisSync ? <FogisSyncAlert /> : null}
+      {showFogisSync ? <FogisSyncAlert /> : null}
 
-        <HStack>
-          <div>
-            <ButtonLink to={`/calendar`} variant="secondary">
-              +/- 2 veckor
-            </ButtonLink>
-          </div>
-          <div>
-            <ButtonLink to={`/months/${now.toFormat("yyyy'/'MM")}`}>
-              Månadsvy
-            </ButtonLink>
-          </div>
-        </HStack>
+      <div className="flex flex-row gap-3">
+        <div>
+          <ButtonLink to={`/calendar`} variant="secondary">
+            +/- 2 veckor
+          </ButtonLink>
+        </div>
+        <div>
+          <ButtonLink to={`/months/${now.toFormat("yyyy'/'MM")}`}>
+            Månadsvy
+          </ButtonLink>
+        </div>
+      </div>
 
-        <SimpleGrid columns={7} rowGap={2} columnGap={1}>
-          {data?.days.edges?.map((day) =>
-            day.node ? <Day key={day.cursor} day={day.node} /> : null
-          )}
-        </SimpleGrid>
-      </Stack>
+      <SimpleGrid columns={7} rowGap={2} columnGap={1}>
+        {data?.days.edges?.map((day) =>
+          day.node ? <Day key={day.cursor} day={day.node} /> : null
+        )}
+      </SimpleGrid>
     </Container>
   );
 }

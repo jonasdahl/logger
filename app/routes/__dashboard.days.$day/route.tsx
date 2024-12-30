@@ -2,7 +2,6 @@ import {
   Box,
   Button,
   HStack,
-  Heading,
   LinkBox,
   LinkOverlay,
   Spacer,
@@ -26,6 +25,7 @@ import {
 import { DateTime } from "luxon";
 import { authenticator } from "~/.server/auth.server";
 import { ButtonLink } from "~/components/button-link";
+import { H1, H2 } from "~/components/headings";
 import { IconButtonLink } from "~/components/icon-button-link";
 import { Container } from "~/components/ui/container";
 import { InlineLink } from "~/components/ui/inline-link";
@@ -136,7 +136,7 @@ export default function DashboardIndex() {
 
           <Spacer />
           <VStack textAlign="center" spacing={0}>
-            <Heading>{day.toFormat("yyyy-MM-dd")}</Heading>
+            <H1>{day.toFormat("yyyy-MM-dd")}</H1>
             <Box fontSize="xs" display={{ base: "none", sm: "block" }}>
               {day.toFormat("EEEE 'vecka' WW, kkkk", { locale: "sv" })}
             </Box>
@@ -160,7 +160,7 @@ export default function DashboardIndex() {
 
         {polarEntries.length ? (
           <Stack>
-            <Heading size="sm">Data från Polar</Heading>
+            <H2>Data från Polar</H2>
             <Stack>
               {polarEntries.map((e) => (
                 <Box key={e.id} bg="blue.50" borderRadius="md" padding={3}>
@@ -176,7 +176,7 @@ export default function DashboardIndex() {
         ) : null}
 
         <Stack>
-          <Heading size="sm">Alla aktiviteter</Heading>
+          <H2>Alla aktiviteter</H2>
           <Stack>
             {data?.day?.activities.edges.map((e) => {
               if (!e.node) {

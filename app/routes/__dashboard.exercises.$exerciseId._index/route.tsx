@@ -1,7 +1,6 @@
 import {
   Checkbox,
   HStack,
-  Heading,
   IconButton,
   Menu,
   MenuButton,
@@ -31,7 +30,7 @@ import { DateTime, Duration } from "luxon";
 import { useState } from "react";
 import { z } from "zod";
 import { ButtonLink } from "~/components/button-link";
-import { H2 } from "~/components/headings";
+import { H1, H2 } from "~/components/headings";
 import { Button } from "~/components/ui/button";
 import { Container } from "~/components/ui/container";
 import { TitleRow } from "~/components/ui/title-row";
@@ -250,7 +249,7 @@ export default function Activity() {
       <Stack spacing={5}>
         <Wrap align="center">
           <WrapItem>
-            <Heading as="h1">Träning</Heading>
+            <H1>Träning</H1>
           </WrapItem>
           <Spacer />
           {start ? (

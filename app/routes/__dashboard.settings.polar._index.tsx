@@ -1,16 +1,5 @@
-import {
-  Alert,
-  Button,
-  Heading,
-  Stack,
-  Table,
-  TableContainer,
-  Tbody,
-  Td,
-  Tr,
-} from "@chakra-ui/react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { json, redirect } from "@remix-run/node";
+import { redirect } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
 import { withZod } from "@remix-validated-form/with-zod";
 import { ValidatedForm } from "remix-validated-form";
@@ -19,7 +8,19 @@ import { assertIsAdmin, authenticator } from "~/.server/auth.server";
 import { SubmitButton } from "~/components/form/submit-button";
 import { validate } from "~/components/form/validate.server";
 import { ValidatedInputField } from "~/components/form/validated-input-field";
+import { H1 } from "~/components/headings";
+import { Alert, AlertTitle } from "~/components/ui/alert";
+import { Button } from "~/components/ui/button";
 import { Container } from "~/components/ui/container";
+import { FormStack } from "~/components/ui/form-stack";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "~/components/ui/table";
 import { db } from "~/db.server";
 import { createdWebhook } from "~/polar/schemas/created-webhook";
 import { webhookInfo } from "~/polar/schemas/webhook-info";
@@ -107,77 +108,87 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const defaultUrl = new URL(request.url);
   defaultUrl.pathname = "/connections/polar/webhook";
 
-  return json({ webhook: data, webhooks, defaultUrl: defaultUrl.toString() });
+  return { webhook: data, webhooks, defaultUrl: defaultUrl.toString() };
 }
 
 export default function SettingsIndex() {
   const { webhook, webhooks, defaultUrl } = useLoaderData<typeof loader>();
 
   return (
-    <Container>
-      <Stack spacing={5}>
-        <Heading>Polar settings</Heading>
+    <Container className="flex flex-col gap-5">
+      <H1>Polar settings</H1>
 
-        <ValidatedForm validator={validator} method="post">
-          <Stack>
-            <ValidatedInputField
-              name="url"
-              label="URL"
-              defaultValue={defaultUrl}
-            />
-            <div>
-              <SubmitButton>Create webhook</SubmitButton>
-            </div>
-          </Stack>
-        </ValidatedForm>
+      <ValidatedForm validator={validator} method="post">
+        <FormStack>
+          <ValidatedInputField
+            name="url"
+            label="URL"
+            defaultValue={defaultUrl}
+          />
+          <div>
+            <SubmitButton>Create webhook</SubmitButton>
+          </div>
+        </FormStack>
+      </ValidatedForm>
 
-        <Heading>Active webhooks</Heading>
-        {!webhook.data.length ? (
-          <Alert>No webhooks installed</Alert>
-        ) : (
-          <TableContainer>
-            <Table>
-              <Tbody>
-                {webhook.data.map((item) => (
-                  <Tr key={item.id}>
-                    <Td>{item.id}</Td>
-                    <Td>{item.url}</Td>
-                    <Td>{item.events.join(", ")}</Td>
-                    <Td>
-                      <Form
-                        action={`/settings/polar/delete-webhook/${item.id}`}
-                        method="post"
-                      >
-                        <Button type="submit" colorScheme="red" size="sm">
-                          Delete
-                        </Button>
-                      </Form>
-                    </Td>
-                  </Tr>
-                ))}
-              </Tbody>
-            </Table>
-          </TableContainer>
-        )}
+      <H1>Active webhooks</H1>
+      {!webhook.data.length ? (
+        <Alert>
+          <AlertTitle>No webhooks installed</AlertTitle>
+        </Alert>
+      ) : (
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>ID</TableHead>
+              <TableHead>URL</TableHead>
+              <TableHead>Events</TableHead>
+              <TableHead>Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {webhook.data.map((item) => (
+              <TableRow key={item.id}>
+                <TableCell>{item.id}</TableCell>
+                <TableCell>{item.url}</TableCell>
+                <TableCell>{item.events.join(", ")}</TableCell>
+                <TableCell>
+                  <Form
+                    action={`/settings/polar/delete-webhook/${item.id}`}
+                    method="post"
+                  >
+                    <Button
+                      type="submit"
+                      variant="destructive-link"
+                      size="inline"
+                    >
+                      Delete
+                    </Button>
+                  </Form>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      )}
 
-        <Heading>Stored webhooks</Heading>
-        {!webhooks.length ? (
-          <Alert>No webhooks saved</Alert>
-        ) : (
-          <TableContainer>
-            <Table>
-              <Tbody>
-                {webhooks.map((item) => (
-                  <Tr key={item.id}>
-                    <Td>{item.polarWebhookId}</Td>
-                    <Td>{item.polarWebhookSignatureSecretKey}</Td>
-                  </Tr>
-                ))}
-              </Tbody>
-            </Table>
-          </TableContainer>
-        )}
-      </Stack>
+      <H1>Stored webhooks</H1>
+      {!webhooks.length ? (
+        <Alert>
+          <AlertTitle>No webhooks saved</AlertTitle>
+        </Alert>
+      ) : (
+        <Table>
+          <TableBody>
+            {webhooks.map((item) => (
+              <TableRow key={item.id}>
+                <TableCell>{item.polarWebhookId}</TableCell>
+                <TableCell>{item.polarWebhookSignatureSecretKey}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      )}
     </Container>
   );
 }
