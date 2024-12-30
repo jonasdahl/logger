@@ -6,6 +6,8 @@ type Exercise implements ActivityBase {
   isHiddenFromOverview: Boolean!
   items: ExerciseItemConnection!
 
+  fromPlannedActivity: PlannedExercise
+
   primaryPurpose: ExercisePurpose
   secondaryPurpose: ExercisePurpose
 

@@ -72,6 +72,7 @@ type Event {
 type Exercise implements ActivityBase {
   comment: String
   description: String
+  fromPlannedActivity: PlannedExercise
   id: ID!
   isHiddenFromOverview: Boolean!
   items: ExerciseItemConnection!
@@ -269,12 +270,19 @@ type PhysicalTest implements ActivityBase {
 type PlannedExercise implements ActivityBase {
   comment: String
   description: String
+  exerciseItems: [PlannedExerciseItem!]!
   id: ID!
   primaryPurpose: ExercisePurpose
   secondaryPurpose: ExercisePurpose
   start: DateTime!
   startDay: Day!
   title: String!
+}
+
+type PlannedExerciseItem {
+  exerciseType: ExerciseType
+  id: ID!
+  plannedExercise: PlannedExercise!
 }
 
 type Query {

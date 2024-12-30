@@ -40,6 +40,7 @@ import { heartRateSampleResolvers } from "./types/heart-rate-sample/resolvers";
 import { heartRateSummaryResolvers } from "./types/heart-rate-summary/resolvers";
 import { pageInfoResolvers } from "./types/page-info/resolvers";
 import { physicalTestResolvers } from "./types/physical-test/resolvers";
+import { plannedExerciseItemResolvers } from "./types/planned-exercise-item/resolvers";
 import { plannedExerciseResolvers } from "./types/planned-exercise/resolvers";
 import { queryResolvers } from "./types/query/resolvers";
 import { travelResolvers } from "./types/travel/resolvers";
@@ -91,4 +92,5 @@ export const resolvers: Resolvers = {
   GoalGeneric: goalGenericResolvers,
   GoalDayOfWork: goalDayOfWorkResolvers,
   GoalPerformExerciseType: goalPerformExerciseTypeResolvers,
+  PlannedExerciseItem: plannedExerciseItemResolvers,
 };

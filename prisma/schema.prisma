@@ -112,12 +112,13 @@ model ExerciseType {
   userId String?
   user   User?   @relation(fields: [userId], references: [id])
 
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  deletedAt     DateTime?
-  exerciseItems ExerciseItem[]
-  categoryTags  CategoryTag[]
-  inGoals       Goal[]         @relation(name: "PerformExerciseTypeGoal")
+  createdAt              DateTime              @default(now())
+  updatedAt              DateTime              @updatedAt
+  deletedAt              DateTime?
+  exerciseItems          ExerciseItem[]
+  categoryTags           CategoryTag[]
+  inGoals                Goal[]                @relation(name: "PerformExerciseTypeGoal")
+  inPlannedExerciseItems PlannedExerciseItem[]
 }
 
 model ExerciseTypeLevel {
@@ -244,6 +245,34 @@ model PlannedActivity {
   updatedAt           DateTime   @updatedAt
   deletedAt           DateTime?
   generatedActivities Activity[]
+
+  items PlannedExerciseItem[]
+}
+
+enum PlannedExerciseItemType {
+  Exercise
+  OneOfChildren
+}
+
+model PlannedExerciseItem {
+  id String @id @default(uuid())
+
+  plannedActivity   PlannedActivity @relation(fields: [plannedActivityId], references: [id])
+  plannedActivityId String
+
+  type PlannedExerciseItemType
+
+  typeExerciseExerciseType    ExerciseType? @relation(fields: [typeExerciseExerciseTypeId], references: [id])
+  typeExerciseExerciseTypeId  String?
+  typeExerciseRepetitions     Int?
+  typeExerciseDurationSeconds Int?
+
+  typeOneOfChildrenPlannedExerciseItems PlannedExerciseItem[] @relation(name: "OneOfChildren")
+
+  order Float
+
+  parentItem   PlannedExerciseItem? @relation(name: "OneOfChildren", fields: [parentItemId], references: [id])
+  parentItemId String?
 }
 
 model PolarExercise {

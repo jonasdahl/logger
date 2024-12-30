@@ -17,6 +17,17 @@ export const exerciseResolvers: ExerciseResolvers = {
           where: { id: parent.value.primaryPurposeId },
         })
       : null,
+  fromPlannedActivity: async (parent) => {
+    if (parent.value.fromPlannedActivityId) {
+      return {
+        type: "PlannedExercise",
+        value: await db.plannedActivity.findFirstOrThrow({
+          where: { id: parent.value.fromPlannedActivityId },
+        }),
+      };
+    }
+    return null;
+  },
   secondaryPurpose: (parent) =>
     parent.value.secondaryPurposeId
       ? db.activityPurpose.findFirstOrThrow({

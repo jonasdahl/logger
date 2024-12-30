@@ -25,4 +25,11 @@ export const plannedExerciseResolvers: PlannedExerciseResolvers = {
       : null,
   comment: (parent) => parent.value.comment,
   description: (parent) => parent.value.description,
+  exerciseItems: async (parent) => {
+    const items = await db.plannedExerciseItem.findMany({
+      where: { plannedActivityId: parent.value.id },
+      orderBy: { order: "asc" },
+    });
+    return items;
+  },
 };

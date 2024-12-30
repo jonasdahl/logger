@@ -8,5 +8,34 @@ query PlannedActivity($plannedActivityId: ID!) {
     secondaryPurpose {
       label
     }
+    exerciseItems {
+      id
+      exerciseType {
+        id
+        name
+        defaultAmountType
+        loadTypes {
+          id
+          name
+          unit
+        }
+      }
+    }
+  }
+
+  exerciseTypes {
+    edges {
+      cursor
+      node {
+        id
+        name
+        defaultAmountType
+        loadTypes {
+          id
+          name
+          unit
+        }
+      }
+    }
   }
 }

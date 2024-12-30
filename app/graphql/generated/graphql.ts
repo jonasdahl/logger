@@ -23,6 +23,7 @@ import { GoalPerformExerciseTypeModel } from '../types/goal-perform-exercise-typ
 import { HeartRateSummaryModel } from '../types/heart-rate-summary/model';
 import { PhysicalTestModel } from '../types/physical-test/model';
 import { PlannedExerciseModel } from '../types/planned-exercise/model';
+import { PlannedExerciseItemModel } from '../types/planned-exercise-item/model';
 import { TravelModel } from '../types/travel/model';
 import { UserModel } from '../types/user/model';
 import { Context } from '../context';
@@ -135,6 +136,7 @@ export type Exercise = ActivityBase & {
   __typename?: 'Exercise';
   comment: Maybe<Scalars['String']['output']>;
   description: Maybe<Scalars['String']['output']>;
+  fromPlannedActivity: Maybe<PlannedExercise>;
   id: Scalars['ID']['output'];
   isHiddenFromOverview: Scalars['Boolean']['output'];
   items: ExerciseItemConnection;
@@ -363,12 +365,20 @@ export type PlannedExercise = ActivityBase & {
   __typename?: 'PlannedExercise';
   comment: Maybe<Scalars['String']['output']>;
   description: Maybe<Scalars['String']['output']>;
+  exerciseItems: Array<PlannedExerciseItem>;
   id: Scalars['ID']['output'];
   primaryPurpose: Maybe<ExercisePurpose>;
   secondaryPurpose: Maybe<ExercisePurpose>;
   start: Scalars['DateTime']['output'];
   startDay: Day;
   title: Scalars['String']['output'];
+};
+
+export type PlannedExerciseItem = {
+  __typename?: 'PlannedExerciseItem';
+  exerciseType: Maybe<ExerciseType>;
+  id: Scalars['ID']['output'];
+  plannedExercise: PlannedExercise;
 };
 
 export type Query = {
@@ -597,6 +607,7 @@ export type ResolversTypes = {
   PageInfo: ResolverTypeWrapper<PageInfo>;
   PhysicalTest: ResolverTypeWrapper<PhysicalTestModel>;
   PlannedExercise: ResolverTypeWrapper<PlannedExerciseModel>;
+  PlannedExerciseItem: ResolverTypeWrapper<PlannedExerciseItemModel>;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   Travel: ResolverTypeWrapper<TravelModel>;
@@ -653,6 +664,7 @@ export type ResolversParentTypes = {
   PageInfo: PageInfo;
   PhysicalTest: PhysicalTestModel;
   PlannedExercise: PlannedExerciseModel;
+  PlannedExerciseItem: PlannedExerciseItemModel;
   Query: {};
   String: Scalars['String']['output'];
   Travel: TravelModel;
@@ -736,6 +748,7 @@ export type EventResolvers<ContextType = Context, ParentType extends ResolversPa
 export type ExerciseResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Exercise'] = ResolversParentTypes['Exercise']> = {
   comment: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   description: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  fromPlannedActivity: Resolver<Maybe<ResolversTypes['PlannedExercise']>, ParentType, ContextType>;
   id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   isHiddenFromOverview: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   items: Resolver<ResolversTypes['ExerciseItemConnection'], ParentType, ContextType>;
@@ -952,12 +965,20 @@ export type PhysicalTestResolvers<ContextType = Context, ParentType extends Reso
 export type PlannedExerciseResolvers<ContextType = Context, ParentType extends ResolversParentTypes['PlannedExercise'] = ResolversParentTypes['PlannedExercise']> = {
   comment: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   description: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  exerciseItems: Resolver<Array<ResolversTypes['PlannedExerciseItem']>, ParentType, ContextType>;
   id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   primaryPurpose: Resolver<Maybe<ResolversTypes['ExercisePurpose']>, ParentType, ContextType>;
   secondaryPurpose: Resolver<Maybe<ResolversTypes['ExercisePurpose']>, ParentType, ContextType>;
   start: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   startDay: Resolver<ResolversTypes['Day'], ParentType, ContextType>;
   title: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type PlannedExerciseItemResolvers<ContextType = Context, ParentType extends ResolversParentTypes['PlannedExerciseItem'] = ResolversParentTypes['PlannedExerciseItem']> = {
+  exerciseType: Resolver<Maybe<ResolversTypes['ExerciseType']>, ParentType, ContextType>;
+  id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  plannedExercise: Resolver<ResolversTypes['PlannedExercise'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -1039,6 +1060,7 @@ export type Resolvers<ContextType = Context> = {
   PageInfo: PageInfoResolvers<ContextType>;
   PhysicalTest: PhysicalTestResolvers<ContextType>;
   PlannedExercise: PlannedExerciseResolvers<ContextType>;
+  PlannedExerciseItem: PlannedExerciseItemResolvers<ContextType>;
   Query: QueryResolvers<ContextType>;
   Travel: TravelResolvers<ContextType>;
   User: UserResolvers<ContextType>;

@@ -9,4 +9,6 @@ type PlannedExercise implements ActivityBase {
 
   comment: String
   description: String
+
+  exerciseItems: [PlannedExerciseItem!]!
 }

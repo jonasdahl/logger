@@ -63,9 +63,7 @@ const postSchema = z.intersection(
 );
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-  const { id: userId } = await authenticator.isAuthenticated(request, {
-    failureRedirect: "/",
-  });
+  await authenticator.isAuthenticated(request, { failureRedirect: "/" });
   const { exerciseId } = await z
     .object({ exerciseId: z.string() })
     .parse(params);
@@ -264,6 +262,36 @@ export default function Activity() {
           ) : null}
         </Wrap>
 
+        {data?.exercise?.fromPlannedActivity ? (
+          <div className="flex flex-col gap-3">
+            <TitleRow>
+              <H2>Planerat</H2>
+            </TitleRow>
+
+            <div className="flex flex-col gap-1">
+              {data.exercise.fromPlannedActivity?.exerciseItems.map((item) => {
+                return (
+                  <div
+                    key={item.exerciseType?.id}
+                    className="flex flex-row w-full"
+                  >
+                    <div className="flex-1">{item.exerciseType?.name}</div>
+                    <div>
+                      <ButtonLink
+                        to={`/exercises/${data.exercise?.id}/items/create?createdExerciseTypeId=${item.exerciseType?.id}`}
+                        variant="secondary"
+                        size="sm"
+                      >
+                        Lägg till
+                      </ButtonLink>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        ) : null}
+
         <TitleRow
           actions={
             selectedExerciseItemIds.length > 0 ? (
@@ -287,8 +315,8 @@ export default function Activity() {
           }
         >
           <H2>Övningar</H2>
-          <Spacer />
         </TitleRow>
+
         <div className="flex flex-col gap-2">
           {data?.exercise?.items.edges.map((edge) => {
             if (!edge.node) {
