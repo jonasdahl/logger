@@ -1,4 +1,3 @@
-import { Heading, Stack } from "@chakra-ui/react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { useLoaderData, useSearchParams } from "@remix-run/react";
@@ -12,7 +11,9 @@ import { SubmitButton } from "~/components/form/submit-button";
 import { ValidatedTextareaField } from "~/components/form/textarea";
 import { validate } from "~/components/form/validate.server";
 import { ValidatedInputField } from "~/components/form/validated-input-field";
+import { H1 } from "~/components/headings";
 import { Container } from "~/components/ui/container";
+import { FormStack } from "~/components/ui/form-stack";
 import { db } from "~/db.server";
 import { getTimeZoneFromRequest } from "~/time";
 
@@ -47,7 +48,7 @@ export async function action({ request }: ActionFunctionArgs) {
     zone: timeZone,
   }).setZone(timeZone);
 
-  await db.plannedActivity.create({
+  const plannedActivity = await db.plannedActivity.create({
     data: {
       userId: user.id,
       time: time.toJSDate(),
@@ -61,7 +62,7 @@ export async function action({ request }: ActionFunctionArgs) {
   const url = new URL(request.url);
   const redirectTo =
     url.searchParams.get("returnTo") ??
-    `/days/${DateTime.now().setZone(timeZone).toFormat("yyyy-MM-dd")}`;
+    `/planned-activities/${plannedActivity.id}`;
 
   return redirect(redirectTo);
 }
@@ -79,8 +80,8 @@ export default function CreatePlannedActivity() {
   return (
     <Container>
       <ValidatedForm validator={createPlannedActivityValidator} method="post">
-        <Stack spacing={5}>
-          <Heading>Skapa planerad aktivitet</Heading>
+        <FormStack>
+          <H1>Skapa planerad aktivitet</H1>
           <ValidatedInputField
             label="Datum"
             name="date"
@@ -119,7 +120,7 @@ export default function CreatePlannedActivity() {
           <div>
             <SubmitButton>Skapa</SubmitButton>
           </div>
-        </Stack>
+        </FormStack>
       </ValidatedForm>
     </Container>
   );

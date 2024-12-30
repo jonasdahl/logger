@@ -13,6 +13,7 @@ import { validate } from "~/components/form/validate.server";
 import { ValidatedInputField } from "~/components/form/validated-input-field";
 import { H1 } from "~/components/headings";
 import { Alert, AlertDescription } from "~/components/ui/alert";
+import { Button } from "~/components/ui/button";
 import { FormStack } from "~/components/ui/form-stack";
 import { db } from "~/db.server";
 import { HiddenReturnToInput } from "~/services/return-to";
@@ -122,7 +123,27 @@ export default function DashboardIndex() {
 
   return (
     <div className="container mx-auto px-4 py-5 max-w-screen-sm">
-      <ValidatedForm validator={validator} method="post">
+      <ValidatedForm
+        validator={validator}
+        method="post"
+        defaultValues={{
+          date: plannedActivity?.time
+            ? DateTime.fromISO(plannedActivity.time)
+                .setZone(timeZone)
+                .toFormat("yyyy-MM-dd'T'HH:mm")
+            : polarActivityStart
+            ? DateTime.fromISO(polarActivityStart)
+                .setZone(timeZone)
+                .toFormat("yyyy-MM-dd'T'HH:mm")
+            : dateFromParams
+            ? `${dateFromParams}T12:00`
+            : undefined,
+          primaryPurposeId: plannedActivity?.primaryPurposeId ?? undefined,
+          secondaryPurposeId: plannedActivity?.secondaryPurposeId ?? undefined,
+          description: plannedActivity?.description ?? undefined,
+          comment: plannedActivity?.comment ?? undefined,
+        }}
+      >
         <HiddenReturnToInput />
         <FormStack>
           <H1>Skapa aktivitet</H1>
@@ -140,28 +161,30 @@ export default function DashboardIndex() {
               </Alert>
             </div>
           ) : null}
-          <ValidatedInputField
-            label="Datum"
-            name="date"
-            type="datetime-local"
-            defaultValue={
-              plannedActivity?.time
-                ? DateTime.fromISO(plannedActivity.time)
+          <div className="flex flex-row gap-2 max-w-full w-full justify-stretch items-end">
+            <div className="flex-1 flex-shrink">
+              <ValidatedInputField
+                label="Datum"
+                name="date"
+                type="datetime-local"
+              />
+            </div>
+            <div className="flex-0">
+              <Button
+                type="button"
+                onClick={(e) => {
+                  e.currentTarget.form!.date.value = DateTime.now()
                     .setZone(timeZone)
-                    .toFormat("yyyy-MM-dd'T'HH:mm")
-                : polarActivityStart
-                ? DateTime.fromISO(polarActivityStart)
-                    .setZone(timeZone)
-                    .toFormat("yyyy-MM-dd'T'HH:mm")
-                : dateFromParams
-                ? `${dateFromParams}T12:00`
-                : undefined
-            }
-          />
+                    .toFormat("yyyy-MM-dd'T'HH:mm");
+                }}
+              >
+                Nu
+              </Button>
+            </div>
+          </div>
           <ValidatedSelectField
             label="Primärt syfte"
             name="primaryPurposeId"
-            defaultValue={plannedActivity?.primaryPurposeId ?? undefined}
             options={[
               { value: "null", label: "Ej valt" },
               ...purposes.map((purpose) => ({
@@ -173,7 +196,6 @@ export default function DashboardIndex() {
           <ValidatedSelectField
             label="Sekundärt syfte"
             name="secondaryPurposeId"
-            defaultValue={plannedActivity?.secondaryPurposeId ?? undefined}
             options={[
               { value: "null", label: "Ej valt" },
               ...purposes.map((purpose) => ({
@@ -185,13 +207,8 @@ export default function DashboardIndex() {
           <ValidatedTextareaField
             label="Beskrivning/innehåll"
             name="description"
-            defaultValue={plannedActivity?.description ?? undefined}
           />
-          <ValidatedTextareaField
-            label="Övriga kommentarer"
-            name="comment"
-            defaultValue={plannedActivity?.comment ?? undefined}
-          />
+          <ValidatedTextareaField label="Övriga kommentarer" name="comment" />
           <div>
             <SubmitButton>Skapa</SubmitButton>
           </div>

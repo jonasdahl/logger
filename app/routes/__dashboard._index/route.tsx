@@ -65,7 +65,7 @@ export default function Index() {
                   data.upcomingPlannedExercise.secondaryPurpose?.label,
                 ]
                   .filter(Boolean)
-                  .join(" och ")}
+                  .join(" och ") || "Planerad aktivitet"}
               </CardTitle>
               <CardDescription>
                 Planerat pass{" "}
@@ -85,7 +85,7 @@ export default function Index() {
                 Visa
               </ButtonLink>
               <ButtonLink
-                to={`/planned-activities/${data.upcomingPlannedExercise.id}`}
+                to={`/activities/create?from=${data.upcomingPlannedExercise.id}`}
               >
                 Starta
               </ButtonLink>

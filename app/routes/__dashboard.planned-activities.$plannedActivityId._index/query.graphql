@@ -1,0 +1,12 @@
+query PlannedActivity($plannedActivityId: ID!) {
+  plannedExercise(id: $plannedActivityId) {
+    id
+    start
+    primaryPurpose {
+      label
+    }
+    secondaryPurpose {
+      label
+    }
+  }
+}

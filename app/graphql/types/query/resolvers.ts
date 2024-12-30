@@ -300,4 +300,15 @@ export const queryResolvers: QueryResolvers = {
     }
     return { type: "PlannedExercise", value: plannedActivity };
   },
+  plannedExercise: async (_, { id }, { userId }) => {
+    if (!userId) {
+      return null;
+    }
+    return {
+      type: "PlannedExercise",
+      value: await db.plannedActivity.findFirstOrThrow({
+        where: { id, userId },
+      }),
+    };
+  },
 };

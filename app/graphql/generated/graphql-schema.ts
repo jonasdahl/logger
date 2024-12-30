@@ -291,6 +291,7 @@ type Query {
   goal(id: ID!): Goal
   goals: [Goal!]!
   me: User
+  plannedExercise(id: ID!): PlannedExercise
   timeZone: String!
   today: Day!
   upcomingPlannedExercise: PlannedExercise

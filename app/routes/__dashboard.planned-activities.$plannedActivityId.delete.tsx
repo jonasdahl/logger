@@ -1,9 +1,10 @@
-import { Button, Heading } from "@chakra-ui/react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { Form } from "@remix-run/react";
 import { DateTime } from "luxon";
 import { authenticator } from "~/.server/auth.server";
+import { H1 } from "~/components/headings";
+import { Button } from "~/components/ui/button";
 import { Container } from "~/components/ui/container";
 import { FormStack } from "~/components/ui/form-stack";
 import { db } from "~/db.server";
@@ -51,9 +52,9 @@ export default function DashboardIndex() {
     <Container>
       <Form method="post">
         <FormStack>
-          <Heading>Radera planerad aktivitet?</Heading>
+          <H1>Radera planerad aktivitet?</H1>
           <div>
-            <Button type="submit" colorScheme="red">
+            <Button type="submit" variant="destructive">
               Radera
             </Button>
           </div>

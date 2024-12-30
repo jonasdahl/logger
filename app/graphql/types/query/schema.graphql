@@ -10,6 +10,7 @@ type Query {
   timeZone: String!
 
   upcomingPlannedExercise: PlannedExercise
+  plannedExercise(id: ID!): PlannedExercise
 
   activities(
     first: Int

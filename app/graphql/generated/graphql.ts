@@ -386,6 +386,7 @@ export type Query = {
   goal: Maybe<Goal>;
   goals: Array<Goal>;
   me: Maybe<User>;
+  plannedExercise: Maybe<PlannedExercise>;
   timeZone: Scalars['String']['output'];
   today: Day;
   upcomingPlannedExercise: Maybe<PlannedExercise>;
@@ -440,6 +441,11 @@ export type QueryGameArgs = {
 
 
 export type QueryGoalArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryPlannedExerciseArgs = {
   id: Scalars['ID']['input'];
 };
 
@@ -969,6 +975,7 @@ export type QueryResolvers<ContextType = Context, ParentType extends ResolversPa
   goal: Resolver<Maybe<ResolversTypes['Goal']>, ParentType, ContextType, RequireFields<QueryGoalArgs, 'id'>>;
   goals: Resolver<Array<ResolversTypes['Goal']>, ParentType, ContextType>;
   me: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  plannedExercise: Resolver<Maybe<ResolversTypes['PlannedExercise']>, ParentType, ContextType, RequireFields<QueryPlannedExerciseArgs, 'id'>>;
   timeZone: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   today: Resolver<ResolversTypes['Day'], ParentType, ContextType>;
   upcomingPlannedExercise: Resolver<Maybe<ResolversTypes['PlannedExercise']>, ParentType, ContextType>;

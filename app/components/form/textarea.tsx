@@ -14,12 +14,13 @@ export function ValidatedTextareaField({
   label: string;
 }) {
   const { error, getInputProps } = useField(name);
+  const inputProps = getInputProps({ id: name } as any);
   return (
     <FormControl>
       <FormLabel htmlFor={name}>{label}</FormLabel>
       <Textarea
-        {...getInputProps({ id: name } as any)}
-        defaultValue={defaultValue}
+        {...inputProps}
+        defaultValue={inputProps.defaultValue ?? defaultValue}
       />
       {error ? <FormErrorMessage>{error}</FormErrorMessage> : null}
     </FormControl>
