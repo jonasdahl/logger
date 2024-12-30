@@ -184,7 +184,7 @@ function OneRepMaxChart({ timeGrouping }: { timeGrouping: TimeGrouping }) {
           margin={{ top: 0, right: 0, bottom: 20, left: 30 }}
           height={300}
           xScale={{ type: "time" }}
-          yScale={{ type: "linear" }}
+          yScale={{ type: "linear", zero: false, nice: true, round: true }}
         >
           <AnimatedAxis
             orientation="bottom"
