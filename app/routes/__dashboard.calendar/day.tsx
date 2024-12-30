@@ -109,6 +109,13 @@ export function Day({
                               <InlineLink to={`/games/${activityEdge.node.id}`}>
                                 {activityEdge.node.title}
                               </InlineLink>
+                            ) : activityEdge.node.__typename ===
+                              "PlannedExercise" ? (
+                              <InlineLink
+                                to={`/planned-activities/${activityEdge.node.id}`}
+                              >
+                                {activityEdge.node.title}
+                              </InlineLink>
                             ) : (
                               <>{activityEdge.node.title}</>
                             )}
