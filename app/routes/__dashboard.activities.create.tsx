@@ -177,6 +177,7 @@ export default function DashboardIndex() {
                     .setZone(timeZone)
                     .toFormat("yyyy-MM-dd'T'HH:mm");
                 }}
+                variant="outline"
               >
                 Nu
               </Button>
