@@ -84,6 +84,9 @@ export default function ExerciseTypeStats() {
         </TitleRow>
 
         <ClientOnly>
+          {() => <OneRepMaxChart timeGrouping={timeGrouping} />}
+        </ClientOnly>
+        <ClientOnly>
           {() => <BarLoadChart timeGrouping={timeGrouping} />}
         </ClientOnly>
         <ClientOnly>{() => <TimeChart />}</ClientOnly>
@@ -91,6 +94,143 @@ export default function ExerciseTypeStats() {
         <ClientOnly>{() => <LoadChart />}</ClientOnly>
         <ClientOnly>{() => <TotalLoadChart />}</ClientOnly>
         <ClientOnly>{() => <LevelsChart />}</ClientOnly>
+      </div>
+    </div>
+  );
+}
+
+function OneRepMaxChart({ timeGrouping }: { timeGrouping: TimeGrouping }) {
+  const { data, timeZone } = useLoaderData<typeof loader>();
+
+  const endOfThisMonth = DateTime.now()
+    .setZone(timeZone)
+    .startOf("month")
+    .plus({ month: 1 });
+
+  const intervals = Interval.fromDateTimes(
+    endOfThisMonth.minus({ years: 1 }),
+    endOfThisMonth
+  ).splitBy(timeGrouping === TimeGrouping.Week ? { week: 1 } : { month: 1 });
+
+  const allLoadAmounts = (data?.exerciseType?.history.dayAmounts || []).flatMap(
+    ({ dayAmounts, dayStart }) =>
+      dayAmounts.flatMap((d) =>
+        d.loads.map((load) => ({ ...load, dayStart, duration: d.duration }))
+      )
+  );
+  const loadAmountsPerType = groupBy(
+    allLoadAmounts,
+    (loadAmount) => loadAmount.type.id
+  );
+
+  const colors = createColormap({
+    colormap: [
+      { index: 0, rgb: [0, 0, 255] },
+      { index: 1, rgb: [120, 0, 255] },
+    ],
+    alpha: [0.2, 1],
+    format: "rgbaString",
+    nshades: Math.max(3, Object.keys(loadAmountsPerType).length * 2),
+  }).reverse();
+
+  const allSeries = Object.entries(loadAmountsPerType).map(
+    ([typeId, loadAmounts], i) => {
+      return {
+        name: typeId,
+        colors: [colors[i % colors.length], colors[(2 * i) % colors.length]],
+        data: intervals.map((interval) => {
+          const amountsInInterval = loadAmounts.filter((loadAmount) =>
+            interval.contains(DateTime.fromISO(loadAmount.dayStart))
+          );
+
+          return {
+            interval,
+            max: !amountsInInterval.length
+              ? null
+              : Math.max(...amountsInInterval.map((l) => l.value)),
+            oneRepMax: !amountsInInterval.length
+              ? null
+              : Math.max(
+                  ...amountsInInterval.map(
+                    (l) =>
+                      l.value *
+                      (1 +
+                        (l.duration.__typename === "ExerciseDurationRepetitions"
+                          ? l.duration.repetitions
+                          : 0) /
+                          30)
+                  )
+                ),
+          };
+        }),
+      };
+    }
+  );
+
+  const customTheme = buildChartTheme({
+    gridColor: "var(--chakra-colors-gray-200)",
+    colors: ["var(--chakra-colors-blue-500)"],
+    backgroundColor: "",
+    tickLength: 0,
+    gridColorDark: "",
+  });
+
+  return (
+    <div className="flex flex-col gap-3">
+      <H2>1-rep max över tid</H2>
+      <div>
+        <XYChart
+          theme={customTheme}
+          margin={{ top: 0, right: 0, bottom: 20, left: 30 }}
+          height={300}
+          xScale={{ type: "time" }}
+          yScale={{ type: "linear" }}
+        >
+          <AnimatedAxis
+            orientation="bottom"
+            tickFormat={(p) => DateTime.fromJSDate(p).toFormat("yyyy-MM")}
+          />
+          <AnimatedAxis orientation="left" />
+          <AnimatedGrid />
+
+          {allSeries.map((series) => {
+            return (
+              <>
+                <AnimatedLineSeries
+                  dataKey={`1-rep max ${series.name}`}
+                  data={series.data}
+                  colorAccessor={() => series.colors[0]}
+                  xAccessor={(p) => p.interval.start?.toJSDate()}
+                  yAccessor={(p) => p.oneRepMax}
+                />
+
+                <AnimatedGlyphSeries
+                  dataKey={`1-rep max punkter ${series.name}`}
+                  data={series.data}
+                  colorAccessor={() => series.colors[0]}
+                  xAccessor={(p) => p.interval.start?.toJSDate()}
+                  yAccessor={(p) => p.oneRepMax}
+                />
+
+                <AnimatedLineSeries
+                  dataKey={`Max ${series.name}`}
+                  data={series.data}
+                  colorAccessor={() => series.colors[1]}
+                  xAccessor={(p) => p.interval.start?.toJSDate()}
+                  yAccessor={(p) => p.max}
+                />
+
+                <AnimatedGlyphSeries
+                  dataKey={`Max punkter ${series.name}`}
+                  data={series.data}
+                  colorAccessor={() => series.colors[1]}
+                  xAccessor={(p) => p.interval.start?.toJSDate()}
+                  yAccessor={(p) => p.max}
+                />
+              </>
+            );
+          })}
+        </XYChart>
       </div>
     </div>
   );
@@ -292,6 +432,7 @@ function BarLoadChart({ timeGrouping }: { timeGrouping: TimeGrouping }) {
     </div>
   );
 }
+
 function TimeChart() {
   const { data } = useLoaderData<typeof loader>();
 
