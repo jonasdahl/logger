@@ -1,12 +1,9 @@
 import {
-  Checkbox,
-  HStack,
   IconButton,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
-  Spacer,
   Stack,
 } from "@chakra-ui/react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
@@ -30,7 +27,13 @@ import { z } from "zod";
 import { ButtonLink } from "~/components/button-link";
 import { H1, H2 } from "~/components/headings";
 import { Button } from "~/components/ui/button";
-import { Card, CardHeader, CardTitle } from "~/components/ui/card";
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "~/components/ui/card";
+import { Checkbox } from "~/components/ui/checkbox";
 import { Container } from "~/components/ui/container";
 import { TitleRow } from "~/components/ui/title-row";
 import { db } from "~/db.server";
@@ -270,7 +273,7 @@ export default function Activity() {
                 return (
                   <Card
                     key={item.exerciseType?.id}
-                    className="flex flex-row w-full px-3 py-2"
+                    className="flex flex-row w-full px-3 py-2 pr-2"
                   >
                     <CardHeader className="flex-1 py-2">
                       <CardTitle>{item.exerciseType?.name}</CardTitle>
@@ -322,161 +325,178 @@ export default function Activity() {
               return null;
             }
             return (
-              <HStack key={edge.cursor}>
-                <div>
-                  <Checkbox
-                    onChange={(e) => {
-                      if (e.target.checked) {
-                        setCheckedExerciseItemIds([
-                          ...checkedExerciseItemIds,
-                          edge.cursor,
-                        ]);
-                      } else {
-                        setCheckedExerciseItemIds(
-                          checkedExerciseItemIds.filter(
-                            (id) => id !== edge.cursor
-                          )
-                        );
-                      }
-                    }}
-                    isChecked={checkedExerciseItemIds.includes(edge.cursor)}
-                  >
-                    {edge.node?.exerciseType.name}
-                  </Checkbox>
-                </div>
+              <Card key={edge.cursor} className="relative px-4 py-4">
+                <div className="flex flex-row justify-between gap-3">
+                  <CardHeader>
+                    <CardTitle>{edge.node?.exerciseType.name}</CardTitle>
+                    <CardDescription>
+                      {edge.node.amount.map((set) => {
+                        const loads = set.loads.length
+                          ? ` (${set.loads
+                              .map(
+                                (load) =>
+                                  `${
+                                    set.loads.length > 1
+                                      ? `${load.type.name}: `
+                                      : ""
+                                  }${load.value}${
+                                    load.unit ? ` ${load.unit}` : ""
+                                  }`
+                              )
+                              .join(", ")})`
+                          : "";
 
-                <Stack>
-                  {edge.node.amount.map((set) => {
-                    const loads = set.loads.length
-                      ? ` (${set.loads
-                          .map(
-                            (load) =>
-                              `${
-                                set.loads.length > 1
-                                  ? `${load.type.name}: `
-                                  : ""
-                              }${load.value}${load.unit ? ` ${load.unit}` : ""}`
-                          )
-                          .join(", ")})`
-                      : "";
+                        if (
+                          set.duration.__typename ===
+                          "ExerciseDurationRepetitions"
+                        ) {
+                          return (
+                            <div>{`${set.duration.repetitions}st${loads}`}</div>
+                          );
+                        } else if (
+                          set.duration.__typename === "ExerciseDurationLevel"
+                        ) {
+                          return <div>{set.duration.levelType.name}</div>;
+                        } else {
+                          const duration = Duration.fromObject({
+                            hours: 0,
+                            minutes: 0,
+                            seconds: set.duration.durationSeconds,
+                          }).normalize();
+                          const timeString =
+                            duration.toMillis() > 60 * 1000
+                              ? duration.toFormat("m'm' s's'")
+                              : duration.toMillis() < 10_000
+                              ? duration.toFormat("s.S's'")
+                              : duration.toFormat("s's'");
+                          return <div>{`${timeString}${loads}`}</div>;
+                        }
+                      })}
+                    </CardDescription>
+                  </CardHeader>
+                  <div>
+                    <div className="flex flex-row gap-2 items-center">
+                      <label className="after:absolute after:inset-0 flex items-center">
+                        <Checkbox
+                          onCheckedChange={(checked) => {
+                            if (checked) {
+                              setCheckedExerciseItemIds([
+                                ...checkedExerciseItemIds,
+                                edge.cursor,
+                              ]);
+                            } else {
+                              setCheckedExerciseItemIds(
+                                checkedExerciseItemIds.filter(
+                                  (id) => id !== edge.cursor
+                                )
+                              );
+                            }
+                          }}
+                          checked={checkedExerciseItemIds.includes(edge.cursor)}
+                        />
+                      </label>
 
-                    if (
-                      set.duration.__typename === "ExerciseDurationRepetitions"
-                    ) {
-                      return (
-                        <div>{`${set.duration.repetitions}st${loads}`}</div>
-                      );
-                    } else if (
-                      set.duration.__typename === "ExerciseDurationLevel"
-                    ) {
-                      return <div>{set.duration.levelType.name}</div>;
-                    } else {
-                      const duration = Duration.fromObject({
-                        hours: 0,
-                        minutes: 0,
-                        seconds: set.duration.durationSeconds,
-                      }).normalize();
-                      const timeString =
-                        duration.toMillis() > 60 * 1000
-                          ? duration.toFormat("m'm' s's'")
-                          : duration.toMillis() < 10_000
-                          ? duration.toFormat("s.S's'")
-                          : duration.toFormat("s's'");
-                      return <div>{`${timeString}${loads}`}</div>;
-                    }
-                  })}
-                </Stack>
-                <Spacer />
-                <div>
-                  <Form method="post">
-                    <input
-                      type="hidden"
-                      name="order"
-                      value={JSON.stringify(move(edge.cursor, 1))}
-                    />
-                    <input type="hidden" name="_action" value="setOrder" />
-                    <IconButton
-                      type="submit"
-                      aria-label="Flytta ner"
-                      icon={<FontAwesomeIcon icon={faArrowDown} />}
-                      size="xs"
-                    />
-                  </Form>
+                      <div>
+                        <Form method="post">
+                          <input
+                            type="hidden"
+                            name="order"
+                            value={JSON.stringify(move(edge.cursor, 1))}
+                          />
+                          <input
+                            type="hidden"
+                            name="_action"
+                            value="setOrder"
+                          />
+                          <IconButton
+                            type="submit"
+                            aria-label="Flytta ner"
+                            icon={<FontAwesomeIcon icon={faArrowDown} />}
+                            size="xs"
+                          />
+                        </Form>
+                      </div>
+                      <div>
+                        <Form method="post">
+                          <input
+                            type="hidden"
+                            name="order"
+                            value={JSON.stringify(move(edge.cursor, -1))}
+                          />
+                          <input
+                            type="hidden"
+                            name="_action"
+                            value="setOrder"
+                          />
+                          <IconButton
+                            type="submit"
+                            aria-label="Flytta upp"
+                            icon={<FontAwesomeIcon icon={faArrowUp} />}
+                            size="xs"
+                          />
+                        </Form>
+                      </div>
+                      <div>
+                        <Menu>
+                          <MenuButton
+                            as={IconButton}
+                            icon={<FontAwesomeIcon icon={faEllipsisVertical} />}
+                            size="xs"
+                          />
+                          <MenuList>
+                            <MenuItem
+                              as={Link}
+                              to={`/stats/exercise-types/${edge.node.exerciseType.id}`}
+                              icon={<FontAwesomeIcon icon={faChartArea} />}
+                            >
+                              Statistik
+                            </MenuItem>
+                            <Form method="post">
+                              <input
+                                type="hidden"
+                                name="exerciseItemId"
+                                value={edge.node?.id}
+                              />
+                              <input
+                                type="hidden"
+                                name="_action"
+                                value="duplicateItem"
+                              />
+                              <HiddenReturnToInput />
+                              <MenuItem
+                                type="submit"
+                                icon={<FontAwesomeIcon icon={faCopy} />}
+                              >
+                                Duplicera
+                              </MenuItem>
+                            </Form>
+                            <Form method="post">
+                              <input
+                                type="hidden"
+                                name="exerciseItemId"
+                                value={edge.node?.id}
+                              />
+                              <input
+                                type="hidden"
+                                name="_action"
+                                value="deleteItem"
+                              />
+                              <HiddenReturnToInput />
+                              <MenuItem
+                                type="submit"
+                                icon={<FontAwesomeIcon icon={faTrash} />}
+                                color="red.500"
+                              >
+                                Radera
+                              </MenuItem>
+                            </Form>
+                          </MenuList>
+                        </Menu>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <Form method="post">
-                    <input
-                      type="hidden"
-                      name="order"
-                      value={JSON.stringify(move(edge.cursor, -1))}
-                    />
-                    <input type="hidden" name="_action" value="setOrder" />
-                    <IconButton
-                      type="submit"
-                      aria-label="Flytta upp"
-                      icon={<FontAwesomeIcon icon={faArrowUp} />}
-                      size="xs"
-                    />
-                  </Form>
-                </div>
-                <div>
-                  <Menu>
-                    <MenuButton
-                      as={IconButton}
-                      icon={<FontAwesomeIcon icon={faEllipsisVertical} />}
-                      size="xs"
-                    />
-                    <MenuList>
-                      <MenuItem
-                        as={Link}
-                        to={`/stats/exercise-types/${edge.node.exerciseType.id}`}
-                        icon={<FontAwesomeIcon icon={faChartArea} />}
-                      >
-                        Statistik
-                      </MenuItem>
-                      <Form method="post">
-                        <input
-                          type="hidden"
-                          name="exerciseItemId"
-                          value={edge.node?.id}
-                        />
-                        <input
-                          type="hidden"
-                          name="_action"
-                          value="duplicateItem"
-                        />
-                        <HiddenReturnToInput />
-                        <MenuItem
-                          type="submit"
-                          icon={<FontAwesomeIcon icon={faCopy} />}
-                        >
-                          Duplicera
-                        </MenuItem>
-                      </Form>
-                      <Form method="post">
-                        <input
-                          type="hidden"
-                          name="exerciseItemId"
-                          value={edge.node?.id}
-                        />
-                        <input
-                          type="hidden"
-                          name="_action"
-                          value="deleteItem"
-                        />
-                        <HiddenReturnToInput />
-                        <MenuItem
-                          type="submit"
-                          icon={<FontAwesomeIcon icon={faTrash} />}
-                          color="red.500"
-                        >
-                          Radera
-                        </MenuItem>
-                      </Form>
-                    </MenuList>
-                  </Menu>
-                </div>
-              </HStack>
+              </Card>
             );
           })}
         </div>
