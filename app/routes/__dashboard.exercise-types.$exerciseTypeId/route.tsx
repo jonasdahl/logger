@@ -11,21 +11,21 @@ import { db } from "~/db.server";
 import { HiddenReturnToInput } from "~/services/return-to";
 import { addSearchParamToPath } from "~/utils/add-search-param-to-path";
 
-import { json, redirect } from "@remix-run/node";
+import { redirect } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { useMemo, useState } from "react";
-import { Combobox } from "~/components/ui/combobox";
-import { FormControl } from "~/components/ui/form-control";
-import { FormLabel } from "~/components/ui/form-label";
+import { useMemo } from "react";
+import { zfd } from "zod-form-data";
+import { ValidatedComboboxField } from "~/components/form/validated-combobox-field";
 import { FormStack } from "~/components/ui/form-stack";
 import { GetExcerciseTypeDocument } from "~/graphql/generated/documents";
 import { gql } from "~/graphql/graphql.server";
-import { CreateTagModal } from "../api.category-tags.modal-create/route";
+import { CreateTagModal } from "../api.category-tags.modal-create._index/route";
 
 const validator = withZod(
   z.object({
     name: z.string(),
     returnTo: z.string().optional(),
+    tags: zfd.repeatableOfType(z.string()).optional(),
   })
 );
 
@@ -42,7 +42,10 @@ export async function action({ request, params }: ActionFunctionArgs) {
 
   await db.exerciseType.update({
     where: { id: exerciseType.id },
-    data: { name: data.name },
+    data: {
+      name: data.name,
+      categoryTags: { set: (data.tags || []).map((id) => ({ id })) },
+    },
   });
 
   return redirect(
@@ -58,21 +61,15 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const { exerciseTypeId } = z
     .object({ exerciseTypeId: z.string() })
     .parse(params);
-  return json(
-    await gql({
-      document: GetExcerciseTypeDocument,
-      request,
-      variables: { exerciseTypeId },
-    })
-  );
+  return gql({
+    document: GetExcerciseTypeDocument,
+    request,
+    variables: { exerciseTypeId },
+  });
 }
 
 export default function Activity() {
   const { data } = useLoaderData<typeof loader>();
-
-  const [selectedTags, setSelectedTags] = useState(
-    data?.exerciseType?.categoryTags?.map((t) => t.id) || []
-  );
 
   const tagOptions = useMemo(
     () =>
@@ -87,36 +84,36 @@ export default function Activity() {
       <ValidatedForm
         method="post"
         validator={validator}
-        defaultValues={{ name: data?.exerciseType?.name }}
+        defaultValues={{
+          name: data?.exerciseType?.name,
+          tags: data?.exerciseType?.categoryTags.map((t) => t.id),
+        }}
       >
         <HiddenReturnToInput />
         <div className="flex flex-col gap-5">
           <FormStack>
             <ValidatedInputField name="name" label="Namn" />
-
-            <FormControl>
-              <FormLabel>Taggar</FormLabel>
-              <Combobox
-                options={tagOptions}
-                value={selectedTags}
-                onChange={setSelectedTags}
-              />
-            </FormControl>
+            <ValidatedComboboxField
+              name="tags"
+              label="Taggar"
+              options={tagOptions}
+            />
           </FormStack>
           <div>
             <SubmitButton>Spara</SubmitButton>
           </div>
-          <div>
-            <CreateTagModal
-              trigger={
-                <button className="text-sm font-bold" type="button">
-                  Skapa tagg
-                </button>
-              }
-            />
-          </div>
         </div>
       </ValidatedForm>
+
+      <div>
+        <CreateTagModal
+          trigger={
+            <button className="text-sm font-bold" type="button">
+              Skapa tagg
+            </button>
+          }
+        />
+      </div>
     </div>
   );
 }
