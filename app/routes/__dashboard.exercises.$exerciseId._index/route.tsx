@@ -30,6 +30,7 @@ import { z } from "zod";
 import { ButtonLink } from "~/components/button-link";
 import { H1, H2 } from "~/components/headings";
 import { Button } from "~/components/ui/button";
+import { Card, CardHeader, CardTitle } from "~/components/ui/card";
 import { Container } from "~/components/ui/container";
 import { TitleRow } from "~/components/ui/title-row";
 import { db } from "~/db.server";
@@ -267,11 +268,13 @@ export default function Activity() {
             <div className="flex flex-col gap-1">
               {data.exercise.fromPlannedActivity?.exerciseItems.map((item) => {
                 return (
-                  <div
+                  <Card
                     key={item.exerciseType?.id}
-                    className="flex flex-row w-full"
+                    className="flex flex-row w-full px-3 py-2"
                   >
-                    <div className="flex-1">{item.exerciseType?.name}</div>
+                    <CardHeader className="flex-1 py-2">
+                      <CardTitle>{item.exerciseType?.name}</CardTitle>
+                    </CardHeader>
                     <div>
                       <ButtonLink
                         to={`/exercises/${data.exercise?.id}/items/create?createdExerciseTypeId=${item.exerciseType?.id}`}
@@ -281,7 +284,7 @@ export default function Activity() {
                         Lägg till
                       </ButtonLink>
                     </div>
-                  </div>
+                  </Card>
                 );
               })}
             </div>
