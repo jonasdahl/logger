@@ -1,13 +1,3 @@
-import {
-  Button,
-  Checkbox,
-  Stack,
-  Table,
-  TableContainer,
-  Tbody,
-  Td,
-  Tr,
-} from "@chakra-ui/react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import {
   Form,
@@ -24,7 +14,11 @@ import { SubmitButton } from "~/components/form/submit-button";
 import { validate } from "~/components/form/validate.server";
 import { ValidatedInputField } from "~/components/form/validated-input-field";
 import { H1, H2 } from "~/components/headings";
+import { Button } from "~/components/ui/button";
+import { Checkbox } from "~/components/ui/checkbox";
 import { Container } from "~/components/ui/container";
+import { FormStack } from "~/components/ui/form-stack";
+import { Table, TableBody, TableCell, TableRow } from "~/components/ui/table";
 import { db } from "~/db.server";
 import { FogisClient } from "~/fogis/client.server";
 import { getTimeZoneFromRequest } from "~/time";
@@ -105,120 +99,105 @@ export default function Fogis() {
     return (
       <Container>
         <Form method="post" action="/connections/fogis/save">
-          <Stack spacing={6}>
+          <div className="flex flex-col gap-5">
             <H1>Granska import</H1>
-            <Stack>
+            <div className="flex flex-col gap-3">
               <H2>Matcher som kommer läggas till</H2>
               {actionData.toAdd.length === 0 ? (
                 <div>Inga nya matcher.</div>
               ) : (
-                <TableContainer>
-                  <Table size="sm">
-                    <Tbody>
-                      {actionData.toAdd.map((game) => (
-                        <Tr key={game.id}>
-                          <Td w={1} pr={0}>
-                            <Checkbox
-                              name="add"
-                              value={game.id}
-                              defaultChecked
-                            />
-                          </Td>
-                          <Td>
-                            {DateTime.fromISO(game.time!).toFormat(
-                              "yyyy-MM-dd HH:mm"
-                            )}
-                            <input
-                              type="hidden"
-                              name={`toAdd[${game.id}]`}
-                              value={JSON.stringify(game)}
-                            />
-                          </Td>
-                          <Td>
-                            {game.homeTeam.name}-{game.awayTeam.name}
-                          </Td>
-                        </Tr>
-                      ))}
-                    </Tbody>
-                  </Table>
-                </TableContainer>
+                <Table>
+                  <TableBody>
+                    {actionData.toAdd.map((game) => (
+                      <TableRow key={game.id}>
+                        <TableCell className="w-1">
+                          <Checkbox name="add" value={game.id} defaultChecked />
+                        </TableCell>
+                        <TableCell>
+                          {DateTime.fromISO(game.time!).toFormat(
+                            "yyyy-MM-dd HH:mm"
+                          )}
+                          <input
+                            type="hidden"
+                            name={`toAdd[${game.id}]`}
+                            value={JSON.stringify(game)}
+                          />
+                        </TableCell>
+                        <TableCell>
+                          {game.homeTeam.name}-{game.awayTeam.name}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
               )}
-            </Stack>
+            </div>
 
-            <Stack>
+            <div className="flex flex-col gap-3">
               <H2>Matcher som kommer tas bort</H2>
               {actionData.toDelete.length === 0 ? (
                 <div>Inga matcher tas bort.</div>
               ) : (
-                <TableContainer>
-                  <Table size="sm">
-                    <Tbody>
-                      {actionData.toDelete.map((game) => (
-                        <Tr key={game.id}>
-                          <Td w={1} pr={0}>
-                            <Checkbox
-                              name="delete"
-                              value={game.id}
-                              defaultChecked
-                            />
-                          </Td>
-                          <Td>
-                            {DateTime.fromISO(game.time).toFormat(
-                              "yyyy-MM-dd HH:mm"
-                            )}
-                          </Td>
-                        </Tr>
-                      ))}
-                    </Tbody>
-                  </Table>
-                </TableContainer>
+                <Table>
+                  <TableBody>
+                    {actionData.toDelete.map((game) => (
+                      <TableRow key={game.id}>
+                        <TableCell className="w-1">
+                          <Checkbox
+                            name="delete"
+                            value={game.id}
+                            defaultChecked
+                          />
+                        </TableCell>
+                        <TableCell>
+                          {DateTime.fromISO(game.time).toFormat(
+                            "yyyy-MM-dd HH:mm"
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
               )}
-            </Stack>
+            </div>
 
             <div>
-              <Button
-                type="submit"
-                colorScheme="green"
-                isLoading={state === "submitting"}
-                isDisabled={state === "submitting"}
-              >
+              <Button type="submit" disabled={state === "submitting"}>
                 Genomför ändringar
               </Button>
             </div>
-          </Stack>
+          </div>
         </Form>
       </Container>
     );
   }
 
   return (
-    <Container>
-      <Stack spacing={5}>
-        <H1>Importera från Fogis</H1>
-        <div>
-          Fyll i dina inloggningsuppgifter till Fogis nedan så importeras dina
-          matcher automatiskt.
-        </div>
-        <ValidatedForm validator={validator} method="post">
-          <Stack spacing={5}>
-            <ValidatedInputField
-              name="username"
-              label="Användarnamn i Fogis"
-              defaultValue={fogisUsername ?? undefined}
-              autoFocus={!fogisUsername}
-            />
-            <ValidatedInputField
-              name="password"
-              type="password"
-              label="Lösenord i Fogis"
-              autoFocus={!!fogisUsername}
-            />
-            <div>
-              <SubmitButton variant="secondary">Hämta matcher</SubmitButton>
-            </div>
-          </Stack>
-        </ValidatedForm>
-      </Stack>
+    <Container className="flex flex-col gap-5">
+      <H1>Importera från Fogis</H1>
+      <div>
+        Fyll i dina inloggningsuppgifter till Fogis nedan så importeras dina
+        matcher automatiskt.
+      </div>
+      <ValidatedForm validator={validator} method="post">
+        <FormStack>
+          <ValidatedInputField
+            name="username"
+            label="Användarnamn i Fogis"
+            defaultValue={fogisUsername ?? undefined}
+            autoFocus={!fogisUsername}
+          />
+          <ValidatedInputField
+            name="password"
+            type="password"
+            label="Lösenord i Fogis"
+            autoFocus={!!fogisUsername}
+          />
+          <div>
+            <SubmitButton variant="secondary">Hämta matcher</SubmitButton>
+          </div>
+        </FormStack>
+      </ValidatedForm>
     </Container>
   );
 }

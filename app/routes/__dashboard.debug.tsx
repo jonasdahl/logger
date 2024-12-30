@@ -1,8 +1,8 @@
-import { Code, Heading } from "@chakra-ui/react";
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { authenticator } from "~/.server/auth.server";
+import { H1 } from "~/components/headings";
 import { Container } from "~/components/ui/container";
 import { db } from "~/db.server";
 import { getPolarNotifications } from "~/polar/get-notifications";
@@ -26,18 +26,18 @@ export default function Debug() {
     useLoaderData<typeof loader>();
   return (
     <Container className="flex flex-col gap-5">
-      <Heading>User session object</Heading>
-      <Code p={3} overflowX="auto" as="pre">
+      <H1>User session object</H1>
+      <pre className="p-3 rounded-lg bg-slate-100 border block text-sm overflow-x-auto">
         {JSON.stringify(userFromSession, null, 4)}
-      </Code>
-      <Heading>Polar notifications</Heading>
-      <Code p={3} overflowX="auto" as="pre">
+      </pre>
+      <H1>Polar notifications</H1>
+      <pre className="p-3 rounded-lg bg-slate-100 border block text-sm overflow-x-auto">
         {JSON.stringify(polarNotifications, null, 4)}
-      </Code>
-      <Heading>Polar entries</Heading>
-      <Code p={3} overflowX="auto" as="pre">
+      </pre>
+      <H1>Polar entries</H1>
+      <pre className="p-3 rounded-lg bg-slate-100 border block text-sm overflow-x-auto">
         {JSON.stringify(exercises, null, 4)}
-      </Code>
+      </pre>
     </Container>
   );
 }

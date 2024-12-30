@@ -1,12 +1,4 @@
 import {
-  Box,
-  GridItem,
-  LinkBox,
-  LinkOverlay,
-  SimpleGrid,
-  VStack,
-} from "@chakra-ui/react";
-import {
   faBook,
   faCode,
   faExclamationTriangle,
@@ -32,7 +24,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export default function SettingsIndex() {
   return (
     <Container>
-      <SimpleGrid minChildWidth={200} gap={5}>
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
         <Item
           to="/settings/purposes"
           icon={<FontAwesomeIcon icon={faRunning} />}
@@ -57,7 +49,7 @@ export default function SettingsIndex() {
         <Item to="/settings/laws" icon={<FontAwesomeIcon icon={faBook} />}>
           Regelfrågor
         </Item>
-      </SimpleGrid>
+      </div>
     </Container>
   );
 }
@@ -72,13 +64,13 @@ function Item({
   icon: ReactNode;
 }) {
   return (
-    <GridItem as={LinkBox} padding={5} bg="blue.50" borderRadius="md">
-      <VStack>
-        <Box fontSize="xl">{icon}</Box>
-        <LinkOverlay as={InlineLink} to={to}>
+    <div className="p-5 bg-blue-50 rounded-lg relative">
+      <div className="flex flex-col items-center">
+        <div className="text-xl">{icon}</div>
+        <InlineLink className="after:absolute after:inset-0" to={to}>
           {children}
-        </LinkOverlay>
-      </VStack>
-    </GridItem>
+        </InlineLink>
+      </div>
+    </div>
   );
 }
