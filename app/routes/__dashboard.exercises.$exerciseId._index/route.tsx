@@ -1,5 +1,4 @@
 import {
-  Button,
   Checkbox,
   HStack,
   Heading,
@@ -32,7 +31,10 @@ import { DateTime, Duration } from "luxon";
 import { useState } from "react";
 import { z } from "zod";
 import { ButtonLink } from "~/components/button-link";
+import { H2 } from "~/components/headings";
+import { Button } from "~/components/ui/button";
 import { Container } from "~/components/ui/container";
+import { TitleRow } from "~/components/ui/title-row";
 import { db } from "~/db.server";
 import { ExerciseDetailsDocument } from "~/graphql/generated/documents";
 import { gql } from "~/graphql/graphql.server";
@@ -263,29 +265,32 @@ export default function Activity() {
           ) : null}
         </Wrap>
 
-        <HStack height={10}>
-          <Heading size="md" as="h2">
-            Övningar
-          </Heading>
+        <TitleRow
+          actions={
+            selectedExerciseItemIds.length > 0 ? (
+              <div>
+                <Form method="post">
+                  <input type="hidden" name="_action" value="duplicateItems" />
+                  <HiddenReturnToInput />
+                  <input
+                    type="hidden"
+                    name="exerciseItemIds"
+                    value={selectedExerciseItemIds.join(",")}
+                  />
+                  <Button type="submit" size="sm" variant="outline">
+                    Duplicera valda
+                  </Button>
+                </Form>
+              </div>
+            ) : (
+              <div className="h-8" />
+            )
+          }
+        >
+          <H2>Övningar</H2>
           <Spacer />
-          {selectedExerciseItemIds.length > 0 ? (
-            <div>
-              <Form method="post">
-                <input type="hidden" name="_action" value="duplicateItems" />
-                <HiddenReturnToInput />
-                <input
-                  type="hidden"
-                  name="exerciseItemIds"
-                  value={selectedExerciseItemIds.join(",")}
-                />
-                <Button type="submit" size="xs">
-                  Duplicera valda
-                </Button>
-              </Form>
-            </div>
-          ) : null}
-        </HStack>
-        <Stack spacing={2}>
+        </TitleRow>
+        <div className="flex flex-col gap-2">
           {data?.exercise?.items.edges.map((edge) => {
             if (!edge.node) {
               return null;
@@ -448,7 +453,7 @@ export default function Activity() {
               </HStack>
             );
           })}
-        </Stack>
+        </div>
         <div>
           <ButtonLink to={`/exercises/${exerciseId}/items/create`}>
             Lägg till övning
