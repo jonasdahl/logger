@@ -137,6 +137,7 @@ export type Exercise = ActivityBase & {
   comment: Maybe<Scalars['String']['output']>;
   description: Maybe<Scalars['String']['output']>;
   fromPlannedActivity: Maybe<PlannedExercise>;
+  heartRateSummary: HeartRateSummary;
   id: Scalars['ID']['output'];
   isHiddenFromOverview: Scalars['Boolean']['output'];
   items: ExerciseItemConnection;
@@ -751,6 +752,7 @@ export type ExerciseResolvers<ContextType = Context, ParentType extends Resolver
   comment: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   description: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   fromPlannedActivity: Resolver<Maybe<ResolversTypes['PlannedExercise']>, ParentType, ContextType>;
+  heartRateSummary: Resolver<ResolversTypes['HeartRateSummary'], ParentType, ContextType>;
   id: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   isHiddenFromOverview: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   items: Resolver<ResolversTypes['ExerciseItemConnection'], ParentType, ContextType>;

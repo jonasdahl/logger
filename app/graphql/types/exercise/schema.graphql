@@ -13,4 +13,6 @@ type Exercise implements ActivityBase {
 
   comment: String
   description: String
+
+  heartRateSummary: HeartRateSummary!
 }

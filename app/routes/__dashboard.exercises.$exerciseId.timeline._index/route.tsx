@@ -29,9 +29,9 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 export default function Timeline() {
   const { me, exercise } = useLoaderData<typeof loader>();
   const maxHeartRate = me.maxPulse;
-  const heartRateSamples = (
-    exercise?.startDay.heartRateSummary?.samples || []
-  ).map((s) => ({ value: s.heartRate, tStart: DateTime.fromISO(s.time) }));
+  const heartRateSamples = (exercise?.heartRateSummary?.samples || []).map(
+    (s) => ({ value: s.heartRate, tStart: DateTime.fromISO(s.time) })
+  );
   const zones = [
     { name: "Zon 1", max: 59.999, color: "var(--chakra-colors-green-600)" },
     { name: "Zon 2", max: 75.999, color: "var(--chakra-colors-green-400)" },

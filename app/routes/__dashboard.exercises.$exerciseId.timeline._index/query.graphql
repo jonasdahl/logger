@@ -5,13 +5,11 @@ query ExerciseTimeline($exerciseId: ID!) {
 
   exercise(id: $exerciseId) {
     id
-    startDay {
-      start
-      heartRateSummary {
-        samples {
-          time
-          heartRate
-        }
+
+    heartRateSummary {
+      samples {
+        time
+        heartRate
       }
     }
   }

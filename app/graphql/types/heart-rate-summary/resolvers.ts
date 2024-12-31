@@ -16,6 +16,7 @@ const zoneDefinitions = [
 
 export const heartRateSummaryResolvers: HeartRateSummaryResolvers = {
   samples: (parent, _, { timeZone }) => {
+    console.log(parent);
     const fullInterval = Interval.fromDateTimes(parent.start, parent.end);
     return fullInterval.splitBy({ seconds: 5 }).map((interval) => {
       const intervalSamples = parent.samples
@@ -34,7 +35,7 @@ export const heartRateSummaryResolvers: HeartRateSummaryResolvers = {
             ? null
             : sum(intervalSamples.map((s) => s.value!)) /
               intervalSamples.length,
-        time: interval.start,
+        time: interval.start!,
       };
     });
   },

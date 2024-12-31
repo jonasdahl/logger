@@ -73,6 +73,7 @@ type Exercise implements ActivityBase {
   comment: String
   description: String
   fromPlannedActivity: PlannedExercise
+  heartRateSummary: HeartRateSummary!
   id: ID!
   isHiddenFromOverview: Boolean!
   items: ExerciseItemConnection!
