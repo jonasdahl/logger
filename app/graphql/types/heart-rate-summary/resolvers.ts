@@ -16,25 +16,25 @@ const zoneDefinitions = [
 
 export const heartRateSummaryResolvers: HeartRateSummaryResolvers = {
   samples: (parent, _, { timeZone }) => {
-    console.log(parent);
+    const samples = parent.samples.map((s) => ({
+      ...s,
+      interval: Interval.fromDateTimes(
+        s.tStart,
+        s.tStart.plus({ seconds: s.durationSeconds })
+      ),
+    }));
+
     const fullInterval = Interval.fromDateTimes(parent.start, parent.end);
     return fullInterval.splitBy({ seconds: 5 }).map((interval) => {
-      const intervalSamples = parent.samples
-        .filter((s) =>
-          interval.intersection(
-            Interval.fromDateTimes(
-              s.tStart,
-              s.tStart.plus({ seconds: s.durationSeconds })
-            )
-          )
-        )
-        .filter((x) => x.value !== null);
+      const intervalSamples = samples
+        .filter((s) => !!interval.intersection(s.interval))
+        .map((s) => s.value)
+        .filter(Boolean);
       return {
         heartRate:
           intervalSamples.length === 0
             ? null
-            : sum(intervalSamples.map((s) => s.value!)) /
-              intervalSamples.length,
+            : sum(intervalSamples) / intervalSamples.length,
         time: interval.start!,
       };
     });
