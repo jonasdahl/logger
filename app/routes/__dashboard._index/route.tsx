@@ -2,7 +2,11 @@ import { H1, H2 } from "~/components/headings";
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 import { InlineLink } from "~/components/ui/inline-link";
 
-import { faCheck, faRunning } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCheck,
+  faCircle,
+  faRunning,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { Link, useLoaderData } from "@remix-run/react";
@@ -32,7 +36,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export default function Index() {
-  const { goals, upcomingPlannedExercise, currentActivity } =
+  const { goals, upcomingPlannedExercise, currentActivity, lastActivity } =
     useLoaderData<typeof loader>();
 
   return (
@@ -43,7 +47,7 @@ export default function Index() {
 
       <div>
         {currentActivity && currentActivity.__typename === "Exercise" ? (
-          <Card className="p-4">
+          <Card className="p-4 bg-blue-50 border-blue-500">
             <CardHeader>
               <CardTitle>
                 {[
@@ -53,20 +57,22 @@ export default function Index() {
                   .filter(Boolean)
                   .join(" och ") || "Pågående aktivitet"}
               </CardTitle>
-              <CardDescription>Pågående</CardDescription>
+              <CardDescription>
+                <span className="animate-pulse text-red-600">
+                  <FontAwesomeIcon icon={faCircle} />
+                </span>{" "}
+                Pågående
+              </CardDescription>
             </CardHeader>
             <CardFooter className="flex flex-row gap-3 justify-between">
               <ButtonLink
-                to={`/exercises/${currentActivity.id}`}
-                variant="outline"
-              >
-                Visa
-              </ButtonLink>
-              <ButtonLink
-                to={`/exercises/${currentActivity.id}`}
+                to={`/exercises/${currentActivity.id}/finish`}
                 variant="destructive-outline"
               >
                 Avsluta
+              </ButtonLink>
+              <ButtonLink to={`/exercises/${currentActivity.id}`}>
+                Visa
               </ButtonLink>
             </CardFooter>
           </Card>
@@ -122,6 +128,27 @@ export default function Index() {
           </Card>
         )}
       </div>
+
+      {lastActivity ? (
+        <div className="flex flex-col gap-3">
+          <TitleRow>
+            <H2>Senaste aktivitet</H2>
+          </TitleRow>
+          <Card className="p-4">
+            <CardHeader>
+              <CardTitle>{lastActivity.title}</CardTitle>
+              <CardDescription>
+                {DateTime.fromISO(lastActivity.start).toFormat(
+                  "yyyy-MM-dd HH:mm"
+                )}
+              </CardDescription>
+            </CardHeader>
+            <CardFooter className="flex flex-row gap-3 justify-end">
+              <ButtonLink to={`/exercises/${lastActivity.id}`}>Visa</ButtonLink>
+            </CardFooter>
+          </Card>
+        </div>
+      ) : null}
 
       <div className="flex flex-col gap-3">
         <TitleRow

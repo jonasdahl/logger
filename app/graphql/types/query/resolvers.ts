@@ -14,6 +14,7 @@ export const queryResolvers: QueryResolvers = {
     const user = await db.user.findUniqueOrThrow({ where: { id: userId } });
     return user;
   },
+
   currentActivity: async (_, __, { userId, timeZone }) => {
     if (!userId) {
       return null;
@@ -29,7 +30,22 @@ export const queryResolvers: QueryResolvers = {
           lte: dayEnd.toJSDate(),
           gte: dayStart.toJSDate(),
         },
+        endedAt: null,
       },
+      orderBy: { time: "desc" },
+    });
+    if (!activity) {
+      return null;
+    }
+    return { type: "Exercise", value: activity };
+  },
+  lastActivity: async (_, __, { userId, timeZone }) => {
+    if (!userId) {
+      return null;
+    }
+    // TODO More activities
+    const activity = await db.activity.findFirst({
+      where: { userId, deletedAt: null },
       orderBy: { time: "desc" },
     });
     if (!activity) {

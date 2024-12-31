@@ -55,7 +55,7 @@ export async function action({ request }: ActionFunctionArgs) {
     zone: timeZone,
   });
 
-  await db.activity.create({
+  const activity = await db.activity.create({
     data: {
       userId,
       time: time.toJSDate(),
@@ -68,9 +68,9 @@ export async function action({ request }: ActionFunctionArgs) {
   });
 
   const redirectTo =
-    data.returnTo ??
-    url.searchParams.get("returnTo") ??
-    `/days/${DateTime.now().setZone(timeZone).toFormat("yyyy-MM-dd")}`;
+    data.returnTo ||
+    url.searchParams.get("returnTo") ||
+    `/exercises/${activity.id}`;
 
   return redirect(redirectTo);
 }

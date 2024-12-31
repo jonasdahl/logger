@@ -298,6 +298,7 @@ type Query {
   game(id: ID!): ActivityGame
   goal(id: ID!): Goal
   goals: [Goal!]!
+  lastActivity: Activity
   me: User
   plannedExercise(id: ID!): PlannedExercise
   timeZone: String!

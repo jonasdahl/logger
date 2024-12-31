@@ -31,10 +31,32 @@ query DashboardOverview {
     }
   }
 
-  currentActivity {
+  lastActivity {
     __typename
+    ... on ActivityBase {
+      id
+      title
+      start
+    }
     ... on Exercise {
       id
+      primaryPurpose {
+        label
+      }
+      secondaryPurpose {
+        label
+      }
+    }
+  }
+
+  currentActivity {
+    __typename
+    ... on ActivityBase {
+      id
+      title
+      start
+    }
+    ... on Exercise {
       primaryPurpose {
         label
       }
