@@ -293,7 +293,7 @@ export type GoalPerformExerciseType = GoalBase & {
 
 export type HeartRateSample = {
   readonly __typename?: 'HeartRateSample';
-  readonly heartRate: Maybe<Scalars['Int']['output']>;
+  readonly heartRate: Maybe<Scalars['Float']['output']>;
   readonly time: Scalars['DateTime']['output'];
 };
 

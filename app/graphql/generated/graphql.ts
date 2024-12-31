@@ -323,7 +323,7 @@ export type GoalPerformExerciseType = GoalBase & {
 
 export type HeartRateSample = {
   __typename?: 'HeartRateSample';
-  heartRate: Maybe<Scalars['Int']['output']>;
+  heartRate: Maybe<Scalars['Float']['output']>;
   time: Scalars['DateTime']['output'];
 };
 
@@ -939,7 +939,7 @@ export type GoalPerformExerciseTypeResolvers<ContextType = Context, ParentType e
 };
 
 export type HeartRateSampleResolvers<ContextType = Context, ParentType extends ResolversParentTypes['HeartRateSample'] = ResolversParentTypes['HeartRateSample']> = {
-  heartRate: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  heartRate: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
   time: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };

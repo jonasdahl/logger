@@ -237,7 +237,7 @@ type GoalPerformExerciseType implements GoalBase {
 }
 
 type HeartRateSample {
-  heartRate: Int
+  heartRate: Float
   time: DateTime!
 }
 
