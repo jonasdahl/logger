@@ -1,0 +1,8 @@
+query ExerciseLayout($exerciseId: ID!) {
+  exercise(id: $exerciseId) {
+    id
+    fromPlannedActivity {
+      id
+    }
+  }
+}

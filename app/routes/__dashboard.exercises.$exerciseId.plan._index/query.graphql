@@ -1,0 +1,51 @@
+query ExercisePlan($exerciseId: ID!) {
+  exercise(id: $exerciseId) {
+    id
+    start
+    fromPlannedActivity {
+      id
+      exerciseItems {
+        exerciseType {
+          id
+          name
+        }
+      }
+    }
+    items {
+      edges {
+        cursor
+        node {
+          id
+          exerciseType {
+            id
+            name
+          }
+          amount {
+            __typename
+            loads {
+              unit
+              value
+              type {
+                name
+              }
+            }
+            duration {
+              __typename
+              ... on ExerciseDurationRepetitions {
+                repetitions
+              }
+              ... on ExerciseDurationTime {
+                durationSeconds
+              }
+              ... on ExerciseDurationLevel {
+                levelType {
+                  name
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -263,47 +263,6 @@ export default function Activity() {
           <H1>Träning</H1>
         </TitleRow>
 
-        {data?.exercise?.fromPlannedActivity ? (
-          <div className="flex flex-col gap-3">
-            <TitleRow
-              actions={
-                <ButtonLink
-                  variant="outline"
-                  to={`/planned-activities/${data.exercise.fromPlannedActivity.id}`}
-                >
-                  Detaljer
-                </ButtonLink>
-              }
-            >
-              <H2>Planerat</H2>
-            </TitleRow>
-
-            <div className="flex flex-col gap-1">
-              {data.exercise.fromPlannedActivity?.exerciseItems.map((item) => {
-                return (
-                  <Card
-                    key={item.exerciseType?.id}
-                    className="flex flex-row w-full px-3 py-2 pr-2"
-                  >
-                    <CardHeader className="flex-1 py-2">
-                      <CardTitle>{item.exerciseType?.name}</CardTitle>
-                    </CardHeader>
-                    <div>
-                      <ButtonLink
-                        to={`/exercises/${data.exercise?.id}/items/create?createdExerciseTypeId=${item.exerciseType?.id}`}
-                        variant="secondary"
-                        size="sm"
-                      >
-                        Lägg till
-                      </ButtonLink>
-                    </div>
-                  </Card>
-                );
-              })}
-            </div>
-          </div>
-        ) : null}
-
         <TitleRow
           actions={
             selectedExerciseItemIds.length > 0 ? (
