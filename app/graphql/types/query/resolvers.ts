@@ -291,7 +291,7 @@ export const queryResolvers: QueryResolvers = {
         userId,
         time: { gte: today.toJSDate() },
         deletedAt: null,
-        generatedActivities: { none: {} },
+        generatedActivities: { none: { deletedAt: null } },
       },
       orderBy: { time: "asc" },
     });

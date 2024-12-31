@@ -20,11 +20,11 @@ import {
 import { Progress } from "~/components/ui/progress";
 import { TitleRow } from "~/components/ui/title-row";
 import { DashboardOverviewDocument } from "~/graphql/generated/documents";
-import { gql } from "~/graphql/graphql.server";
+import { gqlData } from "~/graphql/graphql.server";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   await authenticator.isAuthenticated(request, { failureRedirect: "/login" });
-  return await gql({
+  return await gqlData({
     document: DashboardOverviewDocument,
     variables: {},
     request,
@@ -32,8 +32,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export default function Index() {
-  const { data } = useLoaderData<typeof loader>();
-  const goals = data?.goals ?? [];
+  const { goals, upcomingPlannedExercise, currentActivity } =
+    useLoaderData<typeof loader>();
 
   return (
     <div className="container mx-auto py-6 px-4 max-w-screen-md flex flex-col gap-5">
@@ -42,7 +42,35 @@ export default function Index() {
       </div>
 
       <div>
-        {!data?.upcomingPlannedExercise ? (
+        {currentActivity && currentActivity.__typename === "Exercise" ? (
+          <Card className="p-4">
+            <CardHeader>
+              <CardTitle>
+                {[
+                  currentActivity.primaryPurpose?.label,
+                  currentActivity.secondaryPurpose?.label,
+                ]
+                  .filter(Boolean)
+                  .join(" och ") || "Pågående aktivitet"}
+              </CardTitle>
+              <CardDescription>Pågående</CardDescription>
+            </CardHeader>
+            <CardFooter className="flex flex-row gap-3 justify-between">
+              <ButtonLink
+                to={`/exercises/${currentActivity.id}`}
+                variant="outline"
+              >
+                Visa
+              </ButtonLink>
+              <ButtonLink
+                to={`/exercises/${currentActivity.id}`}
+                variant="destructive-outline"
+              >
+                Avsluta
+              </ButtonLink>
+            </CardFooter>
+          </Card>
+        ) : !upcomingPlannedExercise ? (
           <Alert>
             <AlertTitle>Du har inga planerade pass</AlertTitle>
             <AlertDescription>
@@ -61,31 +89,32 @@ export default function Index() {
             <CardHeader>
               <CardTitle>
                 {[
-                  data.upcomingPlannedExercise.primaryPurpose?.label,
-                  data.upcomingPlannedExercise.secondaryPurpose?.label,
+                  upcomingPlannedExercise.primaryPurpose?.label,
+                  upcomingPlannedExercise.secondaryPurpose?.label,
                 ]
                   .filter(Boolean)
                   .join(" och ") || "Planerad aktivitet"}
               </CardTitle>
               <CardDescription>
                 Planerat pass{" "}
-                {DateTime.fromISO(data.upcomingPlannedExercise.start) <
+                {DateTime.fromISO(upcomingPlannedExercise.start) <
                 DateTime.now()
                   ? "idag"
-                  : DateTime.fromISO(
-                      data.upcomingPlannedExercise.start
-                    ).toRelative({ locale: "sv-SE", style: "long" })}
+                  : DateTime.fromISO(upcomingPlannedExercise.start).toRelative({
+                      locale: "sv-SE",
+                      style: "long",
+                    })}
               </CardDescription>
             </CardHeader>
             <CardFooter className="flex flex-row gap-3 justify-between">
               <ButtonLink
-                to={`/planned-activities/${data.upcomingPlannedExercise.id}`}
+                to={`/planned-activities/${upcomingPlannedExercise.id}`}
                 variant="outline"
               >
                 Visa
               </ButtonLink>
               <ButtonLink
-                to={`/activities/create?from=${data.upcomingPlannedExercise.id}`}
+                to={`/activities/create?from=${upcomingPlannedExercise.id}`}
               >
                 Starta
               </ButtonLink>

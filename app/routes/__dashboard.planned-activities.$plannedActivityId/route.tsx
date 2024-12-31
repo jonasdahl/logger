@@ -9,6 +9,7 @@ export default function PlannedActivity() {
   return (
     <div>
       <TitleHero
+        maxWidthClassName="max-w-screen-md"
         primaryAction={
           <ButtonLink
             size="sm"

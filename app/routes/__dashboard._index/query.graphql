@@ -30,4 +30,17 @@ query DashboardOverview {
       label
     }
   }
+
+  currentActivity {
+    __typename
+    ... on Exercise {
+      id
+      primaryPurpose {
+        label
+      }
+      secondaryPurpose {
+        label
+      }
+    }
+  }
 }
