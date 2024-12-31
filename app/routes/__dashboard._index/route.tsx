@@ -36,8 +36,13 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export default function Index() {
-  const { goals, upcomingPlannedExercise, currentActivity, lastActivity } =
-    useLoaderData<typeof loader>();
+  const {
+    goals,
+    upcomingPlannedExercise,
+    currentActivity,
+    lastActivity,
+    timeZone,
+  } = useLoaderData<typeof loader>();
 
   return (
     <div className="container mx-auto py-6 px-4 max-w-screen-md flex flex-col gap-5">
@@ -106,10 +111,12 @@ export default function Index() {
                 {DateTime.fromISO(upcomingPlannedExercise.start) <
                 DateTime.now()
                   ? "idag"
-                  : DateTime.fromISO(upcomingPlannedExercise.start).toRelative({
-                      locale: "sv-SE",
-                      style: "long",
-                    })}
+                  : DateTime.fromISO(upcomingPlannedExercise.start)
+                      .setZone(timeZone)
+                      .toRelative({
+                        locale: "sv-SE",
+                        style: "long",
+                      })}
               </CardDescription>
             </CardHeader>
             <CardFooter className="flex flex-row gap-3 justify-between">
@@ -138,9 +145,9 @@ export default function Index() {
             <CardHeader>
               <CardTitle>{lastActivity.title}</CardTitle>
               <CardDescription>
-                {DateTime.fromISO(lastActivity.start).toFormat(
-                  "yyyy-MM-dd HH:mm"
-                )}
+                {DateTime.fromISO(lastActivity.start)
+                  .setZone(timeZone)
+                  .toFormat("yyyy-MM-dd HH:mm")}
               </CardDescription>
             </CardHeader>
             <CardFooter className="flex flex-row gap-3 justify-end">

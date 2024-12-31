@@ -102,7 +102,7 @@ function NewExerciseButton() {
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
-      <PopoverTrigger>
+      <PopoverTrigger asChild>
         <Button variant="outline">Ny övning</Button>
       </PopoverTrigger>
       <PopoverContent>

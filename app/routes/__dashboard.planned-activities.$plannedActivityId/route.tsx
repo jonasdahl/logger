@@ -21,14 +21,14 @@ export default function PlannedActivity() {
         title={<H1>Planerad aktivitet</H1>}
         tabs={[
           <TitleHeroTabLink
-            key=""
+            key="overview"
             to={`/planned-activities/${plannedActivityId}`}
             end
           >
             Översikt
           </TitleHeroTabLink>,
           <TitleHeroTabLink
-            key=""
+            key="exercises"
             to={`/planned-activities/${plannedActivityId}/exercises`}
             end
           >

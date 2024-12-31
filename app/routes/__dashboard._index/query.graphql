@@ -1,4 +1,5 @@
 query DashboardOverview {
+  timeZone
   goals {
     __typename
     ... on GoalBase {

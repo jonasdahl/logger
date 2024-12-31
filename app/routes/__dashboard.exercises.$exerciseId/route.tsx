@@ -5,7 +5,10 @@ import { TitleHero } from "~/components/ui/title-hero";
 export default function Activity() {
   return (
     <div>
-      <TitleHero title={<H1>Träningspass</H1>} />
+      <TitleHero
+        maxWidthClassName="max-w-screen-md"
+        title={<H1>Träningspass</H1>}
+      />
       <Outlet />
     </div>
   );
