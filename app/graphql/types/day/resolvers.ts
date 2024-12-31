@@ -152,7 +152,11 @@ export const dayResolvers: DayResolvers = {
         })
       );
 
-    return { samples: heartRateSamples };
+    return {
+      start: parent.start,
+      end: parent.start.endOf("day"),
+      samples: heartRateSamples,
+    };
   },
   events: async (parent, _, { userId }) => {
     if (!userId) return [];

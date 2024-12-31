@@ -1,3 +1,4 @@
+import { Interval } from "luxon";
 import { sum } from "remeda";
 import { db } from "~/db.server";
 import {
@@ -14,8 +15,29 @@ const zoneDefinitions = [
 ];
 
 export const heartRateSummaryResolvers: HeartRateSummaryResolvers = {
-  samples: (parent, _, { timeZone }) =>
-    parent.samples.map((s) => ({ heartRate: s.value, time: s.tStart })),
+  samples: (parent, _, { timeZone }) => {
+    const fullInterval = Interval.fromDateTimes(parent.start, parent.end);
+    return fullInterval.splitBy({ seconds: 5 }).map((interval) => {
+      const intervalSamples = parent.samples
+        .filter((s) =>
+          interval.intersection(
+            Interval.fromDateTimes(
+              s.tStart,
+              s.tStart.plus({ seconds: s.durationSeconds })
+            )
+          )
+        )
+        .filter((x) => x.value !== null);
+      return {
+        heartRate:
+          intervalSamples.length === 0
+            ? null
+            : sum(intervalSamples.map((s) => s.value!)) /
+              intervalSamples.length,
+        time: interval.start,
+      };
+    });
+  },
   secondsInZone: async (parent, { heartRateZone }, { userId }) => {
     if (!userId) {
       throw new Error("Unauthorized");

@@ -55,6 +55,8 @@ export default function Timeline() {
   const tMax = Math.max(...timestamps);
   const tMin = Math.min(...timestamps);
 
+  console.log({ tMax, tMin });
+
   return (
     <Container className="pb-0">
       <div className="flex flex-col gap-1">
@@ -63,17 +65,10 @@ export default function Timeline() {
             <XYChart
               margin={{ top: 0, right: 0, bottom: 20, left: 30 }}
               height={300}
-              xScale={{ type: "linear" }}
+              xScale={{ type: "time" }}
               yScale={{ type: "linear" }}
             >
-              <AnimatedAxis
-                orientation="bottom"
-                tickFormat={(v) =>
-                  (Number(v) / 60).toLocaleString("sv-SE", {
-                    maximumFractionDigits: 1,
-                  })
-                }
-              />
+              <AnimatedAxis orientation="bottom" />
               <AnimatedAxis orientation="left" />
               <AnimatedGrid />
 
@@ -85,16 +80,8 @@ export default function Timeline() {
                   strokeWidth={0}
                   renderLine={false}
                   data={[
-                    {
-                      x: tMin,
-                      y: z.maxAbsolute,
-                      y0: z.minAbsolute,
-                    },
-                    {
-                      x: tMax,
-                      y: z.maxAbsolute,
-                      y0: z.minAbsolute,
-                    },
+                    { x: tMin, y: z.maxAbsolute, y0: z.minAbsolute },
+                    { x: tMax, y: z.maxAbsolute, y0: z.minAbsolute },
                   ]}
                   xAccessor={(p) => p.x}
                   yAccessor={(p) => p.y}
@@ -106,12 +93,11 @@ export default function Timeline() {
               <AnimatedLineSeries
                 dataKey="Puls"
                 data={heartRateSamples.map((s) => ({
-                  x: s.tStart ?? null,
-                  y: s.value ?? null,
+                  x: s.tStart,
+                  y: s.value,
                 }))}
                 xAccessor={(p) => p.x ?? 0}
                 yAccessor={(p) => p.y}
-                stroke="var(--chakra-colors-blue-800)"
                 strokeWidth={1}
               />
             </XYChart>
