@@ -1,4 +1,4 @@
-query PlannedActivity($plannedActivityId: ID!) {
+query PlannedActivityExercises($plannedActivityId: ID!) {
   plannedExercise(id: $plannedActivityId) {
     id
     start
@@ -11,6 +11,22 @@ query PlannedActivity($plannedActivityId: ID!) {
     exerciseItems {
       id
       exerciseType {
+        id
+        name
+        defaultAmountType
+        loadTypes {
+          id
+          name
+          unit
+        }
+      }
+    }
+  }
+
+  exerciseTypes {
+    edges {
+      cursor
+      node {
         id
         name
         defaultAmountType

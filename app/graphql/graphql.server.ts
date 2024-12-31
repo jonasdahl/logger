@@ -30,3 +30,37 @@ export async function gql<TResult, TVariables extends {}>({
 
   return res as ExecutionResult<TResult, ObjMap<unknown>>;
 }
+
+export async function gqlData<
+  TResult,
+  TVariables extends {},
+  TRequiredKeys extends (keyof TResult)[] = []
+>({
+  document,
+  variables,
+  request,
+  requiredProperties,
+}: {
+  document: TypedDocumentNode<TResult, TVariables>;
+  variables: TVariables;
+  request: Request;
+  requiredProperties?: TRequiredKeys;
+}) {
+  const res = await gql({ document, request, variables });
+  const data = res.data;
+  if (!data || res.errors) {
+    console.error(res.errors);
+    throw new Error("GraphQL query failed");
+  }
+  const invalidProperty = requiredProperties?.find(
+    (propertyKey) => !data[propertyKey]
+  );
+  if (invalidProperty) {
+    throw new Error(
+      `Required property not found in query: ${invalidProperty.toString()}`
+    );
+  }
+  return data as TResult & {
+    [key in TRequiredKeys[number]]: NonNullable<TResult[key]>;
+  };
+}

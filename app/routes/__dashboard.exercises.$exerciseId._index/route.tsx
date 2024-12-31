@@ -17,6 +17,7 @@ import {
   faChartArea,
   faCopy,
   faEllipsisVertical,
+  faPlus,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -244,7 +245,7 @@ export default function Activity() {
   };
 
   return (
-    <Container>
+    <Container className="pb-0">
       <HiddenReturnToInput />
       <Stack spacing={5}>
         <TitleRow
@@ -264,7 +265,16 @@ export default function Activity() {
 
         {data?.exercise?.fromPlannedActivity ? (
           <div className="flex flex-col gap-3">
-            <TitleRow>
+            <TitleRow
+              actions={
+                <ButtonLink
+                  variant="outline"
+                  to={`/planned-activities/${data.exercise.fromPlannedActivity.id}`}
+                >
+                  Detaljer
+                </ButtonLink>
+              }
+            >
               <H2>Planerat</H2>
             </TitleRow>
 
@@ -500,9 +510,14 @@ export default function Activity() {
             );
           })}
         </div>
-        <div>
-          <ButtonLink to={`/exercises/${exerciseId}/items/create`}>
-            Lägg till övning
+        <div className="h-12">
+          <ButtonLink
+            to={`/exercises/${exerciseId}/items/create`}
+            size="circle"
+            aria-label="Lägg till övning"
+            className="fixed bottom-20 right-4"
+          >
+            <FontAwesomeIcon icon={faPlus} />
           </ButtonLink>
         </div>
       </Stack>
