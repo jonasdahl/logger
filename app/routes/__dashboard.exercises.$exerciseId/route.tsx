@@ -30,6 +30,11 @@ export default function Activity() {
               Plan
             </TitleHeroTabLink>
           ) : null,
+          exercise?.fromPlannedActivity ? (
+            <TitleHeroTabLink key="timeline" to="timeline">
+              Tidslinje
+            </TitleHeroTabLink>
+          ) : null,
         ].filter(Boolean)}
       />
       <Outlet />

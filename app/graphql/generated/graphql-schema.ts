@@ -317,4 +317,5 @@ type Travel implements ActivityBase {
 type User {
   email: String!
   id: ID!
+  maxPulse: Int
 }`

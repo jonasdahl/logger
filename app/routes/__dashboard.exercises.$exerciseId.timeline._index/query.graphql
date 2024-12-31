@@ -1,0 +1,17 @@
+query ExerciseTimeline($exerciseId: ID!) {
+  me {
+    maxPulse
+  }
+
+  exercise(id: $exerciseId) {
+    id
+    startDay {
+      heartRateSummary {
+        samples {
+          time
+          heartRate
+        }
+      }
+    }
+  }
+}
