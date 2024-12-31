@@ -114,7 +114,7 @@ export default function Index() {
                 Visa
               </ButtonLink>
               <ButtonLink
-                to={`/activities/create?from=${upcomingPlannedExercise.id}`}
+                to={`/activities/create?from=${upcomingPlannedExercise.id}&now`}
               >
                 Starta
               </ButtonLink>

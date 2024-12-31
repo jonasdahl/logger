@@ -13,7 +13,7 @@ export default function PlannedActivity() {
         primaryAction={
           <ButtonLink
             size="sm"
-            to={`/activities/create?from=${plannedActivityId}`}
+            to={`/activities/create?from=${plannedActivityId}&now`}
           >
             Starta nu
           </ButtonLink>

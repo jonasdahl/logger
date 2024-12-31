@@ -127,7 +127,9 @@ export default function DashboardIndex() {
         validator={validator}
         method="post"
         defaultValues={{
-          date: plannedActivity?.time
+          date: searchParams.has("now")
+            ? DateTime.now().setZone(timeZone).toFormat("yyyy-MM-dd'T'HH:mm")
+            : plannedActivity?.time
             ? DateTime.fromISO(plannedActivity.time)
                 .setZone(timeZone)
                 .toFormat("yyyy-MM-dd'T'HH:mm")
