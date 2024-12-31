@@ -62,7 +62,7 @@ export default function Timeline() {
           {() => (
             <XYChart
               margin={{ top: 0, right: 0, bottom: 20, left: 30 }}
-              height={400}
+              height={300}
               xScale={{ type: "linear" }}
               yScale={{ type: "linear" }}
             >
