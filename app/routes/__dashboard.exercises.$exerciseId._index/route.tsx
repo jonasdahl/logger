@@ -162,6 +162,8 @@ export default function Activity() {
     });
   }, [items]);
 
+  console.log({ itemGroups });
+
   return (
     <Container className="pb-0 flex flex-col gap-3">
       {itemGroups.map((item, i) => {

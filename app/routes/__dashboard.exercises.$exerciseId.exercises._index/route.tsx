@@ -7,7 +7,7 @@ import {
   Stack,
 } from "@chakra-ui/react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { json, redirect } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import { authenticator } from "~/.server/auth.server";
 import { HiddenReturnToInput } from "~/services/return-to";
 
@@ -40,6 +40,7 @@ import { TitleRow } from "~/components/ui/title-row";
 import { db } from "~/db.server";
 import { ExerciseExercisesDocument } from "~/graphql/generated/documents";
 import { gql } from "~/graphql/graphql.server";
+import { redirectBack } from "~/lib/redirect-back";
 
 const postSchema = z.intersection(
   z.object({ returnTo: z.string().optional() }),
@@ -215,7 +216,10 @@ export async function action({ request, params }: ActionFunctionArgs) {
     }
   }
 
-  return redirect(data.returnTo ?? `/exercises/${params.exerciseId}`);
+  return redirectBack(
+    data.returnTo ?? `/exercises/${params.exerciseId}/exercises`,
+    request
+  );
 }
 
 export default function Exercises() {
