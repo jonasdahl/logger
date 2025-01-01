@@ -25,7 +25,7 @@ export default function Activity() {
 
   return (
     <Container className="pb-0">
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-col gap-2">
         {data?.exercise?.fromPlannedActivity?.exerciseItems.map((item) => {
           return (
             <Card

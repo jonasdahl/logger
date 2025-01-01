@@ -1,6 +1,8 @@
 query ExerciseLayout($exerciseId: ID!) {
+  timeZone
   exercise(id: $exerciseId) {
     id
+    start
     fromPlannedActivity {
       id
     }
